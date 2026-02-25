@@ -1,37 +1,58 @@
-(* ::Package:: *)
+scriptDir = NotebookDirectory[];
+SetDirectory[scriptDir];
 
-createAgent[pos_, energy_, age_] :=   (*Create agent function, will be used in intializeModel function*)
-  <|
-    "pos" -> pos,
-    "energy" -> energy,
-    "age" -> age
-  |>;
+<< basicMethods.wl (*import basicMethods.wl*)
 
-initializeModel[  
-   nAgents_, (*parameter for number of agents*)
-   nFood_, (*parameter for number of food items*)
-   {min_, max_} (*parameter for bounds of environment, will be used to generate random positions for 
-   agents and food*)
-] :=
+parameters:= <|
+  "proximityRadius" -> 2.0, (*proximity radius for food consumption action*)
+  "metabolismPerAction" -> 0.2, (*energy lost due to metabolism*)
+  "dt" -> 0.1, (*timestep (we can change this later)*)
+  "foodEnergy" -> 5.0, (*how much energy 1 food particle gives*)
+  "foodSpawnCooldown" -> 20,
+  "nFoodSpawn" -> 5,
+  "nStartingAgents" -> 5,
+  "nStartingFood" -> 20,
+  "squareBounds" -> {0, 10}, (*min, max. Square environment*)
+  "startingEnergy" -> 10,
+  "stepLength" -> 10.0/100
+|>;
 
- Module[{agents, food},  
-  agents =
-   Table[
-    createAgent[RandomReal[{min, max}, 2], 10.0, 0.0], nAgents
-   ];
+initializeModel[params_] :=
 
-  food =
-   RandomReal[{min, max}, {nFood, 2}];
+  Module[{agents, food, nStartingAgents, nStartingFood, startingEnergy, min, max},  
 
-  <|
-   "agents" -> agents,
-   "food" -> food,
-   "bounds" -> {min, max},
-   "time" -> 0
-  |>
+    nStartingAgents = params["nStartingAgents"]; (*parameter for number of agents*)
+    nStartingFood = params["nStartingFood"]; (*parameter for number of food items*)
+    startingEnergy = params["startingEnergy"];
+    {min, max} = params["squareBounds"];
+
+    agents =
+    Table[
+      createAgent[RandomReal[{min, max}, 2], startingEnergy, 0.0], nStartingAgents
+    ];
+
+    foods = RandomReal[{min, max}, {nStartingFood, 2}];
+
+    <| 
+      "agents" -> agents, (*list of agent associations*)
+      "foods" -> foods, (*list of food coordinates*)
+      "bounds" -> {min, max},
+      "time" -> 0
+    |>
  ]
 
+model = initializeModel[parameters];
 
-model = initializeModel[5, 20, {0, 10}]; (*test case for initializeModel function*)
-agents = model["agents"]
-food = model["food"]
+propogateModel[params_, model_] := ( (*propogates by one timestep dt*)
+
+  time = model["time"];
+
+  If[Mod[time, params["foodSpawnCooldown"]] == 0, 
+    model["foods"] = spawnFoods[model["foods"], params]
+  ]; (*spawns food if time is appropriate.*)
+
+  (*updating agents' actions*)
+  
+  model["time"] = model["time"] + params["dt"]
+  model
+)

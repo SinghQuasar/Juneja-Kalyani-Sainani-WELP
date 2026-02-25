@@ -1,21 +1,14 @@
 (* ::Package:: *)
 
-parameters[] := <|
-  "proximityRadius" -> 2.0, (*proximity radius for food*)
-  "metabolismPerStep" -> 0.2, (*energy lost due to metabolism*)
-  "dt" -> 0.1, (*timestep (we can change this later)*)
-  "foodEnergy" -> 5.0 (*how much energy 1 food particle gives*)
-|>;
-
-checkWithinRadius[a_, b_, r_] := EuclideanDistance[a, b] <= r; (*agent's radius*)
+checkWithinRadius[p1_, p2_, r_] := EuclideanDistance[p1, p2] <= r; (*agent's radius*)
 
 (*checking the proximity for 1 food particle*)
-checkFoodWithinRadius[agentPos_, foodPos_, params_] :=
-  checkWithinRadius[agentPos, foodPos, params["proximityRadius"]];
+checkFoodWithinRadius[agentPos_, foodPos_, proxRadius] :=
+  checkWithinRadius[agentPos, foodPos, proxRadius];
 
 (*checking the proximity for all foods and putting it into a list*)
-foodsWithinRadius[agentPos_, foodPositions_List, params_] :=
-  Select[foodPositions, checkFoodWithinRadius[agentPos, #, params] &];
+foodsWithinRadius[agentPos_, foodPositions_List, proxRadius] :=
+  Select[foodPositions, checkFoodWithinRadius[agentPos, #, proxRadius] &];
 
 findNearestFood[agentPos_, foodPositions_List] := Module[{dists, index}, (*function for finding nearest food*)
   If[Length[foodPositions] == 0,
@@ -26,18 +19,39 @@ findNearestFood[agentPos_, foodPositions_List] := Module[{dists, index}, (*funct
   ]
 ];
 
-changeMetabolism[energy_, params_] := energy - params["metabolismPerStep"]; (*energy lost due to metabolism*)
+createAgent[pos_, energy_, age_] :=   (*Create agent function, will be used in intializeModel function*)
+  <|
+    "pos" -> pos,
+    "energy" -> energy,
+    "age" -> age
+  |>
+
+changeMetabolism[energy_, params_] := energy - params["metabolismPerAction"]; (*energy lost due to metabolism*)
 
 getPos[agent_Association] := agent["pos"];
 
-(*creating 1 agent (test case)*)
-params = parameters[];
-agent = <|"pos" -> {0., 0.}, "energy" -> 10|>;
-food = {{3., 4.}, {1.5,1.5}, {1., 1.}, {10., 10.}};
+spawnFoods[foods, params] := (
+  Join[foods, RandomReal[params["squareBounds"], {params["nFoodSpawn"], 2}]]
+)
 
-Print[food]
+randomActionWalk[agent, params] := (
+  theta = RandomReal[{0, 2 Pi}];
+  agent["pos"] + Table[, 2](*+ operator threadwise*)
+)
 
-nearestFood = findNearestFood[getPos[agent], food] (*food that is closest to our agent*)
-updatedFoods = foodsWithinRadius[getPos[agent], food, params] (*foods that are within the radius of 2 units*)
-updatedEnergy = changeMetabolism[agent["energy"], params] (*current energy should be: 10-0.2 = 9.8*)
+testBasicMethods[] := ( (*for debugging*)
+  params = <|
+    "proximityRadius" -> 2.0, (*proximity radius for food*)
+    "metabolismPerAction" -> 0.2, (*energy lost due to metabolism*)
+    "dt" -> 0.1, (*timestep (we can change this later)*)
+    "foodEnergy" -> 5.0 (*how much energy 1 food particle gives*)
+  |>;
+  agent = <|"pos" -> {0., 0.}, "energy" -> 10|>;
+  food = {{3., 4.}, {1.5,1.5}, {1., 1.}, {10., 10.}};
 
+  Print[food];
+
+  nearestFood = findNearestFood[getPos[agent], food] (*food that is closest to our agent*)
+  updatedFoods = foodsWithinRadius[getPos[agent], food, params["proximityRadius"]] (*foods that are within the radius of 2 units*)
+  updatedEnergy = changeMetabolism[agent["energy"], params["proximityRadius"]]; (*current energy should be: 10-0.2 = 9.8*)
+)
