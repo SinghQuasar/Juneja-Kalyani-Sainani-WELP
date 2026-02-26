@@ -61,7 +61,7 @@ propogateModel[params_, model_] := Module[{time, i, agenti, nearFoodI, model2=mo
   
   Echo[Length@model2["foods"], "foods after"];
 
-  (*updating agents' actions*)
+  (*updating agents' actions. Compress these.*)
   model["agents"] = RandomSample[model["agents"]]; (*shuffle to not give any agents an advantage (food order).*)
   model["agents"] = DeleteCases[model["agents"], (#["age"] >= params["lifespan"] || #["energy"] <= 0)&];   (*deaths*)
   Echo["updated agents"];
