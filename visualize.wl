@@ -1,3 +1,6 @@
+scriptDir = NotebookDirectory[];
+SetDirectory[scriptDir];
+
 visualizeModel[model_] :=
  Module[{agents, food, bounds},
 

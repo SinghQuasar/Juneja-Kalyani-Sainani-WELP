@@ -1,5 +1,8 @@
 (* ::Package:: *)
 
+scriptDir = NotebookDirectory[];
+SetDirectory[scriptDir]
+
 checkWithinRadius[p1_, p2_, r_] := EuclideanDistance[p1, p2] <= r; (*agent's radius*)
 
 (*checking the proximity for 1 food particle*)
@@ -10,12 +13,12 @@ checkFoodWithinRadius[agentPos_, foodPos_, proxRadius] :=
 foodsWithinRadius[agentPos_, foodPositions_List, proxRadius] :=
   Select[foodPositions, checkFoodWithinRadius[agentPos, #, proxRadius] &];
 
-findNearestFood[agentPos_, foodPositions_List] := Module[{dists, index}, (*function for finding nearest food*)
+findNearestFoodI[agentPos_, foodPositions_List] := Module[{dists, index}, (*function for finding nearest food*)
   If[Length[foodPositions] == 0,
-    Missing["NoFood"],
+    {-1, {-1, -1}}, (*no food*)
     dists = EuclideanDistance[agentPos, #] & /@ foodPositions;
     index = First@Ordering[dists, 1];
-    foodPositions[[index]]
+    index
   ]
 ];
 
@@ -26,8 +29,6 @@ createAgent[pos_, energy_, age_] :=   (*Create agent function, will be used in i
     "age" -> age
   |>
 
-changeMetabolism[energy_, params_] := energy - params["metabolismPerAction"]; (*energy lost due to metabolism*)
-
 getPos[agent_Association] := agent["pos"];
 
 spawnFoods[foods, params] := (
@@ -36,7 +37,7 @@ spawnFoods[foods, params] := (
 
 randomActionWalk[agent, params] := (
   theta = RandomReal[{0, 2 Pi}];
-  agent["pos"] + Table[, 2](*+ operator threadwise*)
+  agent["pos"] + {params["stepLength"] * Cos[theta], params["stepLength"] * Sin[Theta]} (*+ operator threadwise*)
 )
 
 testBasicMethods[] := ( (*for debugging*)
@@ -52,6 +53,6 @@ testBasicMethods[] := ( (*for debugging*)
   Print[food];
 
   nearestFood = findNearestFood[getPos[agent], food] (*food that is closest to our agent*)
-  updatedFoods = foodsWithinRadius[getPos[agent], food, params["proximityRadius"]] (*foods that are within the radius of 2 units*)
-  updatedEnergy = changeMetabolism[agent["energy"], params["proximityRadius"]]; (*current energy should be: 10-0.2 = 9.8*)
 )
+
+testBasicMethods[]
