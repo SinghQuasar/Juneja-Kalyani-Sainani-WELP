@@ -6,11 +6,11 @@ SetDirectory[scriptDir]
 checkWithinRadius[p1_, p2_, r_] := EuclideanDistance[p1, p2] <= r; (*agent's radius*)
 
 (*checking the proximity for 1 food particle*)
-checkFoodWithinRadius[agentPos_, foodPos_, proxRadius] :=
+checkFoodWithinRadius[agentPos_, foodPos_, proxRadius_] :=
   checkWithinRadius[agentPos, foodPos, proxRadius];
 
 (*checking the proximity for all foods and putting it into a list*)
-foodsWithinRadius[agentPos_, foodPositions_List, proxRadius] :=
+foodsWithinRadius[agentPos_, foodPositions_List, proxRadius_] :=
   Select[foodPositions, checkFoodWithinRadius[agentPos, #, proxRadius] &];
 
 findNearestFoodI[agentPos_, foodPositions_List] := Module[{dists, index}, (*function for finding nearest food*)
@@ -31,14 +31,14 @@ createAgent[pos_, energy_, age_] :=   (*Create agent function, will be used in i
 
 getPos[agent_Association] := agent["pos"];
 
-spawnFoods[foods, params] := (
+spawnFoods[foods_, params_] := (
   Join[foods, RandomReal[params["squareBounds"], {params["nFoodSpawn"], 2}]]
 )
 
-randomActionWalk[agent, params] := (
-  theta = RandomReal[{0, 2 Pi}];
-  agent["pos"] + {params["stepLength"] * Cos[theta], params["stepLength"] * Sin[Theta]} (*+ operator threadwise*)
-)
+randomActionWalk[agent_, params_] := With[
+  {theta = RandomReal[{0, 2 Pi}]},
+  agent["pos"] + {params["stepLength"] * Cos[theta], params["stepLength"] * Sin[theta]} (*+ operator threadwise*)
+];
 
 testBasicMethods[] := ( (*for debugging*)
   params = <|
@@ -52,7 +52,11 @@ testBasicMethods[] := ( (*for debugging*)
 
   Print[food];
 
-  nearestFood = findNearestFood[getPos[agent], food] (*food that is closest to our agent*)
+  nearestFood = findNearestFoodI[getPos[agent], food] (*food that is closest to our agent*)
 )
 
 testBasicMethods[]
+
+
+(* ::Input:: *)
+(*Quit*)
