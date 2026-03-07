@@ -3,13 +3,13 @@
 scriptDir = NotebookDirectory[];
 SetDirectory[scriptDir];
 
-(*<< basicMethods.wl*)
+(*<< basicMethods.wl -- we're initializing them in the kernel right now, but working on changing to formal package*)
 
 parameters = <| (*agent energy is currently unbounded, but we can change that*)
   "proximityRadius" -> 2.0, (*proximity radius for food consumption action*)
   "metabolismPerAction" -> 0.2, (*energy lost due to metabolism*)
   "dt" -> 0.1, (*timestep in seconds (we can change this later)*)
-  "foodEnergy" -> 5.0, (*how much enlergy 1 food particle gives*)
+  "foodEnergy" -> 5.0, (*how much energy 1 food particle gives*)
   "foodSpawnCooldown" -> 20,
   "nFoodSpawn" -> 5,
   "nStartingAgents" -> 5,
@@ -35,7 +35,6 @@ initializeModel[params_] :=
     ];
 
     foods = RandomReal[{min, max}, {nStartingFood, 2}];
-	Echo["food created"];
 	
     <| 
       "agents" -> agents, (*list of agent associations*)
@@ -45,46 +44,29 @@ initializeModel[params_] :=
     |>
  ]
 
-propogateModel[params_, model_] := Module[{time, i, agenti, nearFoodI, model2=model},
+propogateModel[params_, model_] := Module[{time, i, agenti, nearFoodI, model2=model}, (*working on changing to DynamicModule/Manipulate. This propogateModel method is not confirmed to be working, but the indiivdual helper methods have been tested.*)
 
-  time = model["time"];
+  time = model2["time"];
   
   Echo[time, "current time"];
   Echo[Length@model2["foods"], "foods"];  
   
-  (*If[Mod[time, params["foodSpawnCooldown"]] == 0, (*spawns food if time is appropriate.*)
-    Echo["foods update"];
-    model["foods"] = 
-  ]*)
-  
-  model2["foods"] = If[Mod[time, params["foodSpawnCooldown"]] == 0, Echo[Length@spawnFoods[model["foods"], params], "spawning foods"], model["foods"]];
+  model2["foods"] = spawnFoodCheck[model2, params];
   
   Echo[Length@model2["foods"], "foods after"];
 
-  (*updating agents' actions. Compress these.*)
-  model["agents"] = RandomSample[model["agents"]]; (*shuffle to not give any agents an advantage (food order).*)
-  model["agents"] = DeleteCases[model["agents"], (#["age"] >= params["lifespan"] || #["energy"] <= 0)&];   (*deaths*)
+  model2 = randomizeAndKill[model2, params];
+  
   Echo["updated agents"];
   
-  For[i = 1, i <= Length[model["agents"]], i++, (*current process may be inefficient. Change to map or table later*)
-
-    agenti = model["agents"][[i]];
-    nearFoodI = findNearestFoodI[agenti["pos"], model["foods"]];
-	
-	Echo[{agenti, nearFoodI}, "current agent and nearest food"];
-	
-    If[nearFoodI >= 0, (*have the agent eat the food*)
-      model["foods"] = Delete[model["foods"], nearFoodI]; (*list shifting operation*)
-      model["agents"][[i]]["energy"] = agenti["energy"] + params["foodEnergy"];
-      , model["agents"][[i]]["pos"] = randomActionWalk[agenti, params]; (*else, move*)
-    ];
-	
-	(*metabolism*)
-	
-  ];
+  model2 = agentActions[model2, params]; (*eat or walk, depending on food availability*)
   
-  Echo[model["time"] = model["time"] + params["dt"]];
-  model
+  model2 = metabolizeAgents[model2, params];
+  
+  model2 = ageAgents[model2, params];
+  
+  Echo[model2["time"] = model2["time"] + params["dt"]];
+  model2
  ];
 
 model = initializeModel[parameters];
@@ -92,3 +74,6 @@ model = propogateModel[parameters, model]
 
 
 
+(* ::Input:: *)
+(*Manipulate[Module[{start=<|"A"->1,"B"->2|>},start["A"]+=x;*)
+(*Dataset[start]],{x,0,1, 0.2}]*)
