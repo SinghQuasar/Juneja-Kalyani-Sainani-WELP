@@ -7,7 +7,7 @@ SetDirectory[scriptDir];
 
 parameters = <| (*agent energy is currently unbounded, but we can change that*)
   "proximityRadius" -> 2.0, (*proximity radius for food consumption action*)
-  "metabolismPerAction" -> 0.2, (*energy lost due to metabolism*)
+  "metabolism" -> 0.2, (*energy lost due to metabolism*)
   "dt" -> 0.1, (*timestep in seconds (we can change this later)*)
   "foodEnergy" -> 5.0, (*how much energy 1 food particle gives*)
   "foodSpawnCooldown" -> 20,
@@ -44,34 +44,24 @@ initializeModel[params_] :=
     |>
  ]
 
-propogateModel[params_, model_] := Module[{time, i, agenti, nearFoodI, model2=model}, (*working on changing to DynamicModule/Manipulate. This propogateModel method is not confirmed to be working, but the indiivdual helper methods have been tested.*)
-
-  time = model2["time"];
-  
-  Echo[time, "current time"];
-  Echo[Length@model2["foods"], "foods"];  
-  
-  model2["foods"] = spawnFoodCheck[model2, params];
-  
-  Echo[Length@model2["foods"], "foods after"];
-
-  model2 = randomizeAndKill[model2, params];
-  
-  Echo["updated agents"];
-  
-  model2 = agentActions[model2, params]; (*eat or walk, depending on food availability*)
-  
-  model2 = metabolizeAgents[model2, params];
-  
-  model2 = ageAgents[model2, params];
-  
-  Echo[model2["time"] = model2["time"] + params["dt"]];
+propagateModelStep[params_, model_] := Module[{model2=model}, (*working on changing to DynamicModule/Manipulate. This propogateModel method is not confirmed to be working, but the indiivdual helper methods have been tested.*)
+  model2["foods"]   = spawnFoodCheck[model2, params];
+  model2            = randomizeAndKill[model2, params];
+  model2            = agentActions[model2, params];
+  model2            = metabolizeAgents[model2, params];
+  model2            = ageAgents[model2, params];
+  model2["time"]    = model2["time"] + params["dt"];
   model2
  ];
 
-model = initializeModel[parameters];
-model = propogateModel[parameters, model]
-
+ 
+ propagateModel[params_, model_, simulationDuration_Integer] :=
+  Fold[propagateModelStep[params, #1]&, model, Range[simulationDuration]];
+ 
+DynamicModule[{model = initializeModel[parameters]},
+  model = propagateModel[parameters, model, 15];
+  model
+]
 
 
 (* ::Input:: *)
