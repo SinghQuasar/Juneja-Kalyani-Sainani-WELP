@@ -10,7 +10,7 @@ parameters = <| (*agent energy is currently unbounded, but we can change that*)
   "metabolism" -> 0.2, (*energy lost due to metabolism*)
   "dt" -> 0.1, (*timestep in seconds (we can change this later)*)
   "foodEnergy" -> 5.0, (*how much energy 1 food particle gives*)
-  "foodSpawnCooldown" -> 20,
+  "foodSpawnCooldown" -> 1,
   "nFoodSpawn" -> 5,
   "nStartingAgents" -> 5,
   "nStartingFood" -> 20,
@@ -45,7 +45,7 @@ initializeModel[params_] :=
  ]
 
 propagateModelStep[params_, model_] := Module[{model2=model}, (*working on changing to DynamicModule/Manipulate. This propogateModel method is not confirmed to be working, but the indiivdual helper methods have been tested.*)
-  model2["foods"]   = spawnFoodCheck[model2, params];
+  (*model2["foods"]   = spawnFoodCheck[model2, params];*)
   model2            = randomizeAndKill[model2, params];
   model2            = agentActions[model2, params];
   model2            = metabolizeAgents[model2, params];
@@ -59,8 +59,31 @@ propagateModelStep[params_, model_] := Module[{model2=model}, (*working on chang
   Fold[propagateModelStep[params, #1]&, model, Range[simulationDuration]];
  
 DynamicModule[{model = initializeModel[parameters]},
-  model = propagateModel[parameters, model, 15];
+  model = propagateModel[parameters, model, 100];
   model
+]
+
+
+test1 = Block[
+{model = initializeModel[parameters]}, Table[
+  model = propagateModel[parameters, model, t];
+  {{model["bounds"], model["time"], Length@model["foods"], Length@model["agents"]},{Dataset@model["agents"], Dataset@model["foods"], SpanFromLeft,  SpanFromLeft}},
+{t, 0, 20, 1}
+  ]
+  
+];
+
+
+Manipulate[Grid@@test1[[i]], {i, 1, Length@test1}]
+
+
+Block[
+{model = initializeModel[parameters]}, Manipulate[
+  model = propagateModel[parameters, model, t];
+  Grid[{{model["bounds"], model["time"], Length@model["foods"], Length@model["agents"]},{Dataset@model["agents"], Dataset@model["foods"], SpanFromLeft}}],
+{t, 0, 30, 1}
+  ]
+  
 ]
 
 

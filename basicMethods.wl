@@ -157,5 +157,3 @@ model = agentActions[model, parameters]
 
 Length[model["foods"]]
 
-
-
