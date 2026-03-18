@@ -58,8 +58,10 @@ ageAgents[model_, params_] := Module[{agents = model["agents"], model2=model},
 	model2
 ]
 
-randomActionWalk[agent_, foods_, params_] := Module[{theta = RandomReal[{0, 2 Pi}], agent2 = agent},
-  agent2["pos"] = agent2["pos"] + {params["stepLength"] * Cos[theta], params["stepLength"] * Sin[theta]}; (*+ operator threadwise*)
+randomActionWalk[agent_, foods_, params_] := Module[{theta = RandomReal[{0, 2 Pi}], agent2 = agent, newPos, min, max},
+  {min, max} = params["squareBounds"];
+  newPos = agent2["pos"] + {params["stepLength"] * Cos[theta], params["stepLength"] * Sin[theta]}; (*+ operator threadwise*)
+  agent2["pos"] = Clip[newPos,  {min, max}];
   {agent2, foods}
 ];
 
@@ -157,4 +159,7 @@ findNearestSensableFoodI[#, model["foods"], parameters]& /@ model["agents"]
 model = agentActions[model, parameters]
 
 Length[model["foods"]]
+
+
+
 
