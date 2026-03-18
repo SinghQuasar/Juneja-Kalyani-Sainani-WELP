@@ -54,13 +54,64 @@ propagateModelStep[params_, model_] := Module[{model2=model}, (*working on chang
   model2
  ];
  
-displayGrid[model_] := Grid[{{"Food Length: "<>ToString@Length@model["foods"], "Time: "<>ToString@model["time"]}, {Dataset@model["agents"], Dataset@model["foods"]}}]
+displayGrid[model_, params_] := Module[
+  {
+    agents, foods, squareBounds, min, max, maxEnergy,
+    agentGraphics, foodGraphics, infoText
+  },
+
+  agents = model["agents"];
+  foods = model["foods"];
+  squareBounds = params["squareBounds"];
+  min = squareBounds[[1]];
+  max = squareBounds[[2]];
+  maxEnergy = params["startingEnergy"];
+
+  (* Energy color *)
+  energyColor[e_] := Which[
+    e >= maxEnergy, Green,
+    e >= 0.75 maxEnergy, Yellow,
+    e >= 0.5 maxEnergy, Orange,
+    True, Red
+  ];
+
+  (* Agents *)
+  agentGraphics = Table[
+    {energyColor[agent["energy"]], PointSize[0.02], Point[agent["pos"]], White, Text[Style[Row[{"(", NumberForm[agent["pos"][[1]], {4, 2}], ", ", NumberForm[agent["pos"][[2]], {4, 2}], ")", " , age: ", NumberForm[agent["age"], {3, 1}] }], 10], agent["pos"] + {0, 0.5}]},
+    {agent, agents}
+  ];
+
+  (* Food *)
+  foodGraphics = Table[
+    {White, PointSize[0.015], Point[f], Gray, Text[ Style[ Row[{ "(", NumberForm[f[[1]], {4, 2}], ", ", NumberForm[f[[2]], {4, 2}], ")" }], 9], f + {0, 0.3} ] }, {f, foods}];
+
+  (* Time and food count stuff *)
+  infoText = Text[ Style[Column[{
+        "Time: " <> ToString@NumberForm[model["time"], {4, 2}],
+        "Food Count: " <> ToString@Length[foods]}], 12, White],
+    {max - 1.2, max - 0.8}
+  ];
+
+  Graphics[
+    {agentGraphics, foodGraphics, infoText},
+    Background -> Black,
+    PlotRange -> {{min, max}, {min, max}},
+    ImageSize -> 500
+  ]
+]
 	 
-genSimulation[params_, model_, timesteps_] := Module[{model2 = model}, 
-	Join[{displayGrid[model]}, Table[ (*gives series*)
-		model2 = propagateModelStep[parameters, model2];
-		displayGrid[model2]
-	, {s, timesteps}]]]
+genSimulation[params_, model_, timesteps_] := Module[{model2 = model},
+  Join[{displayGrid[model, params]},
+    Table[
+      model2 = propagateModelStep[params, model2];
+      displayGrid[model2, params],
+      {s, timesteps}
+    ]
+  ]
+]
+
+(*old version of displayGrid*)
+(*displayGrid[model_] := Grid[{{"Food Length: "<>ToString@Length@model["foods"], "Time: "<>ToString@model["time"]}, {Dataset@model["agents"], Dataset@model["foods"]}}*)
 
 
 (* ::Input:: *)
