@@ -11,9 +11,9 @@ parameters = <| (*agent energy is currently unbounded, but we can change that*)
   "dt" -> 0.1, (*timestep in seconds (we can change this later)*)
   "foodEnergy" -> 5.0, (*how much energy 1 food particle gives*)
   "foodSpawnCooldown" -> 1,
-  "nFoodSpawn" -> 3,
+  "nFoodSpawn" -> 1,
   "nStartingAgents" -> 5,
-  "nStartingFood" -> 5,
+  "nStartingFood" -> 3,
   "squareBounds" -> {0, 10}, (*min, max. Square environment*)
   "startingEnergy" -> 10,
   "stepLength" -> 1,
@@ -45,12 +45,12 @@ initializeModel[params_] :=
  ]
 
 propagateModelStep[params_, model_] := Module[{model2=model}, (*working on changing to DynamicModule/Manipulate. This propogateModel method is not confirmed to be working, but the indiivdual helper methods have been tested.*)
-  (*model2["foods"]   = spawnFoodCheck[model2, params];*)
-  model2            = randomizeAndKill[model2, params]; (*randomization disabled for clarity atm.*)
-  model2            = agentActions[model2, params];
-  model2            = metabolizeAgents[model2, params];
-  model2            = ageAgents[model2, params];
-  model2["time"]    = model2["time"] + params["dt"];
+  model2 = spawnFoodCheck[model2, params];
+  model2 = randomizeAndKill[model2, params]; (*randomization disabled for clarity atm.*)
+  model2 = agentActions[model2, params];
+  model2 = metabolizeAgents[model2, params];
+  model2 = ageAgents[model2, params];
+  model2["time"] = model2["time"] + params["dt"];
   model2
  ];
  

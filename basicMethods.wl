@@ -36,8 +36,9 @@ updateAgentInformation[agentList_List, agentI_Integer, agentAttribute_String, ne
 
 spawnFoods[foods_, params_] := Join[foods, RandomReal[params["squareBounds"], {params["nFoodSpawn"], 2}]]
 
-spawnFoodCheck[model_, params_] := 
-	If[Mod[model["time"], params["foodSpawnCooldown"]] == 0, spawnFoods[model["foods"], params], model["foods"]]
+spawnFoodCheck[model_, params_] := Module[{model2 = model},
+	model2["foods"] = If[Mod[model["time"], params["foodSpawnCooldown"]] < 10^(-1), spawnFoods[model["foods"], params], model["foods"]];
+	model2]
 	
 randomizeAndKill[model_, params_] := Module[{agents = model["agents"], model2=model},	
 	(*agents = RandomSample[agents];*) (*disabled right now for clarity*)
