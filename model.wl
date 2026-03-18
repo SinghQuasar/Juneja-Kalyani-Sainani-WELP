@@ -100,15 +100,44 @@ displayGrid[model_, params_] := Module[
   ]
 ]
 	 
-genSimulation[params_, model_, timesteps_] := Module[{model2 = model},
-  Join[{displayGrid[model, params]},
+genSimulationStates[params_, model_, timesteps_] := Module[{model2 = model},
+  Join[{model},
     Table[
       model2 = propagateModelStep[params, model2];
-      displayGrid[model2, params],
+      model2,
       {s, timesteps}
     ]
   ]
 ]
+
+renderSimulation[states_List, params_] := displayGrid[#, params] & /@ states
+
+
+plotPopulationStats[simulation_List] := Module[
+  {times, agentCounts, foodCounts},
+  times = #["time"] & /@ simulation;
+  agentCounts = Length[#["agents"]] & /@ simulation;
+  foodCounts = Length[#["foods"]] & /@ simulation;
+
+  ListLinePlot[
+    {agentCounts, foodCounts},
+    DataRange  -> {First[times], Last[times]},
+    PlotLegends -> {"Agents", "Food"},
+    PlotStyle  -> {Blue, Green},
+    AxesLabel  -> {"Time", "Count"},
+    PlotLabel  -> "Population Over Time",
+    GridLines  -> Automatic,
+    ImageSize  -> 500
+  ]
+];
+
+model = initializeModel[parameters];
+Simulation = genSimulationStates[parameters, model, 100];
+simulationGraphics = renderSimulation[Simulation, parameters];
+
+Manipulate[simulationGraphics[[j]], {j, 1, Length@simulationGraphics, 1, Appearance->Labeled}]
+
+plotPopulationStats[Simulation]
 
 (*old version of displayGrid*)
 (*displayGrid[model_] := Grid[{{"Food Length: "<>ToString@Length@model["foods"], "Time: "<>ToString@model["time"]}, {Dataset@model["agents"], Dataset@model["foods"]}}*)
@@ -119,3 +148,7 @@ genSimulation[params_, model_, timesteps_] := Module[{model2 = model},
 (*Simulation = genSimulation[parameters, model, 100];*)
 (**)
 (*Manipulate[Simulation[[j]], {j, 1, Length@Simulation, 1, Appearance->Labeled}]*)
+(*(*OR*)*)
+(*(*ListAnimate[Simulation, AnimationRate -> 10]*)*)
+(**)
+(**)
