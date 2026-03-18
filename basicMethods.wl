@@ -40,7 +40,7 @@ spawnFoodCheck[model_, params_] :=
 	If[Mod[model["time"], params["foodSpawnCooldown"]] == 0, spawnFoods[model["foods"], params], model["foods"]]
 	
 randomizeAndKill[model_, params_] := Module[{agents = model["agents"], model2=model},	
-	agents = RandomSample[agents];
+	(*agents = RandomSample[agents];*) (*disabled right now for clarity*)
 	model2["agents"] = Select[agents, (#["age"] < params["lifespan"] && #["energy"] > 0)&];
 	model2
 ]
