@@ -92,8 +92,16 @@ displayGrid[model_, params_] := Module[
     {max - 1.2, max - 0.8}
   ];
 
+ legend = {
+    Green,  PointSize[0.02],  Point[{min + 0.3, max - 0.5}], White, Text[Style["Full energy", 10], {min + 1.2, max - 0.5}],
+    Yellow, PointSize[0.02],  Point[{min + 0.3, max - 1.0}], White, Text[Style["75% energy",  10], {min + 1.2, max - 1.0}],
+    Orange, PointSize[0.02],  Point[{min + 0.3, max - 1.5}], White, Text[Style["50% energy",  10], {min + 1.2, max - 1.5}],
+    Red,    PointSize[0.02],  Point[{min + 0.3, max - 2.0}], White, Text[Style["Low energy",  10], {min + 1.2, max - 2.0}],
+    White,  PointSize[0.015], Point[{min + 0.3, max - 2.5}], White, Text[Style["Food",        10], {min + 1.2, max - 2.5}]
+  };
+
   Graphics[
-    {agentGraphics, foodGraphics, infoText},
+    {agentGraphics, foodGraphics, infoText, legend},
     Background -> Black,
     PlotRange -> {{min, max}, {min, max}},
     ImageSize -> 500
@@ -111,7 +119,6 @@ genSimulationStates[params_, model_, timesteps_] := Module[{model2 = model},
 ]
 
 renderSimulation[states_List, params_] := displayGrid[#, params] & /@ states
-
 
 plotPopulationStats[simulation_List] := Module[
   {times, agentCounts, foodCounts},
