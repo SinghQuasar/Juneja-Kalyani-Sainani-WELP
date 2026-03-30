@@ -55,10 +55,7 @@ propagateModelStep[params_, model_] := Module[{model2=model}, (*working on chang
  ];
  
 displayGrid[model_, params_] := Module[
-  {
-    agents, foods, squareBounds, min, max, maxEnergy,
-    agentGraphics, foodGraphics, infoText
-  },
+  {agents, foods, squareBounds, min, max, maxEnergy, agentGraphics, foodGraphics, infoText, legend, barW, barH, barOffset, textOffset},
 
   agents = model["agents"];
   foods = model["foods"];
@@ -67,56 +64,83 @@ displayGrid[model_, params_] := Module[
   max = squareBounds[[2]];
   maxEnergy = params["startingEnergy"];
 
-  (* Energy color *)
-  energyColor[e_] := Which[
-    e >= maxEnergy, Green,
-    e >= 0.75 maxEnergy, Yellow,
-    e >= 0.5 maxEnergy, Orange,
-    True, Red
-  ];
+  (* size of the bar *)
+  barW = 0.7;
+  barH = 0.12;
+  barOffset = 0.22;
+  textOffset = 0.42;
 
-  (* Agents *)
+  energyColor[frac_] := Blend[{Red, Yellow, Green}, frac];
+  
   agentGraphics = Table[
-    {energyColor[agent["energy"]], PointSize[0.02], Point[agent["pos"]], White, Text[Style[Row[{"(", NumberForm[agent["pos"][[1]], {4, 2}], ", ", NumberForm[agent["pos"][[2]], {4, 2}], ")", " , age: ", NumberForm[agent["age"], {3, 1}] }], 10], agent["pos"] + {0, 0.5}]},
-    {agent, agents}
-  ];
+    Module[
+      {pos, e, age, frac, percent, verticalDir, xShift, barCenter, barLeft, barBottom, textPos},
+      pos = agent["pos"];
+      e = agent["energy"];
+      age = agent["age"];
+      frac = Clip[e/maxEnergy, {0, 1}];
+      percent = Round[100 frac];
+      verticalDir = If[pos[[2]] > max - 0.8, -1, 1];
+      
+      xShift = Which[
+        pos[[1]] < min + 1.2, 0.55,
+        pos[[1]] > max - 1.2, -0.55,
+        True, 0
+      ];
 
-  (* Food *)
-  foodGraphics = Table[
-    {White, PointSize[0.015], Point[f], Gray, Text[ Style[ Row[{ "(", NumberForm[f[[1]], {4, 2}], ", ", NumberForm[f[[2]], {4, 2}], ")" }], 9], f + {0, 0.3} ] }, {f, foods}];
+      barCenter = pos + {xShift, verticalDir*barOffset};
+      barLeft = barCenter[[1]] - barW/2;
+      barBottom = barCenter[[2]] - barH/2;
 
-  (* Time and food count stuff *)
-  infoText = Text[ Style[Column[{
-        "Time: " <> ToString@NumberForm[model["time"], {4, 2}],
-        "Food Count: " <> ToString@Length[foods]}], 12, White],
-    {max - 1.2, max - 0.8}
-  ];
+      textPos = pos + {xShift, verticalDir*textOffset};
 
- legend = {
-    Green,  PointSize[0.02],  Point[{min + 0.3, max - 0.5}], White, Text[Style["Full energy", 10], {min + 1.2, max - 0.5}],
-    Yellow, PointSize[0.02],  Point[{min + 0.3, max - 1.0}], White, Text[Style["75% energy",  10], {min + 1.2, max - 1.0}],
-    Orange, PointSize[0.02],  Point[{min + 0.3, max - 1.5}], White, Text[Style["50% energy",  10], {min + 1.2, max - 1.5}],
-    Red,    PointSize[0.02],  Point[{min + 0.3, max - 2.0}], White, Text[Style["Low energy",  10], {min + 1.2, max - 2.0}],
-    White,  PointSize[0.015], Point[{min + 0.3, max - 2.5}], White, Text[Style["Food",        10], {min + 1.2, max - 2.5}]
+      {
+        (* agent *)
+        Blue, PointSize[0.02], Point[pos],
+
+        (* coordinates + age *)
+        White, Text[Style[Row[{"(",NumberForm[pos[[1]], {4, 2}], ", ", NumberForm[pos[[2]], {4, 2}],")  age: ",NumberForm[age, {3, 1}]}],10],textPos],
+
+        (* energy bar background *)
+        EdgeForm[Directive[White, Thickness[0.0015]]], Darker[Gray, 0.7], Rectangle[{barLeft, barBottom}, {barLeft + barW, barBottom + barH}],
+
+        (* energy fill *)
+        energyColor[frac], Rectangle[{barLeft, barBottom}, {barLeft + barW*frac, barBottom + barH}],
+
+        (* percent centered inside bar *)
+        Magenta, Text[Style[ToString[percent], 8],barCenter]}
+    ],{agent, agents}];
+
+  foodGraphics = Table[{White, PointSize[0.015], Point[f], Gray, Text[Style[Row[{"(",NumberForm[f[[1]], {4, 2}], ", ",NumberForm[f[[2]], {4, 2}],")"}],8],f + {0, 0.22}]},{f, foods}];
+
+  infoText = Text[Style[Column[{"Time: " <> ToString@NumberForm[model["time"], {4, 2}],"Food Count: " <> ToString@Length[foods]}],12,White],{max - 1.2, max - 0.8}];
+
+  legend = {
+    Blue, PointSize[0.02], Point[{min + 0.35, max - 0.45}],
+    White, Text[Style["Agent", 10], {min + 1.1, max - 0.45}],
+
+    EdgeForm[Directive[White, Thickness[0.0015]]],
+    Darker[Gray, 0.7],
+    Rectangle[{min + 0.1, max - 1.05}, {min + 0.8, max - 0.93}],
+    Blend[{Red, Yellow, Green}, 0.75],
+    Rectangle[{min + 0.1, max - 1.05}, {min + 0.625, max - 0.93}],
+    White, Text[Style["Energy bar", 10], {min + 1.35, max - 0.99}],
+
+    White, PointSize[0.015], Point[{min + 0.35, max - 1.55}],
+    White, Text[Style["Food", 10], {min + 1.1, max - 1.55}]
   };
 
   Graphics[
     {agentGraphics, foodGraphics, infoText, legend},
     Background -> Black,
     PlotRange -> {{min, max}, {min, max}},
+    PlotRangePadding -> Scaled[0.05],
+    ImagePadding -> 25,
     ImageSize -> 500
   ]
-]
+] 
 	 
-genSimulationStates[params_, model_, timesteps_] := Module[{model2 = model},
-  Join[{model},
-    Table[
-      model2 = propagateModelStep[params, model2];
-      model2,
-      {s, timesteps}
-    ]
-  ]
-]
+genSimulationStates[params_, model_, timesteps_] := Module[{model2 = model}, Join[{model},Table[model2 = propagateModelStep[params, model2];model2,{s, timesteps}]]]
 
 renderSimulation[states_List, params_] := displayGrid[#, params] & /@ states
 
