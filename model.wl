@@ -98,16 +98,16 @@ displayGrid[model_, params_] := Module[
         (* agent *)
         Blue, PointSize[0.02], Point[pos],
 
-        (* coordinates + age *)
+        (* coordinates and age *)
         White, Text[Style[Row[{"(",NumberForm[pos[[1]], {4, 2}], ", ", NumberForm[pos[[2]], {4, 2}],")  age: ",NumberForm[age, {3, 1}]}],10],textPos],
 
-        (* energy bar background *)
+        (* energy bar *)
         EdgeForm[Directive[White, Thickness[0.0015]]], Darker[Gray, 0.7], Rectangle[{barLeft, barBottom}, {barLeft + barW, barBottom + barH}],
 
         (* energy fill *)
         energyColor[frac], Rectangle[{barLeft, barBottom}, {barLeft + barW*frac, barBottom + barH}],
 
-        (* percent centered inside bar *)
+        (* percent in the bar *)
         Magenta, Text[Style[ToString[percent], 8],barCenter]}
     ],{agent, agents}];
 
