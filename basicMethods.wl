@@ -9,7 +9,7 @@ checkWithinRadius[p1_, p2_, r_] := EuclideanDistance[p1, p2] <= r; (*agent's rad
 checkFoodWithinRadius[agentPos_, foodPos_, proxRadius_] :=
   checkWithinRadius[agentPos, foodPos, proxRadius];
 
-(*checking the proximity for all foods and putting it into a list*)
+(*checking the proximity for all foods and putting it into a list. Implement grid/sector based optimization later.*)
 findNearestSensableFoodI[agent_, foodPositions_List, params_] := Module[{agentPos, foodPosAndI, foodsWithinRadiusPosAndI, dists, closest},
   agentPos = agent["pos"];
   foodPosAndI = Table[{foodPositions[[i]], i}, {i, Length[foodPositions]}];
@@ -20,7 +20,7 @@ findNearestSensableFoodI[agent_, foodPositions_List, params_] := Module[{agentPo
     closest = First@MinimalBy[dists, First];
     closest[[2]]
   ]
-];
+]
 
 createAgent[pos_, energy_, age_] :=
   <|
@@ -63,18 +63,20 @@ randomActionWalk[agent_, params_] := Module[{theta = RandomReal[{0, 2 Pi}], agen
   newPos = agent2["pos"] + {params["stepLength"] * Cos[theta], params["stepLength"] * Sin[theta]}; (*+ operator threadwise*)
   agent2["pos"] = Clip[newPos,  {min, max}];
   agent2
-];
+]
 
-agentEat[agent_, params_] := Module[{agent2 = agent},
-	agent2["energy"] = agent2["energy"] + params["foodEnergy"];
+agentEat[agent_, params_] := Module[{agent2 = agent, newE},
+	newE = agent2["energy"] + params["foodEnergy"];
+	agent2["energy"] = If[newE > params["maxEnergy"], params["maxEnergy"], newE];
 	agent2
 ]
 
+(*I believe agents will never have more than max energy due to metabolism sending it to max-1 metabolism*)
 agentActions[model_, params_] :=  Module[{model2 = model, agents = model["agents"], foods = model["foods"], agent, nearFoodI},
 	agents = Table[
-	agent=agents[[i]];
+	agent = agents[[i]];
 	nearFoodI = findNearestSensableFoodI[agent, foods, params];
-		If[nearFoodI>=1,foods = Delete[foods, nearFoodI]; agentEat[agent,params], randomActionWalk[agent, params]]
+		If[nearFoodI>=1, foods = Delete[foods, nearFoodI]; agentEat[agent,params], randomActionWalk[agent, params]]
 		,{i,Length@agents}
 	];
 	model2["foods"] = foods;

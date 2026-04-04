@@ -6,7 +6,7 @@ SetDirectory[scriptDir];
 (*<< basicMethods.wl -- we're initializing them in the kernel right now, but working on changing to formal package*)
 
 parameters = <| (*agent energy is currently unbounded, but we can change that*)
-  "proximityRadius" -> 2.0, (*proximity radius for food consumption action*)
+  "proximityRadius" -> 1, (*proximity radius for food consumption action*)
   "metabolism" -> 0.2, (*energy lost due to metabolism*)
   "dt" -> 0.1, (*timestep in seconds (we can change this later)*)
   "foodEnergy" -> 5.0, (*how much energy 1 food particle gives*)
@@ -14,12 +14,19 @@ parameters = <| (*agent energy is currently unbounded, but we can change that*)
   "nFoodSpawn" -> 1,
   "nStartingAgents" -> 5,
   "nStartingFood" -> 3,
-  "squareBounds" -> {0, 10}, (*min, max. Square environment*)
+  "squareBounds" -> {0, 5}, (*min, max. Square environment*)
   "startingEnergy" -> 10,
   "stepLength" -> 1,
   "lifespan" -> 20, (*20 units*)
-  "maxEnergy" -> 10
+  "maxEnergy" -> 10,
+  "imageSize" -> 500,
+  "agentSize" -> 0.0005, (*radius in pure length units*)
+  "foodSize" -> 0.0003
 |>;
+
+(*useful for image scaling...*)
+lUnitsToPixels[lUnits_, params_] := lUnits * (params["imageSize"]/(params["squareBounds"][[2]] - params["squareBounds"][[1]]))
+lPixelsToUnits[lPixels_, params_]:= lPixels * ((params["squareBounds"][[2]] - params["squareBounds"][[1]])/params["imageSize"])
 
 initializeModel[params_] :=
 
@@ -97,7 +104,7 @@ displayGrid[model_, params_] := Module[
 
       {
         (* agent *)
-        Blue, PointSize[0.02], Point[pos],
+        Blue, PointSize[lUnitsToPixels[params["agentSize"], params]], Point[pos],
 
         (* coordinates and age *)
         White, Text[Style[Row[{"(",NumberForm[pos[[1]], {4, 2}], ", ", NumberForm[pos[[2]], {4, 2}],")  age: ",NumberForm[age, {3, 1}]}],10],textPos],
@@ -112,7 +119,7 @@ displayGrid[model_, params_] := Module[
         Magenta, Text[Style[ToString[percent], 8],barCenter]}
     ],{agent, agents}];
 
-  foodGraphics = Table[{White, PointSize[0.015], Point[f], Gray, Text[Style[Row[{"(",NumberForm[f[[1]], {4, 2}], ", ",NumberForm[f[[2]], {4, 2}],")"}],8],f + {0, 0.22}]},{f, foods}];
+  foodGraphics = Table[{White, PointSize[lUnitsToPixels[params["foodSize"], params]], Point[f], Gray, Text[Style[Row[{"(",NumberForm[f[[1]], {4, 2}], ", ",NumberForm[f[[2]], {4, 2}],")"}],8],f + {0, 0.22}]},{f, foods}];
 
   infoText = Text[Style[Column[{"Time: " <> ToString@NumberForm[model["time"], {4, 2}],"Food Count: " <> ToString@Length[foods]}],12,White],{max - 1.2, max - 0.8}];
 
@@ -137,7 +144,7 @@ displayGrid[model_, params_] := Module[
     PlotRange -> {{min, max}, {min, max}},
     PlotRangePadding -> Scaled[0.05],
     ImagePadding -> 25,
-    ImageSize -> 500
+    ImageSize -> params["imageSize"]
   ]
 ] 
 	 
