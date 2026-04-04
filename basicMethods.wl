@@ -3,7 +3,7 @@
 scriptDir = NotebookDirectory[];
 SetDirectory[scriptDir];
 
-checkWithinRadius[p1_, p2_, r_] := EuclideanDistance[p1, p2] ≤ r; (*agent's radius*)
+checkWithinRadius[p1_, p2_, r_] := EuclideanDistance[p1, p2] <= r; (*agent's radius*)
 
 (*checking the proximity for 1 food particle*)
 checkFoodWithinRadius[agentPos_, foodPos_, proxRadius_] :=
@@ -24,13 +24,13 @@ findNearestSensableFoodI[agent_, foodPositions_List, params_] := Module[{agentPo
 
 createAgent[pos_, energy_, age_] :=
   <|
-    "pos"  pos,
-    "energy"  energy,
-    "age"  age
+    "pos" -> pos,
+    "energy" -> energy,
+    "age" -> age
   |>
   
 updateAgentInformation[agentList_List, agentI_Integer, agentAttribute_String, newValue_] := Module[{agents = agentList},
-	agents[[agentI]] = ReplacePart[agents[[agentI]], agentAttribute  newValue];
+	agents[[agentI]] = ReplacePart[agents[[agentI]], agentAttribute -> newValue];
 	agents
 ]
 
@@ -74,8 +74,8 @@ agentActions[model_, params_] :=  Module[{model2 = model, agents = model["agents
 	agents = Table[
 	agent=agents[[i]];
 	nearFoodI = findNearestSensableFoodI[agent, foods, params];
-		If[nearFoodI≥1,foods = Delete[foods, nearFoodI]; agentEat[agent,params], randomActionWalk[agent, params]]
-		,{i,Length@agents }
+		If[nearFoodI>=1,foods = Delete[foods, nearFoodI]; agentEat[agent,params], randomActionWalk[agent, params]]
+		,{i,Length@agents}
 	];
 	model2["foods"] = foods;
 	model2["agents"] = agents;
