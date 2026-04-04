@@ -17,7 +17,8 @@ parameters = <| (*agent energy is currently unbounded, but we can change that*)
   "squareBounds" -> {0, 10}, (*min, max. Square environment*)
   "startingEnergy" -> 10,
   "stepLength" -> 1,
-  "lifespan" -> 20 (*20 units*)
+  "lifespan" -> 20, (*20 units*)
+  "maxEnergy" -> 10
 |>;
 
 initializeModel[params_] :=
