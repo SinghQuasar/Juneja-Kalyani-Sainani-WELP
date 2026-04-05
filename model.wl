@@ -21,7 +21,12 @@ parameters = <| (*agent energy is currently unbounded, but we can change that*)
   "maxEnergy" -> 10,
   "imageSize" -> 500,
   "agentSize" -> 0.0005, (*radius in pure length units*)
-  "foodSize" -> 0.0003
+  "foodSize" -> 0.0003,
+  "reproductionRadius" -> 1.5,
+  "minReproductionEnergy" -> 6.0,
+  "minReproductionAge" -> 2.0,
+  "reproductionEnergyCost" -> 3.0,
+  "nextAgentID" -> 1
 |>;
 
 (*useful for image scaling...*)
@@ -39,7 +44,7 @@ initializeModel[params_] :=
 
     agents =
     Table[
-      createAgent[RandomReal[{min, max}, 2], startingEnergy, 0.0], nStartingAgents
+      createAgent[RandomReal[{min, max}, 2], startingEnergy, 0.0, i], {i, nStartingAgents}
     ];
 
     foods = RandomReal[{min, max}, {nStartingFood, 2}];
@@ -48,14 +53,17 @@ initializeModel[params_] :=
       "agents" -> agents, (*list of agent associations*)
       "foods" -> foods, (*list of food coordinates*)
       "bounds" -> {min, max},
-      "time" -> 0
+      "time" -> 0,
+      "nextAgentID" -> nStartingAgents + 1
     |>
  ]
 
-propagateModelStep[params_, model_] := Module[{model2=model}, (*working on changing to DynamicModule/Manipulate. This propogateModel method is not confirmed to be working, but the indiivdual helper methods have been tested.*)
+propagateModelStep[params_, model_] := Module[{model2=model, params2=params}, (*working on changing to DynamicModule/Manipulate. This propogateModel method is not confirmed to be working, but the indiivdual helper methods have been tested.*)
+  params2["nextAgentID"] = model2["nextAgentID"];
   model2 = spawnFoodCheck[model2, params];
   model2 = randomizeAndKill[model2, params]; (*randomization disabled for clarity atm.*)
   model2 = agentActions[model2, params];
+  model2 = reproduceAgents[model2, params2];
   model2 = metabolizeAgents[model2, params];
   model2 = ageAgents[model2, params];
   model2["time"] = model2["time"] + params["dt"];

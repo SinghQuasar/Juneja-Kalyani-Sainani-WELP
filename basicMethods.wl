@@ -22,11 +22,13 @@ findNearestSensableFoodI[agent_, foodPositions_List, params_] := Module[{agentPo
   ]
 ]
 
-createAgent[pos_, energy_, age_] :=
+createAgent[pos_, energy_, age_, id_, parents_:{-1, -1}] :=
   <|
     "pos" -> pos,
     "energy" -> energy,
-    "age" -> age
+    "age" -> age,
+	"id" -> id,
+	"parents" -> parents
   |>
   
 updateAgentInformation[agentList_List, agentI_Integer, agentAttribute_String, newValue_] := Module[{agents = agentList},
@@ -82,4 +84,58 @@ agentActions[model_, params_] :=  Module[{model2 = model, agents = model["agents
 	model2["foods"] = foods;
 	model2["agents"] = agents;
 	model2
+]
+
+findClosestAgentI[agentI_Integer, agents_List] := Module[{pos, dists, closest},
+  If[Length[agents] < 2, Return[-1]];
+  pos = agents[[agentI]]["pos"];
+  dists = Table[
+    If[i == agentI, Infinity, EuclideanDistance[pos, agents[[i]]["pos"]]],
+    {i, Length[agents]}
+  ];
+  closest = First@Ordering[dists, 1];
+  closest
+]
+
+reproduceAgents[model_, params_] := Module[
+  {agents = model["agents"], model2 = model, newAgents = {}, 
+   reproduced, nextID, i, j, ai, aj, dist, midPos, newAgent},
+
+  nextID = params["nextAgentID"];
+  reproduced = ConstantArray[False, Length[agents]];
+
+  Do[
+    If[reproduced[[i]], Continue[]];
+    j = findClosestAgentI[i, agents];
+    If[j == -1 || reproduced[[j]], Continue[]];
+
+    ai = agents[[i]];
+    aj = agents[[j]];
+    dist = EuclideanDistance[ai["pos"], aj["pos"]];
+
+    If[dist <= params["reproductionRadius"] &&
+       ai["energy"] >= params["minReproductionEnergy"] &&
+       aj["energy"] >= params["minReproductionEnergy"] &&
+       ai["age"] >= params["minReproductionAge"] &&
+       aj["age"] >= params["minReproductionAge"],
+
+      (* both parents pay energy cost *)
+      agents[[i]] = ReplacePart[agents[[i]], 
+        "energy" -> ai["energy"] - params["reproductionEnergyCost"]];
+      agents[[j]] = ReplacePart[agents[[j]], 
+        "energy" -> aj["energy"] - params["reproductionEnergyCost"]];
+
+      midPos = (ai["pos"] + aj["pos"]) / 2;
+      newAgent = createAgent[midPos, params["startingEnergy"] / 2, 0.0, nextID, {ai["id"], aj["id"]}];
+      AppendTo[newAgents, newAgent];
+      nextID++;
+
+      reproduced[[i]] = True;
+      reproduced[[j]] = True;
+    ];
+  , {i, Length[agents]}];
+
+  model2["agents"] = Join[agents, newAgents];
+  model2["nextAgentID"] = nextID;
+  model2
 ]
