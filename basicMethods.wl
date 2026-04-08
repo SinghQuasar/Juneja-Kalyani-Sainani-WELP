@@ -105,6 +105,15 @@ findClosestAgentI[agentI_Integer, agents_List] := Module[{pos, dists, closest},
   closest
 ]
 
+areRelated[ai_, aj_] := Module[{},
+  (* parent-child check *)
+  If[MemberQ[aj["parents"], ai["id"]] || MemberQ[ai["parents"], aj["id"]], Return[True]];
+  (* sibling check: share at least one parent, excluding the {-1,-1} default *)
+  If[ai["parents"] =!= {-1, -1} && aj["parents"] =!= {-1, -1} &&
+     Length[Intersection[ai["parents"], aj["parents"]]] > 0, Return[True]];
+  False
+]
+
 reproduceAgents[model_, params_] := Module[
   {agents = model["agents"], model2 = model, newAgents = {}, 
    reproduced, nextID, i, j, ai, aj, dist, midPos, newAgent},
@@ -125,7 +134,8 @@ reproduceAgents[model_, params_] := Module[
        ai["energy"] >= params["minReproductionEnergy"] &&
        aj["energy"] >= params["minReproductionEnergy"] &&
        ai["age"] >= params["minReproductionAge"] &&
-       aj["age"] >= params["minReproductionAge"],
+       aj["age"] >= params["minReproductionAge"] &&
+       !areRelated[ai, aj],
 
       (* both parents pay energy cost *)
       agents[[i]] = ReplacePart[agents[[i]], 
