@@ -1,12 +1,13 @@
 (* ::Package:: *)
 
-scriptDir = NotebookDirectory[];
-SetDirectory[scriptDir];
+SetDirectory[NotebookDirectory[]];
+Needs["BasicMethods`"]
 
 (*<< basicMethods.wl -- we're initializing them in the kernel right now, but working on changing to formal package*)
 
 parameters = <| (*agent energy is currently unbounded, but we can change that*)
   "proximityRadius" -> 1, (*proximity radius for food consumption action*)
+  "sensingDistance" -> 1,
   "metabolism" -> 0.2, (*energy lost due to metabolism*)
   "dt" -> 0.1, (*timestep in seconds (we can change this later)*)
   "foodEnergy" -> 5.0, (*how much energy 1 food particle gives*)
@@ -14,7 +15,7 @@ parameters = <| (*agent energy is currently unbounded, but we can change that*)
   "nFoodSpawn" -> 1,
   "nStartingAgents" -> 5,
   "nStartingFood" -> 3,
-  "squareBounds" -> {0, 5}, (*min, max. Square environment*)
+  "squareBounds" -> {0, 10}, (*min, max. Square environment*)
   "startingEnergy" -> 10,
   "stepLength" -> 1,
   "lifespan" -> 20, (*20 units*)
@@ -190,12 +191,4 @@ plotPopulationStats[Simulation]
 (*displayGrid[model_] := Grid[{{"Food Length: "<>ToString@Length@model["foods"], "Time: "<>ToString@model["time"]}, {Dataset@model["agents"], Dataset@model["foods"]}}*)
 
 
-(* ::Input:: *)
-(*model = initializeModel[parameters];*)
-(*Simulation = genSimulation[parameters, model, 100];*)
-(**)
-(*Manipulate[Simulation[[j]], {j, 1, Length@Simulation, 1, Appearance->Labeled}]*)
-(*(*OR*)*)
-(*(*ListAnimate[Simulation, AnimationRate -> 10]*)*)
-(**)
-(**)
+
