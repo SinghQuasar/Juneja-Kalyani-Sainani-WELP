@@ -15,14 +15,14 @@ parameters = <| (*agent energy is currently unbounded, but we can change that*)
   "nFoodSpawn" -> 1,
   "nStartingAgents" -> 5,
   "nStartingFood" -> 3,
-  "squareBounds" -> {0, 10}, (*min, max. Square environment*)
+  "squareBounds" -> {0, 5}, (*min, max. Square environment*)
   "startingEnergy" -> 10,
   "stepLength" -> 1,
   "lifespan" -> 20, (*20 units*)
   "maxEnergy" -> 10,
   "imageSize" -> 500,
-  "agentSize" -> 0.0005, (*radius in pure length units*)
-  "foodSize" -> 0.0003,
+  "agentSize" -> 0.025, (*radius in pure length units*)
+  "foodSize" -> 0.01,
   "reproductionRadius" -> 1.5,
   "minReproductionEnergy" -> 6.0,
   "minReproductionAge" -> 2.0,
@@ -72,87 +72,98 @@ propagateModelStep[params_, model_] := Module[{model2=model, params2=params}, (*
  ];
  
 displayGrid[model_, params_] := Module[
-  {agents, foods, squareBounds, min, max, maxEnergy, agentGraphics, foodGraphics, infoText, legend, barW, barH, barOffset, textOffset},
+  {
+    agents, foods, min, max, span, nAgents,
+    hudPad, agentR, foodR, barW, barH, barGap,
+    showEnergyBars, legendX, legendY, infoX, infoY,
+    ageColor, ageTextColor, energyColor,
+    chooseBarCenter, otherAgentPositions,
+    agentGraphics, foodGraphics, legend, infoText
+  },
 
   agents = model["agents"];
   foods = model["foods"];
-  squareBounds = params["squareBounds"];
-  min = squareBounds[[1]];
-  max = squareBounds[[2]];
-  maxEnergy = params["startingEnergy"];
+  {min, max} = params["squareBounds"];
+  span = max - min;
+  nAgents = Length[agents];
 
-  (* size of the bar *)
-  barW = 0.7;
-  barH = 0.12;
-  barOffset = 0.22;
-  textOffset = 0.42;
+  agentR = params["agentSize"]*span;
+  foodR  = params["foodSize"]*span;
 
-  energyColor[frac_] := Blend[{Red, Yellow, Green}, frac];
-  
+  barW = 0.10 span;
+  barH = 0.015 span;
+  barGap = 0.040 span;
+
+  hudPad = 0.001 span;
+
+  showEnergyBars = nAgents < 6;
+
+  ageColor[age_] := Blend[{Green, Yellow, Orange, Red},Clip[age/(0.3 params["lifespan"]), {0, 1}]];
+  ageTextColor[age_] := If[age < 0.6 params["lifespan"], Black, White];
+  energyColor[frac_] := Blend[{Red, Yellow, Green},Clip[frac, {0, 1}]];
+  otherAgentPositions[pos_] := DeleteCases[Lookup[agents, "pos"], pos];
+  chooseBarCenter[pos_, others_] := Module[{candidates, scores},candidates = {pos + {0, barGap},pos + {0, -barGap},pos + {barGap, 0},pos + {-barGap, 0}};
+
+    candidates = {
+      {Clip[candidates[[1, 1]], {min + barW/2, max - barW/2}], Clip[candidates[[1, 2]], {min + barH/2, max - barH/2}]},
+      {Clip[candidates[[2, 1]], {min + barW/2, max - barW/2}], Clip[candidates[[2, 2]], {min + barH/2, max - barH/2}]},
+      {Clip[candidates[[3, 1]], {min + barW/2, max - barW/2}], Clip[candidates[[3, 2]], {min + barH/2, max - barH/2}]},
+      {Clip[candidates[[4, 1]], {min + barW/2, max - barW/2}], Clip[candidates[[4, 2]], {min + barH/2, max - barH/2}]}};
+
+    scores = If[Length[others] == 0, ConstantArray[1, Length[candidates]], Min[Norm[# - #2] & @@@ Tuples[{{#}, others}]] & /@ candidates];
+
+    candidates[[First @ Ordering[scores, -1]]]];
+
   agentGraphics = Table[
     Module[
-      {pos, e, age, frac, percent, verticalDir, xShift, barCenter, barLeft, barBottom, textPos},
-      pos = agent["pos"];
-      e = agent["energy"];
-      age = agent["age"];
-      frac = Clip[e/maxEnergy, {0, 1}];
-      percent = Round[100 frac];
-      verticalDir = If[pos[[2]] > max - 0.8, -1, 1];
-      
-      xShift = Which[
-        pos[[1]] < min + 1.2, 0.55,
-        pos[[1]] > max - 1.2, -0.55,
-        True, 0
-      ];
+      {
+        pos, age, e, frac, percent,
+        fillColor, txtColor,
+        barCenter, barLeft, barBottom
+      },
 
-      barCenter = pos + {xShift, verticalDir*barOffset};
+      pos = agent["pos"];
+      age = agent["age"];
+      e = agent["energy"];
+
+      frac = Clip[e/params["maxEnergy"], {0, 1}];
+      percent = Round[100 frac];
+
+      fillColor = ageColor[age];
+      txtColor = ageTextColor[age];
+
+      barCenter = chooseBarCenter[pos, otherAgentPositions[pos]];
       barLeft = barCenter[[1]] - barW/2;
       barBottom = barCenter[[2]] - barH/2;
 
-      textPos = pos + {xShift, verticalDir*textOffset};
+      {EdgeForm[Directive[White, Thickness[0.0015]]],fillColor,Disk[pos, agentR],Text[Style[ToString[Round[age]],Max[7, Round[0.018 params["imageSize"]]],txtColor,Bold],pos],
 
-      {
-        (* agent *)
-        Blue, PointSize[lUnitsToPixels[params["agentSize"], params]], Point[pos],
+        If[showEnergyBars,{EdgeForm[Directive[White, Thickness[0.0012]]],Darker[Gray, 0.75],Rectangle[{barLeft, barBottom},{barLeft + barW, barBottom + barH}],energyColor[frac],
+        Rectangle[{barLeft, barBottom},{barLeft + barW frac, barBottom + barH}],
+            Text[Style[ToString[percent],Max[6, Round[0.014 params["imageSize"]]],Magenta],barCenter]},Nothing]}],{agent, agents}];
 
-        (* coordinates and age *)
-        White, Text[Style[Row[{"(",NumberForm[pos[[1]], {4, 2}], ", ", NumberForm[pos[[2]], {4, 2}],")  age: ",NumberForm[age, {3, 1}]}],10],textPos],
+  foodGraphics = Table[{White,Disk[f, foodR]},{f, foods}];
 
-        (* energy bar *)
-        EdgeForm[Directive[White, Thickness[0.0015]]], Darker[Gray, 0.7], Rectangle[{barLeft, barBottom}, {barLeft + barW, barBottom + barH}],
+  legendX = min + hudPad;
+  legendY = max - hudPad;
 
-        (* energy fill *)
-        energyColor[frac], Rectangle[{barLeft, barBottom}, {barLeft + barW*frac, barBottom + barH}],
+  infoX = max - hudPad;
+  infoY = max - hudPad;
 
-        (* percent in the bar *)
-        Magenta, Text[Style[ToString[percent], 8],barCenter]}
-    ],{agent, agents}];
+  legend = {Text[Style["Legend", 11, White, Bold],{legendX, legendY},{-1, 1}],
+  EdgeForm[Directive[White, Thickness[0.0015]]],ageColor[0.2 params["lifespan"]],Disk[{legendX + 0.020 span, legendY - 0.050 span}, params["foodSize"]*span*1.3],Text[Style["Agent", 9, White],{legendX + 0.042 span, legendY - 0.050 span},{-1, 0}],
 
-  foodGraphics = Table[{White, PointSize[lUnitsToPixels[params["foodSize"], params]], Point[f], Gray, Text[Style[Row[{"(",NumberForm[f[[1]], {4, 2}], ", ",NumberForm[f[[2]], {4, 2}],")"}],8],f + {0, 0.22}]},{f, foods}];
+    If[showEnergyBars,{EdgeForm[Directive[White, Thickness[0.0012]]],Darker[Gray, 0.75],Rectangle[{legendX, legendY - 0.090 span},{legendX + 0.070 span, legendY - 0.077 span}],energyColor[0.75],Rectangle[{legendX, legendY - 0.090 span},{legendX + 0.0525 span, legendY - 0.077 span}],
+        Text[Style["Energy", 9, White],{legendX + 0.085 span, legendY - 0.0835 span},{-1, 0}]},Nothing],White,Disk[{legendX + 0.020 span, legendY - 0.130 span}, params["foodSize"]*span],Text[Style["Food", 9, White],{legendX + 0.042 span, legendY - 0.130 span},{-1, 0}]};
 
-  infoText = Text[Style[Column[{"Time: " <> ToString@NumberForm[model["time"], {4, 2}],"Food Count: " <> ToString@Length[foods]}],12,White],{max - 1.2, max - 0.8}];
+  infoText = Text[Style[Column[{"Time: " <> ToString @ NumberForm[model["time"], {4, 2}],"Food Count: " <> ToString @ Length[foods],"Agents: " <> ToString @ nAgents},
+        Alignment -> Right],11,White],{infoX, infoY},{1, 1}];
 
-  legend = {
-    Blue, PointSize[0.02], Point[{min + 0.35, max - 0.45}],
-    White, Text[Style["Agent", 10], {min + 1.1, max - 0.45}],
-
-    EdgeForm[Directive[White, Thickness[0.0015]]],
-    Darker[Gray, 0.7],
-    Rectangle[{min + 0.1, max - 1.05}, {min + 0.8, max - 0.93}],
-    Blend[{Red, Yellow, Green}, 0.75],
-    Rectangle[{min + 0.1, max - 1.05}, {min + 0.625, max - 0.93}],
-    White, Text[Style["Energy bar", 10], {min + 1.35, max - 0.99}],
-
-    White, PointSize[0.015], Point[{min + 0.35, max - 1.55}],
-    White, Text[Style["Food", 10], {min + 1.1, max - 1.55}]
-  };
-
-  Graphics[
-    {agentGraphics, foodGraphics, infoText, legend},
+  Graphics[{foodGraphics,agentGraphics,legend,infoText},
     Background -> Black,
     PlotRange -> {{min, max}, {min, max}},
-    PlotRangePadding -> Scaled[0.05],
-    ImagePadding -> 25,
+    PlotRangePadding -> Scaled[0.01],
+    ImagePadding -> 10,
     ImageSize -> params["imageSize"]
   ]
 ] 
@@ -189,6 +200,7 @@ plotPopulationStats[Simulation]
 
 (*old version of displayGrid*)
 (*displayGrid[model_] := Grid[{{"Food Length: "<>ToString@Length@model["foods"], "Time: "<>ToString@model["time"]}, {Dataset@model["agents"], Dataset@model["foods"]}}*)
+
 
 
 
