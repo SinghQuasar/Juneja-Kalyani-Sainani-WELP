@@ -12,8 +12,8 @@ parameters = <| (*agent energy is currently unbounded, but we can change that*)
   "dt" -> 0.1, (*timestep in seconds (we can change this later)*)
   "foodEnergy" -> 5.0, (*how much energy 1 food particle gives*)
   "foodSpawnCooldown" -> 1,
-  "nFoodSpawn" -> 1,
-  "nStartingAgents" -> 5,
+  "nFoodSpawn" -> 40,
+  "nStartingAgents" -> 50,
   "nStartingFood" -> 3,
   "squareBounds" -> {0, 5}, (*min, max. Square environment*)
   "startingEnergy" -> 10,
@@ -197,9 +197,10 @@ simulationGraphics = renderSimulation[Simulation, parameters];
 Manipulate[simulationGraphics[[j]], {j, 1, Length@simulationGraphics, 1, Appearance->Labeled}]
 
 plotPopulationStats[Simulation]
-
+|
 (*old version of displayGrid*)
 (*displayGrid[model_] := Grid[{{"Food Length: "<>ToString@Length@model["foods"], "Time: "<>ToString@model["time"]}, {Dataset@model["agents"], Dataset@model["foods"]}}*)
+
 
 
 

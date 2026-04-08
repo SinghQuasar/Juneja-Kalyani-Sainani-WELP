@@ -26,9 +26,10 @@ createAgent[pos_, energy_, age_, id_, parents_:{-1, -1}] :=
   <|
     "pos" -> pos,
     "energy" -> energy,
-    "age" -> age,
-	"id" -> id,
-	"parents" -> parents
+    "age" -> age, 
+	  "id" -> id,
+	  "parents" -> parents,
+    "ancestors" -> ancestors
   |>
   
 updateAgentInformation[agentList_List, agentI_Integer, agentAttribute_String, newValue_] := Module[{agents = agentList},
@@ -105,13 +106,10 @@ findClosestAgentI[agentI_Integer, agents_List] := Module[{pos, dists, closest},
   closest
 ]
 
-areRelated[ai_, aj_] := Module[{},
-  (* parent-child check *)
-  If[MemberQ[aj["parents"], ai["id"]] || MemberQ[ai["parents"], aj["id"]], Return[True]];
-  (* sibling check: share at least one parent, excluding the {-1,-1} default *)
-  If[ai["parents"] =!= {-1, -1} && aj["parents"] =!= {-1, -1} &&
-     Length[Intersection[ai["parents"], aj["parents"]]] > 0, Return[True]];
-  False
+areRelated[ai_, aj_] := Module[{allAi, allAj},
+  MemberQ[ai["ancestors"], aj["id"]] || 
+  MemberQ[aj["ancestors"], ai["id"]] ||
+  (ai["parents"] =!= {-1, -1} && ai["parents"] === aj["parents"])
 ]
 
 reproduceAgents[model_, params_] := Module[
@@ -144,7 +142,8 @@ reproduceAgents[model_, params_] := Module[
         "energy" -> aj["energy"] - params["reproductionEnergyCost"]];
 
       midPos = (ai["pos"] + aj["pos"]) / 2;
-      newAgent = createAgent[midPos, params["startingEnergy"] / 2, 0.0, nextID, {ai["id"], aj["id"]}];
+      newAncestors = DeleteDuplicates[Join[{ai["id"], aj["id"]}, ai["ancestors"], aj["ancestors"]]];
+      newAgent = createAgent[midPos, params["startingEnergy"] / 2, 0.0, nextID, {ai["id"], aj["id"]}, newAncestors];
       AppendTo[newAgents, newAgent];
       nextID++;
 
