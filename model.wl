@@ -3,21 +3,20 @@
 SetDirectory[NotebookDirectory[]];
 Needs["BasicMethods`"]
 
-(*<< basicMethods.wl -- we're initializing them in the kernel right now, but working on changing to formal package*)
-
 parameters = <| (*agent energy is currently unbounded, but we can change that*)
-  "proximityRadius" -> 1, (*proximity radius for food consumption action*)
-  "sensingDistance" -> 1,
+  "proximityRadius" -> 0.5, (*proximity radius for food consumption action*)
+  "sensingDistance" -> 2,
   "metabolism" -> 0.2, (*energy lost due to metabolism*)
   "dt" -> 0.1, (*timestep in seconds (we can change this later)*)
   "foodEnergy" -> 5.0, (*how much energy 1 food particle gives*)
   "foodSpawnCooldown" -> 1,
-  "nFoodSpawn" -> 40,
-  "nStartingAgents" -> 50,
-  "nStartingFood" -> 3,
+  "nFoodSpawn" -> 3,
+  "nStartingAgents" -> 5,
+  "nStartingFood" -> 7,
   "squareBounds" -> {0, 5}, (*min, max. Square environment*)
   "startingEnergy" -> 10,
   "stepLength" -> 1,
+  "dirChangeProb" -> 0.2,
   "lifespan" -> 20, (*20 units*)
   "maxEnergy" -> 10,
   "imageSize" -> 500,
@@ -45,7 +44,7 @@ initializeModel[params_] :=
 
     agents =
     Table[
-      createAgent[RandomReal[{min, max}, 2], startingEnergy, 0.0, i], {i, nStartingAgents}
+      createAgent[RandomReal[{min, max}, 2], startingEnergy, 0.0, i, RandomReal[{0, 2 Pi}]], {i, nStartingAgents}
     ];
 
     foods = RandomReal[{min, max}, {nStartingFood, 2}];
