@@ -1,0 +1,638 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 14.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[     24031,        630]
+NotebookOptionsPosition[     17401,        507]
+NotebookOutlinePosition[     17839,        524]
+CellTagsIndexPosition[     17796,        521]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["\<\
+Simulating the Emergence of Reproductive and Parenting Strategies using \
+Agent-Based Modeling with Evolutionary Game Theory\
+\>", "Title",
+ CellChangeTimes->{{3.9821898656762505`*^9, 3.9821898716910725`*^9}, {
+  3.9821909533992023`*^9, 
+  3.9821909930457573`*^9}},ExpressionUUID->"fc779f64-94a4-1645-96da-\
+b7c48e9320a8"],
+
+Cell[CellGroupData[{
+
+Cell["Abstract", "Section",
+ CellChangeTimes->{{3.9821910469212837`*^9, 3.9821910577482967`*^9}, {
+  3.982191106682844*^9, 3.982191126018154*^9}, {3.982191398995737*^9, 
+  3.9821914059070625`*^9}},ExpressionUUID->"b47a9adc-7996-504b-8c35-\
+2c9e4daa3d69"],
+
+Cell["We\[CloseCurlyQuote]ll work on this during the last couple of \
+sprints.", "Text",
+ CellChangeTimes->{{3.9821914125019894`*^9, 
+  3.9821914624889736`*^9}},ExpressionUUID->"badd546a-7765-9842-941a-\
+3decf455c43d"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Introduction", "Section",
+ CellChangeTimes->{{3.98219114556913*^9, 
+  3.9821911516783543`*^9}},ExpressionUUID->"5932021b-be45-1941-a625-\
+9e2664160210"],
+
+Cell[CellGroupData[{
+
+Cell["Merit for Using Agent-Based Modeling (ABM)", "Subsection",
+ CellChangeTimes->{{3.9821917929253254`*^9, 3.982191822134247*^9}, {
+  3.982192047849478*^9, 3.982192050968609*^9}, {3.9822236412431946`*^9, 
+  3.982223644159132*^9}},ExpressionUUID->"add2c244-0246-e442-b31f-\
+5aa093a399a0"],
+
+Cell["\<\
+Agent Based Modeling is often used to study common behaviors within \
+ecosystems because it accurately represents individuals as independent agents \
+interacting with their environment through simple rules. Moreover, ABM allows \
+for strategies, including reproductive and parenting strategies, to emerge \
+naturally from interactions between agents, as opposed to manipulating \
+behaviors on a larger scale. This makes it useful for understanding how \
+surrounding environments may influence behavioral and evolutionary traits \
+within a population.\
+\>", "Text",
+ CellChangeTimes->{{3.9821923548377037`*^9, 3.9821923578223305`*^9}, {
+  3.9821924254536*^9, 3.982192454222889*^9}, {3.982252957448803*^9, 
+  3.982252957618307*^9}, {3.982253010011324*^9, 3.982253013322666*^9}, {
+  3.98225309762673*^9, 3.982253115418333*^9}, {3.9822531673696823`*^9, 
+  3.9822531913914223`*^9}, {3.982253224580414*^9, 3.9822533965534744`*^9}, {
+  3.9822534301307144`*^9, 3.982253471459692*^9}, {3.982253541706457*^9, 
+  3.9822535443259277`*^9}, {3.9822535900538445`*^9, 3.9822536418586025`*^9}, {
+  3.9822538866764374`*^9, 
+  3.9822538882600994`*^9}},ExpressionUUID->"89c1ddc1-11ec-804e-8dce-\
+a5457c40edaa"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Project Roadmap", "Subsection",
+ CellChangeTimes->{{3.9821918784106617`*^9, 
+  3.982191880814745*^9}},ExpressionUUID->"8d4be50a-c105-aa4f-83f5-\
+0c9184098e8b"],
+
+Cell[CellGroupData[{
+
+Cell["01 Model Development", "Subsubsection",
+ CellChangeTimes->{{3.982191944174038*^9, 
+  3.982191954872555*^9}},ExpressionUUID->"c99bd80f-cd7e-ff43-9397-\
+6b30fcaffffb"],
+
+Cell["\<\
+In this section, we explain the scope and foundations of our model, including \
+how agents, resources (i.e., food), and other environmental parameters are \
+represented in ABM.\
+\>", "Text",
+ CellChangeTimes->{{3.982192296422554*^9, 3.982192301805994*^9}, {
+  3.9821924210804615`*^9, 3.98219242141609*^9}, {3.982192468022743*^9, 
+  3.9821924792400494`*^9}, {3.982223512640541*^9, 3.982223517590811*^9}, {
+  3.98225368242659*^9, 3.9822538812283287`*^9}, {3.9822539252836857`*^9, 
+  3.9822539303379116`*^9}, {3.982253968030327*^9, 
+  3.982253993550993*^9}},ExpressionUUID->"af0c5248-afe6-824c-a5b6-\
+73ae8b00296f"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["02 Constructing the Helper Methods", "Subsubsection",
+ CellChangeTimes->{{3.9821919696805305`*^9, 3.9821919717979717`*^9}, {
+  3.9821921741278954`*^9, 
+  3.982192180164219*^9}},ExpressionUUID->"4f56091e-d7d6-914b-a994-\
+f39104a80d4e"],
+
+Cell["\<\
+In this section, we explain and develop the helper functions that control \
+both the environment and agents within our model. Some methods include \
+sensing food, spawning food, incorporating random movement, simulating \
+metabolism, and setting up aging. Put together, these form the basic \
+mechanics for the simulation.\
+\>", "Text",
+ CellChangeTimes->{{3.982192310549799*^9, 3.982192311508625*^9}, {
+   3.982192423016836*^9, 3.982192423335232*^9}, {3.98219248122283*^9, 
+   3.9821924842230797`*^9}, 3.9822235224087257`*^9, {3.982253948282091*^9, 
+   3.9822539561225033`*^9}, {3.9822540167176914`*^9, 3.982254137710886*^9}, {
+   3.9822541768982296`*^9, 
+   3.9822542551462994`*^9}},ExpressionUUID->"4ff3d370-32ef-9142-ab33-\
+b5bd29176629"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["03 Model Propagation", "Subsubsection",
+ CellChangeTimes->{{3.9821921877297516`*^9, 3.98219220722694*^9}, {
+  3.9821922491396313`*^9, 3.9821922538817043`*^9}, {3.9828692070518265`*^9, 
+  3.982869216314886*^9}},ExpressionUUID->"3a906c76-fc1f-9141-a8fc-\
+2cfce4a4caa2"],
+
+Cell["\<\
+In this section, we create a timestep update function that incorporates our \
+helper methods and allows for the simulation to advance and loop over time. \
+\>", "Text",
+ CellChangeTimes->{{3.982192310549799*^9, 3.982192311508625*^9}, {
+   3.982192424206501*^9, 3.9821924245291767`*^9}, {3.982192486207096*^9, 
+   3.982192489961689*^9}, 3.9822235241291084`*^9, {3.982254324663971*^9, 
+   3.982254384079876*^9}, {3.9822556607739334`*^9, 
+   3.9822557480500393`*^9}},ExpressionUUID->"3f2120f9-390f-504d-b435-\
+db1e1311ab3c"]
+}, Open  ]],
+
+Cell["04 Visualization", "Subsubsection",
+ CellChangeTimes->{{3.9828693750684166`*^9, 3.9828693756880836`*^9}, {
+  3.9828694146728516`*^9, 
+  3.982869416424713*^9}},ExpressionUUID->"5e6cb18d-48be-ff4e-8474-\
+a4812a744953"],
+
+Cell["05 Implementing Reproduction", "Subsubsection",
+ CellChangeTimes->{{3.982869382639366*^9, 3.982869382699625*^9}, {
+  3.982949287983423*^9, 
+  3.98294929552199*^9}},ExpressionUUID->"cd86415f-7c3d-0c4e-8aaa-\
+b3588059bdbb"],
+
+Cell["06 Reproductive Strategies", "Subsubsection",
+ CellChangeTimes->{{3.9828693927041187`*^9, 3.9828693930169086`*^9}, {
+  3.982949336600586*^9, 3.982949406192724*^9}, {3.982949470293766*^9, 
+  3.9829494739939384`*^9}},ExpressionUUID->"a0751f2c-e66b-3849-b497-\
+23d8be64703f"],
+
+Cell["07 Parenting Strategies ", "Subsubsection",
+ CellChangeTimes->{{3.982869409060692*^9, 3.982869409620863*^9}, {
+  3.982949389293644*^9, 3.982949389791912*^9}, {3.9829494777601337`*^9, 
+  3.982949482974594*^9}},ExpressionUUID->"9a155b4b-f54c-d145-9776-\
+d20b91634e16"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["01 Model Development", "Section",
+ CellChangeTimes->{{3.9821913146818466`*^9, 3.9821913242147045`*^9}, {
+  3.982192215691025*^9, 
+  3.9821922192738476`*^9}},ExpressionUUID->"70fc7f0d-3b96-5746-9f8b-\
+a221eddd0345"],
+
+Cell[CellGroupData[{
+
+Cell["Introduction to ABM", "Subsection",
+ CellChangeTimes->{{3.9822235914297104`*^9, 3.9822236476229877`*^9}, {
+  3.982252930349556*^9, 
+  3.982252932936325*^9}},ExpressionUUID->"4f7d4ddc-f7b1-774b-ac25-\
+f1a152fa677a"],
+
+Cell["\<\
+Agent-Based Modeling simulations consist of agents that interact with each \
+other and their environment through simple rules. As the simulation evolves \
+through time,  each agent has its own state, such as position, energy, age, \
+hunger, and other characteristics that constantly change. These rules produce \
+interesting behaviors among the agents that can be studied, mimicking real \
+life to create a realistic, albeit simplified, simulation.\
+\>", "Text",
+ CellChangeTimes->{{3.9822530010870266`*^9, 3.982253006910301*^9}, 
+   3.9822554213624916`*^9, {3.9822554691372585`*^9, 3.9822554691571045`*^9}, {
+   3.9822555036656055`*^9, 
+   3.982255620652092*^9}},ExpressionUUID->"1dfb70c9-37f3-1943-94aa-\
+14a8889170e4"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Current Scope", "Subsection",
+ CellChangeTimes->{
+  3.9822268098682213`*^9, {3.9822268521701164`*^9, 
+   3.982226853463169*^9}},ExpressionUUID->"015076e2-4beb-0741-a350-\
+56a86a1d7b26"],
+
+Cell["\<\
+Currently, our model simulates the basic behaviors within a population, \
+consisting of agents that move, search for and consume nearby food, and gain \
+or lose energy. We\[CloseCurlyQuote]ve also created a visualization for our \
+ABM so far.\
+\>", "Text",
+ CellChangeTimes->{{3.982253020855629*^9, 3.982253031160576*^9}, {
+  3.982255872361162*^9, 3.982256007212734*^9}, {3.982949042916792*^9, 
+  3.982949052745554*^9}},ExpressionUUID->"2f6dff15-ac40-5946-9765-\
+dfadd688eaf0"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["02 Constructing the Helper Methods", "Section",
+ CellChangeTimes->{{3.982192226940838*^9, 
+  3.9821922324859447`*^9}},ExpressionUUID->"c5be0d16-ba53-2546-a6ff-\
+79990cc6644d"],
+
+Cell[CellGroupData[{
+
+Cell["checkWithinRadius[p1_, p2_, r_]", "Subsection",
+ CellChangeTimes->{3.9822578210254784`*^9, 
+  3.9822580668103714`*^9},ExpressionUUID->"b8c1dac2-9c33-9141-9065-\
+368f58d44522"],
+
+Cell["\<\
+Checks whether two points are within a specified Euclidean distance. This is \
+often used in conjunction with proximityRadius.\
+\>", "Text",
+ CellChangeTimes->{{3.9822582353925304`*^9, 3.9822582975094585`*^9}, {
+  3.9822585458305397`*^9, 
+  3.982258546893841*^9}},ExpressionUUID->"c246b5ea-91bf-094a-8994-\
+10f8d1501980"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["checkFoodWithinRadius[agentPos_, foodPos_, proxRadius_]", "Subsection",
+ CellChangeTimes->{
+  3.982257840569044*^9, {3.9822578821392593`*^9, 
+   3.9822578831081963`*^9}},ExpressionUUID->"95fae602-ecc6-8f43-9322-\
+aa59ea2f1237"],
+
+Cell["\<\
+Checks whether some food lies within an agent\[CloseCurlyQuote]s proximity \
+radius.\
+\>", "Text",
+ CellChangeTimes->{{3.9822583101318684`*^9, 3.982258328382492*^9}, {
+  3.9822585340207386`*^9, 
+  3.9822585372732353`*^9}},ExpressionUUID->"484be3dc-b13f-0449-a401-\
+5e32c480787d"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+findNearestSensableFoodI[agent_, foodPositions_List, params_]\
+\>", "Subsection",
+ CellChangeTimes->{{3.9822578903984795`*^9, 
+  3.9822578982893543`*^9}},ExpressionUUID->"21e8154f-70be-b044-a9ff-\
+35490d52acfc"],
+
+Cell["\<\
+Finds the closest food that is within an agent\[CloseCurlyQuote]s proximity \
+radius. If a food item exists, the function returns its index; otherwise, it \
+returns -1 to show that there is no food nearby.\
+\>", "Text",
+ CellChangeTimes->{{3.982258341530279*^9, 3.982258388623953*^9}, {
+  3.98225851664447*^9, 
+  3.982258557088091*^9}},ExpressionUUID->"7a26224a-0879-0740-9ed0-\
+24b55c2c4781"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["createAgent[pos_, energy_, age_]", "Subsection",
+ CellChangeTimes->{
+  3.9822579140424137`*^9},ExpressionUUID->"3eee4dc7-f9ac-9045-81be-\
+029933c11ca7"],
+
+Cell["\<\
+Creates an agent as an association with a certain position, energy, and age. \
+This allows us to maintain a consistent structure for all agents and allocate \
+them in one place.\
+\>", "Text",
+ CellChangeTimes->{{3.982258402012926*^9, 
+  3.9822584493993206`*^9}},ExpressionUUID->"fe332b47-11e1-c74e-b85d-\
+105b345ce2d4"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+updateAgentInformation[agentList_List, agentI_Integer, agentAttribute_String, \
+newValue_]\
+\>", "Subsection",
+ CellChangeTimes->{
+  3.9822579277148094`*^9},ExpressionUUID->"70edffac-edce-f140-91d5-\
+f2f0540b28d5"],
+
+Cell["\<\
+Updates a specific attribute of an agent within a list of agents, which is \
+useful for testing and debugging.\
+\>", "Text",
+ CellChangeTimes->{{3.982258471149784*^9, 
+  3.9822584945678806`*^9}},ExpressionUUID->"511c3be5-adbb-7d40-8f60-\
+8a74c070de58"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["spawnFoods[foods_, params_]", "Subsection",
+ CellChangeTimes->{
+  3.982257939689825*^9},ExpressionUUID->"1a624284-6d1f-d948-9844-\
+30f7bfefe741"],
+
+Cell["\<\
+Spawns new food in the environment and appends it to the existing list of \
+foods.\
+\>", "Text",
+ CellChangeTimes->{{3.982258504094017*^9, 3.982258528959364*^9}, {
+  3.9822585818906384`*^9, 
+  3.982258602493244*^9}},ExpressionUUID->"46b291c1-0c50-c543-a35b-\
+1ad91b319beb"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["spawnFoodCheck[model_, params_]", "Subsection",
+ CellChangeTimes->{
+  3.9822579491734085`*^9},ExpressionUUID->"55a7a0af-b4aa-8748-922c-\
+71dad41e4969"],
+
+Cell["\<\
+Checks if new food should spawn at the current timestep, based on the model \
+time and cooldown.  \
+\>", "Text",
+ CellChangeTimes->{{3.9822586187579937`*^9, 
+  3.982258659417673*^9}},ExpressionUUID->"6ca46b73-811d-a447-bdd9-\
+5e798ca23bd7"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["randomizeAndKill[model_, params_]", "Subsection",
+ CellChangeTimes->{
+  3.982257967101116*^9},ExpressionUUID->"7831b465-d202-ae43-847b-\
+5c0d31fdfd2d"],
+
+Cell["\<\
+Ensures realism by removing agents that have exceeded their lifespan or lost \
+all their energy. \
+\>", "Text",
+ CellChangeTimes->{{3.9822586896419563`*^9, 
+  3.982258739914318*^9}},ExpressionUUID->"1f2d0698-5aaa-3e42-9e91-\
+187d43832927"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["metabolizeAgents[model_, params_]", "Subsection",
+ CellChangeTimes->{{3.982257971877247*^9, 
+  3.982257978697054*^9}},ExpressionUUID->"5ca63144-aefd-dc4f-ae1c-\
+cf0afd259b0e"],
+
+Cell["\<\
+Forces all agents to lose a set amount of energy due to metabolism at each \
+timestep.\
+\>", "Text",
+ CellChangeTimes->{{3.9822587640609226`*^9, 
+  3.9822588228827114`*^9}},ExpressionUUID->"8fa45dce-c982-5d47-b26c-\
+f3c44013ddf7"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["ageAgents[model_, params_]", "Subsection",
+ CellChangeTimes->{
+  3.982258003969328*^9},ExpressionUUID->"dcd15a4a-268c-414b-aaf2-\
+b354c6bf2d2f"],
+
+Cell["\<\
+Increases the age of each agent, which is important for controlling life \
+cycles and removal from the simulation.\
+\>", "Text",
+ CellChangeTimes->{{3.982258838574049*^9, 
+  3.982258889054884*^9}},ExpressionUUID->"81564369-58e8-be4f-891d-\
+2e3df5e6d04b"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["randomActionWalk[agent_, foods_, params_]", "Subsection",
+ CellChangeTimes->{
+  3.982258012525215*^9},ExpressionUUID->"8825de0d-9f87-a64b-a718-\
+9a81e6e1e734"],
+
+Cell["\<\
+Moves an agent in a random direction using a fixed step length, which models \
+animals\[CloseCurlyQuote] natural instincts to explore and search for nearby \
+food.\
+\>", "Text",
+ CellChangeTimes->{{3.982258905886507*^9, 
+  3.982258973139332*^9}},ExpressionUUID->"f60bc878-bca2-4d43-9cb3-\
+afce4d8866ae"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["eat[agent_, foods_, foodI_, params_]", "Subsection",
+ CellChangeTimes->{
+  3.982258021836834*^9},ExpressionUUID->"43c29bd7-f221-8a43-a620-\
+ed75667936ac"],
+
+Cell["\<\
+Increases an agent\[CloseCurlyQuote]s energy when it eats food and removes \
+the food from the environment.\
+\>", "Text",
+ CellChangeTimes->{{3.982258983646145*^9, 
+  3.98225900122324*^9}},ExpressionUUID->"7cdb4bac-0647-c249-b317-\
+e51887189e78"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["03 Model Propagation", "Section",
+ CellChangeTimes->{{3.9821922407373047`*^9, 3.9821922594191017`*^9}, 
+   3.982869223867647*^9, 
+   3.982947604009659*^9},ExpressionUUID->"78928c30-e011-be49-95d5-\
+76236f2cbe03"],
+
+Cell[CellGroupData[{
+
+Cell["propogateModel[params_, model_]", "Subsection",
+ CellChangeTimes->{
+  3.982257802449217*^9},ExpressionUUID->"59865427-2b20-0b4d-ac07-\
+a1f896f0d400"],
+
+Cell["\<\
+This is the top-level timestep function that computes all of the helper \
+functions at once to allow us to loop and update our simulation continuously.\
+\>", "Text",
+ CellChangeTimes->{{3.98225812688072*^9, 
+  3.9822581880611305`*^9}},ExpressionUUID->"8510e860-86d1-484c-aafd-\
+62c6e27a325c"]
+}, Open  ]]
+}, Open  ]],
+
+Cell["04 Visualization", "Section",
+ CellChangeTimes->{{3.9828692436483173`*^9, 
+  3.9828692508295784`*^9}},ExpressionUUID->"adf5e6db-afa9-bd4e-9bfa-\
+226c9171a445"],
+
+Cell["05 Implementing Reproduction", "Section",
+ CellChangeTimes->{{3.98286926438072*^9, 3.982869269632347*^9}, {
+  3.9828693236442394`*^9, 3.9828693436310635`*^9}, {3.9829495713867683`*^9, 
+  3.982949574711521*^9}},ExpressionUUID->"a671984d-8b17-ce47-8fa1-\
+7e377fdc9c60"],
+
+Cell["06 Reproductive Strategies", "Section",
+ CellChangeTimes->{{3.9828693388389606`*^9, 3.9828693496746387`*^9}, {
+  3.9829495759864902`*^9, 
+  3.9829495790467243`*^9}},ExpressionUUID->"92e704e2-29b3-4b4f-8558-\
+394ea02f37f2"],
+
+Cell["07 Parenting Strategies", "Section",
+ CellChangeTimes->{{3.982869340814558*^9, 3.982869341385681*^9}, {
+  3.98294958119709*^9, 
+  3.982949583683815*^9}},ExpressionUUID->"7ba12f3f-19c4-9545-ab9e-\
+4d5a7f97520b"],
+
+Cell["Conclusion", "Section",
+ CellChangeTimes->{{3.98219137470154*^9, 
+  3.9821913763565674`*^9}},ExpressionUUID->"502af867-c6d5-d84e-8f7d-\
+1cd186dc4c4b"],
+
+Cell["Future Direction", "Section",
+ CellChangeTimes->{{3.9821913822598095`*^9, 
+  3.982191384966795*^9}},ExpressionUUID->"609ece5c-277b-cb4b-a3b8-\
+6522555d4bd8"],
+
+Cell["", "Section",ExpressionUUID->"938225fc-bc92-2e43-a469-eef16a315467"]
+}, Open  ]]
+},
+WindowSize->{1080, 607.5},
+WindowMargins->{{-4.875, Automatic}, {Automatic, -4.875}},
+Magnification:>0.8 Inherited,
+FrontEndVersion->"14.3 for Microsoft Windows (64-bit) (July 8, 2025)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"c330cb7d-5a34-dd43-a52a-504d9feb7079"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[576, 22, 332, 7, 125, "Title",ExpressionUUID->"fc779f64-94a4-1645-96da-b7c48e9320a8"],
+Cell[CellGroupData[{
+Cell[933, 33, 254, 4, 52, "Section",ExpressionUUID->"b47a9adc-7996-504b-8c35-2c9e4daa3d69"],
+Cell[1190, 39, 218, 4, 27, "Text",ExpressionUUID->"badd546a-7765-9842-941a-3decf455c43d"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1445, 48, 158, 3, 52, "Section",ExpressionUUID->"5932021b-be45-1941-a625-9e2664160210"],
+Cell[CellGroupData[{
+Cell[1628, 55, 289, 4, 42, "Subsection",ExpressionUUID->"add2c244-0246-e442-b31f-5aa093a399a0"],
+Cell[1920, 61, 1200, 19, 62, "Text",ExpressionUUID->"89c1ddc1-11ec-804e-8dce-a5457c40edaa"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[3157, 85, 165, 3, 42, "Subsection",ExpressionUUID->"8d4be50a-c105-aa4f-83f5-0c9184098e8b"],
+Cell[CellGroupData[{
+Cell[3347, 92, 171, 3, 35, "Subsubsection",ExpressionUUID->"c99bd80f-cd7e-ff43-9397-6b30fcaffffb"],
+Cell[3521, 97, 622, 11, 27, "Text",ExpressionUUID->"af0c5248-afe6-824c-a5b6-73ae8b00296f"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[4180, 113, 240, 4, 35, "Subsubsection",ExpressionUUID->"4f56091e-d7d6-914b-a994-f39104a80d4e"],
+Cell[4423, 119, 752, 13, 44, "Text",ExpressionUUID->"4ff3d370-32ef-9142-ab33-b5bd29176629"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[5212, 137, 273, 4, 35, "Subsubsection",ExpressionUUID->"3a906c76-fc1f-9141-a8fc-2cfce4a4caa2"],
+Cell[5488, 143, 531, 9, 27, "Text",ExpressionUUID->"3f2120f9-390f-504d-b435-db1e1311ab3c"]
+}, Open  ]],
+Cell[6034, 155, 222, 4, 35, "Subsubsection",ExpressionUUID->"5e6cb18d-48be-ff4e-8474-a4812a744953"],
+Cell[6259, 161, 227, 4, 29, "Subsubsection",ExpressionUUID->"cd86415f-7c3d-0c4e-8aaa-b3588059bdbb"],
+Cell[6489, 167, 278, 4, 29, "Subsubsection",ExpressionUUID->"a0751f2c-e66b-3849-b497-23d8be64703f"],
+Cell[6770, 173, 272, 4, 29, "Subsubsection",ExpressionUUID->"9a155b4b-f54c-d145-9776-d20b91634e16"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[7091, 183, 220, 4, 52, "Section",ExpressionUUID->"70fc7f0d-3b96-5746-9f8b-a221eddd0345"],
+Cell[CellGroupData[{
+Cell[7336, 191, 220, 4, 42, "Subsection",ExpressionUUID->"4f7d4ddc-f7b1-774b-ac25-f1a152fa677a"],
+Cell[7559, 197, 731, 12, 62, "Text",ExpressionUUID->"1dfb70c9-37f3-1943-94aa-14a8889170e4"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[8327, 214, 191, 4, 42, "Subsection",ExpressionUUID->"015076e2-4beb-0741-a350-56a86a1d7b26"],
+Cell[8521, 220, 487, 9, 44, "Text",ExpressionUUID->"2f6dff15-ac40-5946-9765-dfadd688eaf0"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[9057, 235, 181, 3, 52, "Section",ExpressionUUID->"c5be0d16-ba53-2546-a6ff-79990cc6644d"],
+Cell[CellGroupData[{
+Cell[9263, 242, 181, 3, 42, "Subsection",ExpressionUUID->"b8c1dac2-9c33-9141-9065-368f58d44522"],
+Cell[9447, 247, 331, 7, 27, "Text",ExpressionUUID->"c246b5ea-91bf-094a-8994-10f8d1501980"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[9815, 259, 233, 4, 42, "Subsection",ExpressionUUID->"95fae602-ecc6-8f43-9322-aa59ea2f1237"],
+Cell[10051, 265, 289, 7, 27, "Text",ExpressionUUID->"484be3dc-b13f-0449-a401-5e32c480787d"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[10377, 277, 221, 5, 42, "Subsection",ExpressionUUID->"21e8154f-70be-b044-a9ff-35490d52acfc"],
+Cell[10601, 284, 403, 8, 27, "Text",ExpressionUUID->"7a26224a-0879-0740-9ed0-24b55c2c4781"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[11041, 297, 158, 3, 42, "Subsection",ExpressionUUID->"3eee4dc7-f9ac-9045-81be-029933c11ca7"],
+Cell[11202, 302, 329, 7, 27, "Text",ExpressionUUID->"fe332b47-11e1-c74e-b85d-105b345ce2d4"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[11568, 314, 224, 6, 42, "Subsection",ExpressionUUID->"70edffac-edce-f140-91d5-f2f0540b28d5"],
+Cell[11795, 322, 262, 6, 27, "Text",ExpressionUUID->"511c3be5-adbb-7d40-8f60-8a74c070de58"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[12094, 333, 151, 3, 42, "Subsection",ExpressionUUID->"1a624284-6d1f-d948-9844-30f7bfefe741"],
+Cell[12248, 338, 283, 7, 27, "Text",ExpressionUUID->"46b291c1-0c50-c543-a35b-1ad91b319beb"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[12568, 350, 157, 3, 42, "Subsection",ExpressionUUID->"55a7a0af-b4aa-8748-922c-71dad41e4969"],
+Cell[12728, 355, 250, 6, 27, "Text",ExpressionUUID->"6ca46b73-811d-a447-bdd9-5e798ca23bd7"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[13015, 366, 157, 3, 42, "Subsection",ExpressionUUID->"7831b465-d202-ae43-847b-5c0d31fdfd2d"],
+Cell[13175, 371, 249, 6, 27, "Text",ExpressionUUID->"1f2d0698-5aaa-3e42-9e91-187d43832927"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[13461, 382, 181, 3, 42, "Subsection",ExpressionUUID->"5ca63144-aefd-dc4f-ae1c-cf0afd259b0e"],
+Cell[13645, 387, 240, 6, 27, "Text",ExpressionUUID->"8fa45dce-c982-5d47-b26c-f3c44013ddf7"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[13922, 398, 150, 3, 42, "Subsection",ExpressionUUID->"dcd15a4a-268c-414b-aaf2-b354c6bf2d2f"],
+Cell[14075, 403, 264, 6, 27, "Text",ExpressionUUID->"81564369-58e8-be4f-891d-2e3df5e6d04b"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[14376, 414, 165, 3, 42, "Subsection",ExpressionUUID->"8825de0d-9f87-a64b-a718-9a81e6e1e734"],
+Cell[14544, 419, 313, 7, 27, "Text",ExpressionUUID->"f60bc878-bca2-4d43-9cb3-afce4d8866ae"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[14894, 431, 160, 3, 42, "Subsection",ExpressionUUID->"43c29bd7-f221-8a43-a620-ed75667936ac"],
+Cell[15057, 436, 256, 6, 27, "Text",ExpressionUUID->"7cdb4bac-0647-c249-b317-e51887189e78"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[15362, 448, 218, 4, 52, "Section",ExpressionUUID->"78928c30-e011-be49-95d5-76236f2cbe03"],
+Cell[CellGroupData[{
+Cell[15605, 456, 155, 3, 42, "Subsection",ExpressionUUID->"59865427-2b20-0b4d-ac07-a1f896f0d400"],
+Cell[15763, 461, 302, 6, 27, "Text",ExpressionUUID->"8510e860-86d1-484c-aafd-62c6e27a325c"]
+}, Open  ]]
+}, Open  ]],
+Cell[16092, 471, 165, 3, 52, "Section",ExpressionUUID->"adf5e6db-afa9-bd4e-9bfa-226c9171a445"],
+Cell[16260, 476, 273, 4, 42, "Section",ExpressionUUID->"a671984d-8b17-ce47-8fa1-7e377fdc9c60"],
+Cell[16536, 482, 228, 4, 42, "Section",ExpressionUUID->"92e704e2-29b3-4b4f-8558-394ea02f37f2"],
+Cell[16767, 488, 216, 4, 42, "Section",ExpressionUUID->"7ba12f3f-19c4-9545-ab9e-4d5a7f97520b"],
+Cell[16986, 494, 156, 3, 42, "Section",ExpressionUUID->"502af867-c6d5-d84e-8f7d-1cd186dc4c4b"],
+Cell[17145, 499, 163, 3, 42, "Section",ExpressionUUID->"609ece5c-277b-cb4b-a3b8-6522555d4bd8"],
+Cell[17311, 504, 74, 0, 42, "Section",ExpressionUUID->"938225fc-bc92-2e43-a469-eef16a315467"]
+}, Open  ]]
+}
+]
+*)
+
