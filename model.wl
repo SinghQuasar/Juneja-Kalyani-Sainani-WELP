@@ -196,9 +196,12 @@ simulationGraphics = renderSimulation[Simulation, parameters];
 Manipulate[simulationGraphics[[j]], {j, 1, Length@simulationGraphics, 1, Appearance->Labeled}]
 
 plotPopulationStats[Simulation]
-|
+
 (*old version of displayGrid*)
 (*displayGrid[model_] := Grid[{{"Food Length: "<>ToString@Length@model["foods"], "Time: "<>ToString@model["time"]}, {Dataset@model["agents"], Dataset@model["foods"]}}*)
+
+
+
 
 
 
