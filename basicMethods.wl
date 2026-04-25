@@ -4,15 +4,11 @@ BeginPackage["BasicMethods`"]
 
 checkWithinRadius[p1_, p2_, r_] := EuclideanDistance[p1, p2] <= r; (*agent's radius*)
 
-(*checking the proximity for 1 food particle*)
-checkFoodWithinRadius[agentPos_, foodPos_, proxRadius_] :=
-  checkWithinRadius[agentPos, foodPos, proxRadius];
-
 (*checking the proximity for all foods and putting it into a list. Implement grid/sector based optimization later.*)
 findNearestSensableFoodPosAndI[agent_, foodPositions_List, params_] := Module[{agentPos, foodPosAndI, foodsWithinRadiusPosAndI, dists, closest},
   agentPos = agent["pos"];
   foodPosAndI = Table[{foodPositions[[i]], i}, {i, Length[foodPositions]}];
-  foodsWithinRadiusPosAndI = Select[foodPosAndI, checkFoodWithinRadius[agentPos, #[[1]], params["sensingDistance"]]&];
+  foodsWithinRadiusPosAndI = Select[foodPosAndI, checkWithinRadius[agentPos, #[[1]], params["sensingDistance"]]&];
   If[Length[foodsWithinRadiusPosAndI] == 0,
     {-1, -1}, (*no food*)
     dists = {EuclideanDistance[agentPos, #[[1]]], #[[2]]}& /@ foodsWithinRadiusPosAndI;

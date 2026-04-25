@@ -13,7 +13,7 @@ parameters = <| (*agent energy is currently unbounded, but we can change that*)
   "nFoodSpawn" -> 3,
   "nStartingAgents" -> 5,
   "nStartingFood" -> 7,
-  "squareBounds" -> {0, 5}, (*min, max. Square environment*)
+  "squareBounds" -> {0, 10}, (*min, max. Square environment*)
   "startingEnergy" -> 10,
   "stepLength" -> 1,
   "dirChangeProb" -> 0.2,
@@ -22,11 +22,11 @@ parameters = <| (*agent energy is currently unbounded, but we can change that*)
   "imageSize" -> 500,
   "agentSize" -> 0.025, (*radius in pure length units*)
   "foodSize" -> 0.01,
-  "reproductionRadius" -> 1.5,
+  "reproductionRadius" -> 1.5, (*we should cut this out in favor of proximityRadius, since proxRad is supposed to encompass this as well.*)
   "minReproductionEnergy" -> 6.0,
   "minReproductionAge" -> 2.0,
   "reproductionEnergyCost" -> 3.0,
-  "nextAgentID" -> 1
+  "nextAgentID" -> 1 (*if this is a holder for the next agent id, and it evolves as the model does, it should go in the model data struct. If it's a parameter for number ID to start at, then it should stay here.*)
 |>;
 
 (*useful for image scaling...*)
@@ -58,10 +58,10 @@ initializeModel[params_] :=
     |>
  ]
 
-propagateModelStep[params_, model_] := Module[{model2=model, params2=params}, (*working on changing to DynamicModule/Manipulate. This propogateModel method is not confirmed to be working, but the indiivdual helper methods have been tested.*)
+propagateModelStep[params_, model_] := Module[{model2=model, params2=params},
   params2["nextAgentID"] = model2["nextAgentID"];
   model2 = spawnFoodCheck[model2, params];
-  model2 = randomizeAndKill[model2, params]; (*randomization disabled for clarity atm.*)
+  model2 = randomizeAndKill[model2, params]; (*randomization*)
   model2 = agentActions[model2, params];
   model2 = reproduceAgents[model2, params2];
   model2 = metabolizeAgents[model2, params];
