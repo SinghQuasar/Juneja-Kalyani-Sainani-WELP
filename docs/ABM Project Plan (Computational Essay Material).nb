@@ -1,0 +1,1377 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 14.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[     61798,       1369]
+NotebookOptionsPosition[     49721,       1166]
+NotebookOutlinePosition[     50162,       1183]
+CellTagsIndexPosition[     50119,       1180]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ABM Project Plan", "Title",
+ CellChangeTimes->{{3.977663556694519*^9, 3.977663562098715*^9}, {
+  3.97827208844075*^9, 
+  3.9782720924858856`*^9}},ExpressionUUID->"12e3845f-e16d-fc4b-897f-\
+273abfdd0040"],
+
+Cell["\<\
+Simulating the Emergence of Evolutionarily Stable Reproductive and Parenting \
+Strategies using Agent-Based Modeling with Evolutionary Game Theory.\
+\>", "Subtitle",
+ CellChangeTimes->{{3.977664366254837*^9, 3.977664368599169*^9}, {
+  3.9776888162938347`*^9, 3.977688862637703*^9}, {3.97769021182061*^9, 
+  3.9776902333732376`*^9}, {3.977691230462988*^9, 3.9776912387393837`*^9}, {
+  3.9776940850459385`*^9, 3.9776940885389347`*^9}, {3.9777473105752296`*^9, 
+  3.977747317072031*^9}},ExpressionUUID->"9a5b0013-8b30-284a-9cc8-\
+f6a8808a4c22"],
+
+Cell["Yash Juneja, Om Kalyani, Shreraj Sainani", "Text",
+ CellChangeTimes->{{3.977663676013542*^9, 
+  3.9776636830652256`*^9}},ExpressionUUID->"4580851f-af58-df4d-bf5c-\
+75644240a4d6"],
+
+Cell[CellGroupData[{
+
+Cell["Problem and Group Fit", "Section",
+ CellChangeTimes->{{3.977663579131777*^9, 3.9776635819321575`*^9}, {
+  3.9777483753657017`*^9, 
+  3.9777483764946823`*^9}},ExpressionUUID->"be1b8abb-a084-5f43-b189-\
+787da0f294ea"],
+
+Cell[TextData[{
+ "\tThe processes by which life interacts with its environment, sustains \
+itself, and continues on through its posterity (reproduces) fascinates us. As \
+a group, we have found the emergence of evolutionary behaviors and traits of \
+organisms through the process of natural selection interesting. We were \
+particularly inspired by the ",
+ StyleBox["Primer",
+  FontSlant->"Italic"],
+ " YouTube channel: https://www.youtube.com/@PrimerBlobs for their insightful \
+investigations of evolutionary phenomena done through Agent-Based Modeling \
+simulations, ranging from behavior to genetics. Agent-Based Modeling (ABM) \
+simulations, while greatly simplified, can provide interesting theory that \
+can provide a basis and a framework for actual studies of ecological \
+behaviors and traits in organisms. These simulations consist of agents that \
+interact with each other and their environment through simple rules. As the \
+simulation evolves through time, the rules produce interesting behavior among \
+the agents that can be studied. These rules ideally mimic real life to create \
+a realistic, albeit simplified, simulation.\n\tIn an ecological simulations \
+context, ABM simulations can explain the emergence of  ecological phenomena \
+by analyzing the behavior of agents over time based on their interactions and \
+feedback for their environment. ",
+ StyleBox["Primer",
+  FontSlant->"Italic"],
+ " for example, explores the evolution of behaviors like teamwork or the \
+development of traits of species through simulated ecosystems, in which \
+simulated natural selection drives the process of the of development \
+favorable traits based on the environment created. From these explorations, \
+he uses data on his simulations to draw conclusions and provide insights into \
+how these simulations can explain not only the behavior of organisms in the \
+natural world, but also by extension us humans. One interesting area that ",
+ StyleBox["Primer",
+  FontSlant->"Italic"],
+ " does not cover in his explorations is the reasons why organisms reproduce \
+the way they do, and how they take care of their young--reproductive and \
+parenting behaviors. \n\tWhile watching ",
+ StyleBox["Primer\[CloseCurlyQuote]s",
+  FontSlant->"Italic"],
+ " videos, we found his application of Evolutionary Game Theory to discover \
+Evolutionarily Stable Strategies a powerful model for breaking down the \
+decisions that organisms make on a level that they can be simulated in ABM \
+and explored. We would like to apply Agent-Based Modeling and Evolutionary \
+Game Theory in Wolfram Language to create a testing ground for investigating \
+the emergence of these reproductive and parenthood strategies in organisms. \
+Specifically, we imagine creating Wolfram Functions for the Wolfram Community \
+so ourselves and users can run experiments on custom models we create, in \
+which ourselves and the Wolfram Community can tweak environment setups, agent \
+behavior, and other parameters of our model to analyze statistical data \
+produced by the simulation and gain insights on reproductive and parenting \
+strategies of organisms in the real world.\n\tWe\[CloseCurlyQuote]re \
+interested in answering deeper questions through ABM, including but not \
+limited to:"
+}], "Text",
+ CellChangeTimes->CompressedData["
+1:eJwlz30o4wEYB/Cl1VFcE3HUxDUpzahz+ElxNZm7yWi75ojSXJY5uptsOjqi
+7o+dO8tdI2Yx43CRd81bUaTRlJyXXUfmzMKtWbeLkd/354+nT9/nn+f7RBRX
+5JZ40Wi0SHKgIrhItdZ9/kxe33wvU3G8Tcp6qrXBVtlly09SvoithvH+P7qg
+ZumFDrIE0TNQ+JswwlktI2mH9H9jLAEbP27yoK7v9iUUfC2rhMKBBkqrklMH
+zZx5FTzbM7ZAyeMVDezo4Q3D/ijTKPzwJ2UDVn6+uoAHsiHvXdxjPvChVGc8
+hPwVaRCVJetMaGMYY6GH1fMExgmSc+EOES+G3AXHa0gzTMmgOPHoDRSK9e/2
+SRnuNi3UiaIMUHEl+g7NOukwdHxKGIemfuc0tZ9PPIGlPl9c8KDKxrKQBi7/
+48BwwpoJZXlDe05S1Y39F6RnTZ3C1vQBO9wa/PYXyi35LshdK7yGYlfMLXwf
+skq/RC+lmg81aZM50OwJewXlDr0ErjZll8OOscK3cKQ6VQsli53dkB1AN0Ah
+4WeB3nPPKS01BYfwUW+7FS57Jq6hb6jRy0XKi3HX3uBvfVgdvANZNGNj
+  "],ExpressionUUID->"e0e41088-64d5-d64b-862a-7a8846769a8c"],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+Why did natural selection cause organisms to reproduce the way they do (more \
+children vs. less children, sexual vs. asexual vs. both (facultative \
+parthenogenesis), etc.) and how is this shaped by their environment (less \
+food, more predators, etc.)? Finally, how do these behaviors emerge from \
+evolution and natural selection? How long do they take to? Is it faster if we \
+change the environment?\
+\>", "Item",
+ CellChangeTimes->{{3.977747779895664*^9, 3.977747909970545*^9}, {
+   3.9777479760453033`*^9, 3.977747996319334*^9}, {3.9782846698053703`*^9, 
+   3.978284683703306*^9}, 3.9782851558552*^9, 
+   3.9782852292068596`*^9},ExpressionUUID->"0da7c77e-2393-1b4f-8514-\
+8f69cfe01993"],
+
+Cell["\<\
+Which behaviors are stronger, and when? Having more children when there is \
+more food?\
+\>", "Subitem",
+ CellChangeTimes->{{3.977747779895664*^9, 3.977747909970545*^9}, {
+  3.9777479760453033`*^9, 
+  3.97774801009548*^9}},ExpressionUUID->"39aac43f-c293-f541-87b7-\
+520a13abdd06"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+How did the process of parenthood emerge? Why do some organisms abandon their \
+young while others guard them preciously? Why do males leave their children \
+while females remain with them in some species? How does this relate to their \
+reproductive strategy and their environment? \
+\>", "Item",
+ CellChangeTimes->{{3.977747779895664*^9, 3.977747973199991*^9}, {
+   3.9777480142954845`*^9, 3.9777480142954845`*^9}, {3.977748275221031*^9, 
+   3.977748275773945*^9}, 
+   3.9782852025982533`*^9},ExpressionUUID->"8b340c47-3801-0841-a5d4-\
+a218430ff308"],
+
+Cell["\<\
+Which parenting strategies are the strongest? Have many offspring and abandon \
+them? Guard them preciously? Feed them, but only a little bit, saving most \
+resources for yourself? What if there are predators, what if there aren\
+\[CloseCurlyQuote]t?\
+\>", "Subitem",
+ CellChangeTimes->{{3.977747779895664*^9, 3.977747973199991*^9}, {
+  3.9777480147378807`*^9, 
+  3.977748058903963*^9}},ExpressionUUID->"08c25739-eea4-7842-9c59-\
+ab7f91f946f4"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Rationale", "Section",
+ CellChangeTimes->{{3.9777491654802113`*^9, 3.977749170539337*^9}, {
+  3.977750444310425*^9, 
+  3.9777504449990673`*^9}},ExpressionUUID->"49b35a96-3ef8-bd41-8631-\
+ba725d378bc8"],
+
+Cell[TextData[{
+ "\tIn ecological observational studies, reproductive and parenting behaviors \
+of species are analyzed through field studies, mark-recapture population \
+counting methods, monitoring habitats, all to take metrics like age at first \
+reproduction, broods per female, parental care behaviors, and survivorship \
+data. More mathematical analysis is done, and sometimes populations are \
+studied directly in labs. In general, the way that species make reproductive \
+decisions and care for their young has a complex relationship with \
+environmental factors, and such a rationale for these behaviors is thus \
+expensive and time-consuming to study since these behaviors depend on \
+long-term fitness consequences and nonlinear ecological factors, requiring \
+extended observation or experimentation across variable environments. They \
+are nonetheless insightful.\t\n\tA simple mathematical model that explains \
+the population growth of organisms based on their environment is the logistic \
+model for population growth: ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    FractionBox["dP", "dt"], "=", 
+    RowBox[{"rP", "(", 
+     RowBox[{"1", "-", 
+      FractionBox["P", "K"]}], ")"}]}], TraditionalForm]],ExpressionUUID->
+  "800074fb-fca4-2a47-a555-ac69b6b64a92"],
+ ", where P is the population at a given time, r is the intrinsic population \
+growth rate--the children per-capita per unit time assuming abundant \
+resources--and K is the carrying capacity of the environment. This model \
+creates unconstrained growth proportional to P when P << K (the more \
+organisms, the more children proportional to the number of organisms) but \
+factors in the environmental constraint of competition for resources, scaling \
+growth such that it becomes 0  when P \[Rule] K.\n\tThis model lends itself \
+to the ecological model of r/K selection theory. In r/K selection theory, \
+natural selection pressures are hypothesized to drive reproduction strategies \
+generally towards r-selection or K-selection. r-selection is indicative of \
+high population growth rates from very high amounts of offspring with low \
+parental care and Type III survivorship (low probabilities of surviving to \
+adulthood). In other words, these are organisms that have more offspring and \
+provide less parental care as part of their reproductive strategy, with sheer \
+volume mathematically compensating for the fact that offspring receive little \
+care. Some of them are bound to survive. Such species with this strategy are \
+termed r-selected since they tend to perform well when a population is not \
+near carrying capacity (when the rP factor is at its strongest), since their \
+rapid reproduction naturally leads to brutal competition near carrying \
+capacity. Examples of such organisms are insects and rodents. K-selection is \
+indicative of low population growth rates from low amounts of offspring with \
+high parental care and Type I survivorship (high probabilities of surviving \
+to adulthood). These are organisms that have less offspring but care for them \
+more, investing in them to ensure they can reach adulthood. Such species with \
+this strategy are termed K-selected since their populations do not \
+destabilize like r-selected species near carrying capacity. Humans and eagles \
+are examples of K-selected species.\n\tAlthough r/K selection theory offers a \
+simple model to explain some organisms\[CloseCurlyQuote] reproductive \
+behaviors, other organisms often exhibit combinations of r- and K-selected \
+behavior, and r/K selection theory greatly simplifies the rationale for \
+reproductive behavior and the longevity of species\[CloseCurlyQuote] \
+lifetimes. The model of logistic population growth and r/K selection theory \
+piqued our interest because they offer a starting point for those very deep \
+questions we asked before. Like these, much biological theory exists and \
+explains reproductive and parenting strategies. However, we hope to use \
+Agent-Based Modeling to create Wolfram tools with which to explore parenting \
+and reproductive behaviors free of the limitations of real world where \
+ourselves and our users can make the simulation their own. Here, we can \
+observe these behaviors emerge naturally instead of viewing it through the \
+lens of pre-established biological theory, and analyze not only what causes \
+these parenting and reproductive behaviors, but also the nature of their \
+emergence and how they are shaped by rapidly changing environmental factors."
+}], "Text",
+ CellChangeTimes->{{3.977748092062847*^9, 3.977748094478117*^9}, {
+  3.977748132667576*^9, 3.977748165173542*^9}, {3.9777482945682697`*^9, 
+  3.9777483080071316`*^9}, {3.9777488166848927`*^9, 3.977748914999687*^9}, {
+  3.977749189537657*^9, 3.977749189842188*^9}, {3.9777504877692223`*^9, 
+  3.977750488090275*^9}, {3.9782727334800873`*^9, 
+  3.978272734182081*^9}},ExpressionUUID->"a39c3e64-d141-0a4f-a42c-\
+eff48a142729"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Implementation", "Section",
+ CellChangeTimes->{{3.9776635949045715`*^9, 
+  3.9776635960305233`*^9}},ExpressionUUID->"8bc61b01-5bb8-274f-8245-\
+31fd0f14f4b0"],
+
+Cell[TextData[{
+ StyleBox["\tPrimer\[CloseCurlyQuote]s ",
+  FontSlant->"Italic"],
+ "success comes not only from the power of his simplistic simulations but \
+also the visuals that he provides, which honestly dazzled us. We don\
+\[CloseCurlyQuote]t hope to completely mimic ",
+ StyleBox["Primer",
+  FontSlant->"Italic"],
+ ", as that would not be original work, but our implementation, on a \
+higher-level, takes heavy inspiration from the process with which ",
+ StyleBox["Primer ",
+  FontSlant->"Italic"],
+ "uses to explore evolution and behavior. Note he was not the first to \
+implement ecological ABM in this manner."
+}], "Text",
+ CellChangeTimes->{{3.97766360293058*^9, 3.977663603467249*^9}, {
+   3.9777483256740055`*^9, 3.9777483511518726`*^9}, {3.9777485633411465`*^9, 
+   3.9777486365957737`*^9}, {3.9777489395002747`*^9, 3.977748968196541*^9}, 
+   3.977749194732971*^9, {3.97774953486034*^9, 3.977749536771145*^9}, {
+   3.977750400295973*^9, 
+   3.9777504051670513`*^9}},ExpressionUUID->"fdf77f3e-708f-a542-83f5-\
+391acf0b61c2"],
+
+Cell[CellGroupData[{
+
+Cell["High-Level Plan", "Subsection",
+ CellChangeTimes->{{3.9777489778240643`*^9, 3.9777489811601906`*^9}, {
+  3.9777491211759377`*^9, 
+  3.9777491227050743`*^9}},ExpressionUUID->"3cb2d0ac-80d3-c348-81dd-\
+d903dbe12ffd"],
+
+Cell["Simulation Goal", "Item",
+ CellChangeTimes->{{3.9777492619519024`*^9, 3.977749288757229*^9}, {
+  3.9777493795878334`*^9, 
+  3.9777494108113327`*^9}},ExpressionUUID->"ca34d2bc-f0a8-b84e-a99b-\
+34539007b040"],
+
+Cell[CellGroupData[{
+
+Cell["Agent-Based Model", "Item",
+ CellChangeTimes->{{3.9777492619519024`*^9, 3.977749288757229*^9}, 
+   3.977749627057596*^9, {3.977750034822422*^9, 
+   3.977750035896166*^9}},ExpressionUUID->"09fee705-70a3-b64c-87a6-\
+d6be3fa33688"],
+
+Cell["Agents", "Subitem",
+ CellChangeTimes->{{3.9777492619519024`*^9, 3.9777493691054115`*^9}, {
+  3.9777494212264404`*^9, 3.9777494350137005`*^9}, {3.9777495795518456`*^9, 
+  3.977749579976906*^9}, {3.977751908637785*^9, 
+  3.9777519086387863`*^9}},ExpressionUUID->"69184712-77d9-d84e-ae10-\
+581e556b9fbd"],
+
+Cell["Predator Agents", "Subitem",
+ CellChangeTimes->{{3.9777492619519024`*^9, 3.9777493691054115`*^9}, {
+  3.9777494212264404`*^9, 3.9777494350137005`*^9}, {3.9777495795518456`*^9, 
+  3.977749579976906*^9}, {3.9777519091168156`*^9, 
+  3.9777519112032585`*^9}},ExpressionUUID->"88bf829f-5669-bb40-9237-\
+e6ea6182ca74"],
+
+Cell["Environment", "Subitem",
+ CellChangeTimes->{{3.9777492619519024`*^9, 3.9777493691054115`*^9}, {
+  3.977749423798435*^9, 3.9777494430992165`*^9}, {3.977749581635355*^9, 
+  3.977749606198992*^9}},ExpressionUUID->"70852041-4d4a-0f40-b233-\
+324966cb09c8"],
+
+Cell["Parameters", "Subitem",
+ CellChangeTimes->{{3.9777492619519024`*^9, 3.9777493691054115`*^9}, {
+  3.977749423798435*^9, 3.9777494430992165`*^9}, {3.977749581635355*^9, 
+  3.9777496089426823`*^9}, {3.9777501718566704`*^9, 
+  3.97775017185767*^9}},ExpressionUUID->"91276606-391d-aa4e-bdb6-\
+e613e153e007"],
+
+Cell["Visuals", "Subitem",
+ CellChangeTimes->{{3.9777492619519024`*^9, 3.9777493691054115`*^9}, {
+  3.977749423798435*^9, 3.9777494430992165`*^9}, {3.977749581635355*^9, 
+  3.9777496089426823`*^9}, {3.9777501724973564`*^9, 3.9777501730732594`*^9}, {
+  3.977750296027605*^9, 
+  3.977750307493273*^9}},ExpressionUUID->"e34e3629-7747-ce4b-9e18-\
+30c5ae2fc015"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Simulation Rules", "Item",
+ CellChangeTimes->{{3.9777492619519024`*^9, 3.9777493691054115`*^9}, {
+  3.977749423798435*^9, 3.977749477511265*^9}, {3.977750037823168*^9, 
+  3.9777500501572304`*^9}},ExpressionUUID->"0c95cec5-9990-084d-bc6e-\
+0595ec8a75ae"],
+
+Cell["Feeding", "Subitem",
+ CellChangeTimes->{{3.9777492619519024`*^9, 3.977749377584236*^9}, {
+   3.97774941661166*^9, 3.9777494183544693`*^9}, {3.977749464058485*^9, 
+   3.9777494917923584`*^9}, 
+   3.9777521375974503`*^9},ExpressionUUID->"29c71804-a65d-ad46-8697-\
+1ee9c16cc842"],
+
+Cell["Reproduction", "Subitem",
+ CellChangeTimes->{{3.9777492619519024`*^9, 3.977749377584236*^9}, {
+  3.97774941661166*^9, 3.9777494183544693`*^9}, {3.977749464058485*^9, 
+  3.977749502243513*^9}},ExpressionUUID->"4762aaee-9c46-e142-a4d6-\
+618b055db5c2"],
+
+Cell["Parenthood", "Subitem",
+ CellChangeTimes->{{3.9777492619519024`*^9, 3.977749377584236*^9}, {
+  3.97774941661166*^9, 3.9777494183544693`*^9}, {3.977749464058485*^9, 
+  3.97774950335565*^9}},ExpressionUUID->"46227616-cf4e-1d47-aaac-\
+7abcd6f1513e"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Reproductive Strategies", "Item",
+ CellChangeTimes->{{3.9777492619519024`*^9, 3.9777492803920593`*^9}, {
+   3.9777493245174694`*^9, 3.977749329035654*^9}, {3.977749364020653*^9, 
+   3.977749366512293*^9}, {3.977749495936983*^9, 3.977749498248522*^9}, {
+   3.9777495908827343`*^9, 3.977749596055252*^9}, {3.9777496390373554`*^9, 
+   3.9777496390383625`*^9}, 
+   3.9777500521601143`*^9},ExpressionUUID->"7b67e02a-c807-884d-a6d1-\
+5be3490960ba"],
+
+Cell["Mutational Emergence", "Subitem",
+ CellChangeTimes->{{3.9777492619519024`*^9, 3.9777492803920593`*^9}, {
+  3.9777493245174694`*^9, 3.977749329035654*^9}, {3.977749364020653*^9, 
+  3.977749366512293*^9}, {3.977749495936983*^9, 3.977749498248522*^9}, {
+  3.9777495908827343`*^9, 3.977749596055252*^9}, {3.977749639580595*^9, 
+  3.9777496810092525`*^9}},ExpressionUUID->"d0fc1f87-eb41-494c-9e55-\
+debe99d7b9d0"],
+
+Cell["r/K archetypes", "Subitem",
+ CellChangeTimes->{{3.9777492619519024`*^9, 3.9777492803920593`*^9}, {
+  3.9777493245174694`*^9, 3.977749329035654*^9}, {3.977749364020653*^9, 
+  3.977749366512293*^9}, {3.977749495936983*^9, 3.977749498248522*^9}, {
+  3.9777495908827343`*^9, 3.977749596055252*^9}, {3.977749639580595*^9, 
+  3.977749640327404*^9}, {3.9777496958841343`*^9, 3.977749718166071*^9}, {
+  3.9777497615214996`*^9, 
+  3.97774976454648*^9}},ExpressionUUID->"843cff2c-e4cb-9849-b67c-\
+cb46fa6e403d"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Parenting Strategies", "Item",
+ CellChangeTimes->{{3.9777492619519024`*^9, 3.9777492803920593`*^9}, {
+   3.9777493245174694`*^9, 3.977749329035654*^9}, {3.977749364020653*^9, 
+   3.977749366512293*^9}, {3.977749495936983*^9, 3.977749498248522*^9}, {
+   3.9777495908827343`*^9, 3.977749596055252*^9}, {3.977749639580595*^9, 
+   3.977749640327404*^9}, {3.9777496958841343`*^9, 3.977749718166071*^9}, {
+   3.9777497615214996`*^9, 3.977749777337244*^9}, 
+   3.9777500539010983`*^9},ExpressionUUID->"68cde640-916e-6147-b606-\
+e8c1b9b8bc86"],
+
+Cell["Mutational Emergence", "Subitem",
+ CellChangeTimes->{{3.9777492619519024`*^9, 3.9777492803920593`*^9}, {
+  3.9777493245174694`*^9, 3.977749329035654*^9}, {3.977749364020653*^9, 
+  3.977749366512293*^9}, {3.977749495936983*^9, 3.977749498248522*^9}, {
+  3.9777495908827343`*^9, 3.977749596055252*^9}, {3.977749639580595*^9, 
+  3.977749640327404*^9}, {3.9777496958841343`*^9, 3.977749718166071*^9}, {
+  3.9777497615214996`*^9, 
+  3.9777497825170555`*^9}},ExpressionUUID->"e234de48-fcca-f248-9d08-\
+ca9b887b1434"],
+
+Cell["Evolutionary Game Theory Modeling of Parenting Behaviors", "Subitem",
+ CellChangeTimes->{{3.9777492619519024`*^9, 3.9777492803920593`*^9}, {
+  3.9777493245174694`*^9, 3.977749329035654*^9}, {3.977749364020653*^9, 
+  3.977749366512293*^9}, {3.977749495936983*^9, 3.977749498248522*^9}, {
+  3.9777495908827343`*^9, 3.977749596055252*^9}, {3.977749639580595*^9, 
+  3.977749640327404*^9}, {3.9777496958841343`*^9, 3.977749718166071*^9}, {
+  3.9777497615214996`*^9, 3.9777498015105705`*^9}, {3.9777501953376713`*^9, 
+  3.9777501953386707`*^9}},ExpressionUUID->"c65099b7-795b-6647-8d04-\
+415f063daacf"],
+
+Cell["Parenting Behavior and Reproductive Strategy Coupling", "Subitem",
+ CellChangeTimes->{{3.9777492619519024`*^9, 3.9777492803920593`*^9}, {
+  3.9777493245174694`*^9, 3.977749329035654*^9}, {3.977749364020653*^9, 
+  3.977749366512293*^9}, {3.977749495936983*^9, 3.977749498248522*^9}, {
+  3.9777495908827343`*^9, 3.977749596055252*^9}, {3.977749639580595*^9, 
+  3.977749640327404*^9}, {3.9777496958841343`*^9, 3.977749718166071*^9}, {
+  3.9777497615214996`*^9, 3.9777498015105705`*^9}, {3.9777501958908386`*^9, 
+  3.9777502113769894`*^9}},ExpressionUUID->"8db6feae-cc56-d244-ad70-\
+b1e4f7787da3"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Analysis", "Item",
+ CellChangeTimes->{{3.9777492619519024`*^9, 3.9777492803920593`*^9}, {
+  3.9777493245174694`*^9, 3.977749329035654*^9}, {3.977749364020653*^9, 
+  3.977749366512293*^9}, {3.977749495936983*^9, 3.977749498248522*^9}, {
+  3.9777495908827343`*^9, 3.977749596055252*^9}, {3.977749639580595*^9, 
+  3.977749640327404*^9}, {3.9777496958841343`*^9, 
+  3.977749720718334*^9}},ExpressionUUID->"5d3dfdf2-e3dc-4d48-b7db-\
+b8f4270ebb77"],
+
+Cell["Gene-tracking", "Subitem",
+ CellChangeTimes->{{3.9777492619519024`*^9, 3.9777492803920593`*^9}, {
+  3.9777493245174694`*^9, 3.977749329035654*^9}, {3.977749364020653*^9, 
+  3.977749366512293*^9}, {3.977749495936983*^9, 3.977749498248522*^9}, {
+  3.9777495908827343`*^9, 3.977749596055252*^9}, {3.977749639580595*^9, 
+  3.977749640327404*^9}, {3.9777496958841343`*^9, 
+  3.9777497278332863`*^9}},ExpressionUUID->"6cf59ec6-3b7d-bc4c-b2a7-\
+a436ff6ac23e"],
+
+Cell["Experiments (IVs: Parameters; DV: Advantageous Strategy)", "Subitem",
+ CellChangeTimes->{{3.9777492619519024`*^9, 3.9777492803920593`*^9}, {
+  3.9777493245174694`*^9, 3.977749329035654*^9}, {3.977749364020653*^9, 
+  3.977749366512293*^9}, {3.977749495936983*^9, 3.977749498248522*^9}, {
+  3.9777495908827343`*^9, 3.977749596055252*^9}, {3.977749639580595*^9, 
+  3.977749640327404*^9}, {3.9777496958841343`*^9, 3.977749745790863*^9}, {
+  3.977749825502592*^9, 3.9777498417876377`*^9}, {3.977749882105421*^9, 
+  3.977749882105421*^9}, {3.977750233409088*^9, 
+  3.977750233409088*^9}},ExpressionUUID->"4dbd7e3c-d893-4c4f-b3dc-\
+7f6837223d43"],
+
+Cell["Obtaining Evolutionarily Stable Strategies", "Subitem",
+ CellChangeTimes->{{3.9777492619519024`*^9, 3.9777492803920593`*^9}, {
+  3.9777493245174694`*^9, 3.977749329035654*^9}, {3.977749364020653*^9, 
+  3.977749366512293*^9}, {3.977749495936983*^9, 3.977749498248522*^9}, {
+  3.9777495908827343`*^9, 3.977749596055252*^9}, {3.977749639580595*^9, 
+  3.977749640327404*^9}, {3.9777496958841343`*^9, 3.977749745790863*^9}, {
+  3.977749825502592*^9, 3.9777498417876377`*^9}, {3.977749882105421*^9, 
+  3.977749882105421*^9}, {3.9777502359228516`*^9, 
+  3.9777502415994205`*^9}},ExpressionUUID->"5df283fc-e72b-894f-a67a-\
+d773357a9f8b"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Simulation Goal", "Subsection",
+ CellChangeTimes->{{3.977749951729603*^9, 
+  3.9777499527552357`*^9}},ExpressionUUID->"685a71fc-609c-2b43-a1d6-\
+84f6d9a90f13"],
+
+Cell["\<\
+\tAs stated earlier, we hope to create a full fledged Agent-Based Model where \
+we may tweak parameters and collect data on the simulation over time. The \
+simulation would be complete with visuals and animations, showing what\
+\[CloseCurlyQuote]s going on behind the data collection. On a higher-level, \
+it is important to note that agents do not \[OpenCurlyDoubleQuote]feel\
+\[CloseCurlyDoubleQuote] or are not provided \[OpenCurlyDoubleQuote]rewards\
+\[CloseCurlyDoubleQuote] by the simulation. Rather, natural selection drives \
+some agents to do better than others, causing other agents to die out, \
+showing how some strategies are advantageous.\
+\>", "Text",
+ CellChangeTimes->{{3.977749958358597*^9, 3.977750017301708*^9}, {
+   3.9777501512550735`*^9, 3.9777501674649696`*^9}, 3.977750885979969*^9, {
+   3.977753483387802*^9, 
+   3.9777535391122284`*^9}},ExpressionUUID->"ac0f2e2f-663c-fc42-b65a-\
+0682e6f194e7"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Agent-Based Model", "Subsection",
+ CellChangeTimes->{{3.9777501786406345`*^9, 
+  3.9777501825778065`*^9}},ExpressionUUID->"fa9ff3b8-c88f-5646-b5ca-\
+28b43de1e239"],
+
+Cell[CellGroupData[{
+
+Cell["Agents", "Subsubsection",
+ CellChangeTimes->{{3.9777505613562565`*^9, 
+  3.9777505630862675`*^9}},ExpressionUUID->"7174897e-a64d-5743-8367-\
+8ece14c230ea"],
+
+Cell[TextData[{
+ "\tOur agents would be stand-ins for whatever organism one would hope to \
+emulate in our simulation. They will be governed by simple rules. However, as \
+is the case with ABM, their collective behavior ",
+ StyleBox["synergizes",
+  IgnoreSpellCheck->True],
+ " into emergent complexity. \n\tAgents will have 2 vital statistics: age and \
+energy. age will be measured in seconds or a certain timestep of our \
+simulation and a distinction will be made between two age groups: adult and \
+child. There will be a threshold for what age qualifies an agent as an adult \
+or a child. Children will inherently have higher energy costs, slower speed, \
+or some sort of limitation to simulated the natural vulnerability of \
+children. The vulnerability of children can be tweaked as a parameter, and \
+will probably influence parenting behavior. Energy is a measure of the \
+resources an agent has available to them while they exist in the simulation.\n\
+\tAgents will require energy to survive. Agents will only be able to gain \
+energy by either 2 ways: consuming food, or receiving energy from a parent. \
+Agents may only gain energy in the second way if they are a child.\n\tAgents \
+can be created through the process of reproduction between other agents \
+(enumerated later on) and they vanish from the environment (die) when they \
+either: 1) run out of energy, or 2) exhaust their lifespan, which can be a \
+parameter that is set by the user. Parameters are also explained later on.\n\t\
+There will be a multitude of ways that Agents will be able to spend their \
+energy. These include:"
+}], "Text",
+ CellChangeTimes->{{3.977750573044382*^9, 3.9777508236868725`*^9}, {
+  3.9777508629000187`*^9, 3.9777510612759743`*^9}, {3.9777514994778137`*^9, 
+  3.977751609816883*^9}, {3.977751652551483*^9, 3.977751712495121*^9}, {
+  3.977751753488367*^9, 3.9777518035212307`*^9}, {3.9777527412074394`*^9, 
+  3.9777527852947636`*^9}},ExpressionUUID->"87343269-ab67-7d44-babb-\
+1986530f7058"],
+
+Cell["\<\
+Simply existing. Energy will be consumed with time to simulate the bodily \
+functions of an organism.\
+\>", "Item",
+ CellChangeTimes->{{3.9777510637428913`*^9, 3.977751247920191*^9}, {
+  3.9777516164607944`*^9, 3.977751617381052*^9}, {3.977751716928919*^9, 
+  3.977751731407831*^9}},ExpressionUUID->"d2e9baea-fa85-404a-99a3-\
+a6aae8853294"],
+
+Cell[TextData[{
+ "Moving around in the environment. A common way to model energy costs for \
+movement in ABM is: energy ~ ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["speed", "2"], TraditionalForm]],
+  FormatType->TraditionalForm,ExpressionUUID->
+  "49021f87-7174-f14d-b1e6-d00d5944d705"],
+ ". This models the conversion of an organisms chemical energy in organisms\
+\[CloseCurlyQuote] muscles to kinetic energy--k = ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    FractionBox["1", "2"], 
+    SuperscriptBox["mv", "2"]}], TraditionalForm]],
+  FormatType->TraditionalForm,ExpressionUUID->
+  "c6fd1133-c05f-f042-8019-b2e60596ab87"],
+ ". We can either choose our agents to have variable speed or fix their speed \
+to be constant, in which case their energy cost for movement will simply be \
+constant."
+}], "Item",
+ CellChangeTimes->{{3.9777510637428913`*^9, 3.977751247920191*^9}, {
+  3.9777516164607944`*^9, 
+  3.977751617381052*^9}},ExpressionUUID->"5dc9a0c9-faa0-1e44-9db6-\
+8c7b6e2b2e2b"],
+
+Cell["\<\
+Obtaining more food. Such a task will require less energy than an agent gains \
+from obtaining food. This amount of energy may also be a simulation parameter.\
+\>", "Item",
+ CellChangeTimes->{{3.9777510637428913`*^9, 3.9777510862874317`*^9}, {
+  3.9777512534470615`*^9, 
+  3.9777512749010696`*^9}},ExpressionUUID->"11e8c2ce-5d01-104d-96a2-\
+6e7082d74bd5"],
+
+Cell["\<\
+Reproducing. We can make the amount of energy to reproduce be proportionally \
+scale with the amount of offspring, or have it be concave down (having \
+triplets seems like it could be more than 3 times as hard as just having 1 \
+child). The reproduction energy function can also be a parameter.\
+\>", "Item",
+ CellChangeTimes->{{3.9777510637428913`*^9, 3.9777510862874317`*^9}, {
+  3.9777512534470615`*^9, 3.977751308920908*^9}, {3.977751352684641*^9, 
+  3.977751451656925*^9}},ExpressionUUID->"6a78cf3d-3bf6-8b42-a7f8-\
+0d2dd52f422f"],
+
+Cell["\<\
+Parenting. Some agents, by their genes, will be compelled to donate energy to \
+their children. This circumvents the process of their children having to find \
+their own food, which may be seen as evolutionarily advantageous in some \
+environments. This however, comes at a cost to parents and could inhibit \
+their own ability to reproduce more or \[OpenCurlyDoubleQuote]protect\
+\[CloseCurlyDoubleQuote] their children. A great analogy for the \
+\[OpenCurlyDoubleQuote]parenting\[CloseCurlyDoubleQuote] process we hope to \
+model is the process by which birds regurgitate digested food to their young.\
+\>", "Item",
+ CellChangeTimes->{{3.9777510637428913`*^9, 3.9777510862874317`*^9}, {
+  3.9777512534470615`*^9, 3.977751308920908*^9}, {3.977751352684641*^9, 
+  3.97775149296274*^9}, {3.977751827258793*^9, 
+  3.977751953094837*^9}},ExpressionUUID->"c4a701d3-18ca-9c4b-9507-\
+89166ccb45aa"],
+
+Cell["\<\
+\tNatural instinct will guide the decisions of agents. Agents will obviously \
+spend most of their time looking for food. One way this natural instinct is \
+simulated is done by just having them randomly move around and if they come \
+across food they obtain it. Another way is by just having them have a sensing \
+distance and take shortest paths to the nearest food or the nearest mate when \
+they are within their sensing distance. How many children agents choose to \
+have and how they choose to parent those children will be in their genes, \
+which we will define further. But in general, the decisions of an agent will \
+deterministic and based off their simulated \[OpenCurlyDoubleQuote]genes.\
+\[CloseCurlyDoubleQuote] An example: an agent has the genes: (have one child, \
+do not feed and abandon children) will always do those things as such.\
+\>", "Text",
+ CellChangeTimes->{{3.9777521179721413`*^9, 3.9777522055900135`*^9}, {
+   3.9777522464097767`*^9, 3.9777522621293526`*^9}, {3.9777523019047375`*^9, 
+   3.9777524340801373`*^9}, {3.977754033922886*^9, 3.9777540390521355`*^9}, 
+   3.9777540927721043`*^9},ExpressionUUID->"1086e55a-c9b6-cf4a-b188-\
+d4bd94474347"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Predator Agents", "Subsubsection",
+ CellChangeTimes->{{3.9777520119162807`*^9, 
+  3.9777520270198936`*^9}},ExpressionUUID->"e8033681-13fb-e940-b889-\
+0623ae64b7f9"],
+
+Cell["\<\
+\tIf we find it fruitful, we may introduce an additional layer of complexity \
+by putting predators in our simulation that feed on agents. This could add a \
+parental dynamic of \[OpenCurlyDoubleQuote]protecting\[CloseCurlyDoubleQuote] \
+young and could be an interesting direction to explore. Predator agents would \
+have similar movement and consumption rules. However for now, we will not \
+implement them and the limiting factor will be resources and competition from \
+other agents rather than the threat of predator agents.\
+\>", "Text",
+ CellChangeTimes->{{3.977752030451727*^9, 3.9777521110612545`*^9}, 
+   3.977754095249096*^9},ExpressionUUID->"747835fa-8ba7-df44-bfec-\
+030551143602"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Environment", "Subsubsection",
+ CellChangeTimes->{{3.9777524678526306`*^9, 
+  3.9777524687984066`*^9}},ExpressionUUID->"d5659be7-f23c-3b42-a325-\
+aa7e2499a92d"],
+
+Cell["\<\
+\tThe environment will have simple rules like days pass, and at the start of \
+each day, agents set out from their homes and at the end of each day, agents \
+are teleported back to their homes. This circumvents the need for a mechanic \
+for where and how agents choose to live, while also simulating a natural \
+cycle of the whereabouts of agents. Food can be placed randomly in the \
+environment, and its abundance and distribution can be changed as a \
+parameter. The food will simulate primary producers in an ecosystem, where \
+just as plants produce energy from the seemingly infinite energy of the sun, \
+the food will be placed by without fail, at the start of every day (or other \
+timestep) as per rules of the simulation. To simulate seasons or resource \
+disruptions, we could have the amount of food periodically change (food \
+decreases during simulated \[OpenCurlyDoubleQuote]winter,\
+\[CloseCurlyDoubleQuote] or food suddenly drops during simulated \
+\[OpenCurlyDoubleQuote]blight\[CloseCurlyDoubleQuote]). Who knows what these \
+environmental disruptions will produce. Perhaps parents who don\
+\[CloseCurlyQuote]t feed their children when food is abundant go on fine and \
+pass their genes since food is so abundant that even children can obtain it. \
+Those genes will likely die out in \[OpenCurlyDoubleQuote]winter\
+\[CloseCurlyDoubleQuote] situations, as the kids are not fed, where gene \
+pools that actually nourish their children will survive and pass on their \
+genes.\
+\>", "Text",
+ CellChangeTimes->{{3.9777524824515476`*^9, 3.9777527310671597`*^9}, {
+   3.977752792948433*^9, 3.97775283976939*^9}, {3.977752872844822*^9, 
+   3.9777528738166275`*^9}, 
+   3.977754096431595*^9},ExpressionUUID->"ee3213e0-6870-024c-910e-\
+7f6c4db4a4ab"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Parameters", "Subsubsection",
+ CellChangeTimes->{{3.977752891814438*^9, 
+  3.977752896254608*^9}},ExpressionUUID->"989a9a19-0b8b-9c4e-b025-\
+08ce876f22ea"],
+
+Cell["\<\
+Many parameters that offer rich experimentation possibilities are discussed \
+in the above sections. They are listed here:\
+\>", "Text",
+ CellChangeTimes->{{3.977752899377882*^9, 3.9777529184068413`*^9}, {
+  3.977752976472067*^9, 
+  3.977752977429077*^9}},ExpressionUUID->"4ef23000-0b3e-bc4d-882e-\
+f1fb86004a44"],
+
+Cell[CellGroupData[{
+
+Cell["Demographic/life-history", "Item",
+ CellChangeTimes->{{3.977753012476*^9, 
+  3.9777530162745056`*^9}},ExpressionUUID->"e9cdf0c2-cc92-5749-9536-\
+97d3b8ed7d4b"],
+
+Cell["Adult-child age threshold", "Subitem",
+ CellChangeTimes->{{3.977753012476*^9, 
+  3.9777530277036076`*^9}},ExpressionUUID->"076474fd-0ce0-fc4f-a226-\
+7d04f1694c08"],
+
+Cell["Maximum lifespan", "Subitem",
+ CellChangeTimes->{{3.977753012476*^9, 
+  3.977753032448305*^9}},ExpressionUUID->"db1190ce-cb89-694d-a43c-\
+e91e30617d8f"],
+
+Cell["Child vulnerability (affects energy cost, speed reduction)", "Subitem",
+ CellChangeTimes->{{3.977753012476*^9, 
+  3.9777530485626297`*^9}},ExpressionUUID->"15768b9e-8ae0-8d44-b4c2-\
+2a975ab9cd4f"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Energy", "Item",
+ CellChangeTimes->{{3.977753012476*^9, 
+  3.9777530520264072`*^9}},ExpressionUUID->"6873567b-0495-0b4b-b5a8-\
+8066aea1a690"],
+
+Cell["Baseline energy consumption (\[OpenCurlyDoubleQuote]breathing\
+\[CloseCurlyDoubleQuote] cost, if you will)", "Subitem",
+ CellChangeTimes->{{3.977753012476*^9, 
+  3.9777530616466274`*^9}},ExpressionUUID->"ed01289b-dae2-7c44-b97d-\
+d2c46a15cb97"],
+
+Cell["Initial energy upon the birth of a child", "Subitem",
+ CellChangeTimes->{{3.977753012476*^9, 
+  3.9777530689069576`*^9}},ExpressionUUID->"22eb0a3c-e74c-5148-beb6-\
+56ba59a6f10d"],
+
+Cell["Maximum energy an agent can have", "Subitem",
+ CellChangeTimes->{{3.977753012476*^9, 
+  3.977753078993349*^9}},ExpressionUUID->"b3dd9b4b-0c0c-0148-bdc0-\
+c76495331c94"],
+
+Cell["Energy costs of movement, reproduction", "Subitem",
+ CellChangeTimes->{{3.977753012476*^9, 
+  3.977753084292074*^9}},ExpressionUUID->"614469f2-cb08-ac4e-b8e3-\
+b8ebd9af82b9"],
+
+Cell["Energy gained per food", "Subitem",
+ CellChangeTimes->{{3.977753012476*^9, 
+  3.977753088008173*^9}},ExpressionUUID->"35734d3c-ea53-9843-a58e-\
+41fee08bad03"],
+
+Cell[CellGroupData[{
+
+Cell["Energy cost of converting food to energy (digestion)", "Subitem",
+ CellChangeTimes->{{3.977753012476*^9, 
+  3.9777531016871758`*^9}},ExpressionUUID->"e9dbd4c2-dbd5-934d-9df4-\
+5b78114480cd"],
+
+Cell["Results in a net energy gain for food", "Subsubitem",
+ CellChangeTimes->{{3.977753012476*^9, 3.977753106328972*^9}, {
+  3.977753678285967*^9, 
+  3.977753678286968*^9}},ExpressionUUID->"9eda7c70-dc49-354f-a3d5-\
+c84e7a05b78f"]
+}, Open  ]],
+
+Cell["Energy a parent may donate", "Subitem",
+ CellChangeTimes->{{3.977753012476*^9, 3.977753106328972*^9}, {
+  3.9777536791749287`*^9, 
+  3.977753683531704*^9}},ExpressionUUID->"ed580055-ce2e-fd49-a3b5-\
+4a4b187a3e6c"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Movement", "Item",
+ CellChangeTimes->{{3.977753012476*^9, 
+  3.977753112291649*^9}},ExpressionUUID->"a59dafe4-2b00-9647-b9bb-\
+5cc74a9c59a3"],
+
+Cell["Speed", "Subitem",
+ CellChangeTimes->{{3.977753012476*^9, 
+  3.977753114089306*^9}},ExpressionUUID->"c8b57e45-c4f3-c64d-8a79-\
+1b0b9f8c2df1"],
+
+Cell["\<\
+Movement rule (random walk vs. shortest path vs. manhattan grid)\
+\>", "Subitem",
+ CellChangeTimes->{{3.977753012476*^9, 
+  3.9777531216097355`*^9}},ExpressionUUID->"dd9b3e12-25bd-134c-8f2a-\
+4fe4af22f050"],
+
+Cell["Sensing Radius", "Subitem",
+ CellChangeTimes->{{3.977753012476*^9, 
+  3.977753125654701*^9}},ExpressionUUID->"c3cb4e7a-1d4b-fd48-b432-\
+9fa51eebb3e9"]
+}, Open  ]],
+
+Cell["\<\
+These are examples... There\[CloseCurlyQuote]s so much to be played with once \
+we make our simulation. Even controlling how genes are passed down or the \
+starting distributions of those genes are possibilities!\
+\>", "Item",
+ CellChangeTimes->{{3.977753012476*^9, 
+  3.9777531777385273`*^9}},ExpressionUUID->"aeba584b-25ee-4540-8b98-\
+043f4680aee6"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Visuals", "Subsubsection",
+ CellChangeTimes->{{3.9777532120917034`*^9, 
+  3.9777532294148808`*^9}},ExpressionUUID->"17143292-b851-5e45-8bc2-\
+e57a92470a80"],
+
+Cell["\<\
+\tWe imagine that agents can be some sort of \[OpenCurlyDoubleQuote]blob\
+\[CloseCurlyDoubleQuote] looking thing or just perfect spheres (assume this \
+cow is a perfect sphere!). Food could look like an apple or also just be a \
+little blob. Child agents will be visually smaller than adult agents. \
+Features of agents, like beards or color can also be added to show vital \
+signs: energy/age. We\[CloseCurlyQuote]re also imagining energy bars over \
+agents. Two agents that are mating can both turn a designated mating color \
+indicating that they are mating for visual purposes.\
+\>", "Text",
+ CellChangeTimes->{{3.9777532365458565`*^9, 3.9777533395776634`*^9}, 
+   3.9777541005671673`*^9},ExpressionUUID->"591b5bc4-6b92-cf41-b33a-\
+2788f3497080"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Simulation Rules", "Subsection",
+ CellChangeTimes->{{3.977753592186861*^9, 
+  3.9777535940018673`*^9}},ExpressionUUID->"f00c7bd0-d8e8-7147-b482-\
+6f4bd0bd4255"],
+
+Cell[CellGroupData[{
+
+Cell["Reproduction", "Subsubsection",
+ CellChangeTimes->{{3.9777536105429287`*^9, 3.97775361120467*^9}, {
+  3.977753663044018*^9, 
+  3.977753665943041*^9}},ExpressionUUID->"91e03789-d043-ce4f-bf61-\
+d45f9f7bca55"],
+
+Cell["\<\
+\tWhen two agents have excess energy (will be determined through a \
+threshold), they will, rather than seeking food, seek mates, and upon finding \
+a mate, reproduce with the mate. This is assuming sexual reproduction in our \
+simulation, and we\[CloseCurlyQuote]re still torn between implementing our \
+ABM through sexual or asexual reproduction. For now we\[CloseCurlyQuote]re \
+assuming sexual. This reproduction will cost energy as explained above, and \
+their genes will tell them how many children they should have, costing an \
+amount of energy per the reproduction energy function. We have \
+\[OpenCurlyDoubleQuote]alleles\[CloseCurlyDoubleQuote] that provide the \
+evolutionary behavior and decision making to our agents, and when two mates \
+reproduce their alleles will be mixed among their children either through \
+haploid mixing. As for the biology don\[CloseCurlyQuote]t worry too much, as \
+it will be a simplistic system like this:\
+\>", "Text",
+ CellChangeTimes->{{3.9777536360950775`*^9, 3.9777536600167046`*^9}, {
+   3.97775369707493*^9, 3.977753913075117*^9}, 3.977754102009121*^9, 
+   3.9777544306225624`*^9},ExpressionUUID->"9a005540-18b7-9940-a11b-\
+4abc4b6de22d"],
+
+Cell[CellGroupData[{
+
+Cell["Agents genetic information consists of two genes:", "Item",
+ CellChangeTimes->{{3.977753930160137*^9, 
+  3.977753947834734*^9}},ExpressionUUID->"de1eea90-0575-fa43-ab46-\
+f842c965eb82"],
+
+Cell[CellGroupData[{
+
+Cell["Gene 1: Reproductive behavior", "Subitem",
+ CellChangeTimes->{{3.977753930160137*^9, 
+  3.977753957383644*^9}},ExpressionUUID->"d0d50a5b-c95c-f94d-8279-\
+5b626d7d2918"],
+
+Cell["\<\
+Consists of 1 of many alleles telling the agent how many children to have \
+when they reproduce.\
+\>", "Subsubitem",
+ CellChangeTimes->{{3.977753930160137*^9, 3.977753987186596*^9}, {
+  3.977754442003807*^9, 
+  3.97775444540843*^9}},ExpressionUUID->"eef63250-7274-4045-9cef-\
+2a662064076f"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Gene 2: Parenting behavior", "Subitem",
+ CellChangeTimes->{{3.977753930160137*^9, 
+  3.977753981902149*^9}},ExpressionUUID->"b872775c-74ec-574e-8d9a-\
+591a1faba1b8"],
+
+Cell["\<\
+Consists of 1 of many alleles telling the agent in what situations to feed \
+their children.\
+\>", "Subsubitem",
+ CellChangeTimes->{{3.977753930160137*^9, 3.977753996674383*^9}, {
+  3.9777540448662357`*^9, 3.977754044867235*^9}, {3.97775444840432*^9, 
+  3.977754450324724*^9}},ExpressionUUID->"ccaec08f-a548-2f45-8de2-\
+337e39d742ad"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Child genetic information:", "Item",
+ CellChangeTimes->{{3.9777541275762444`*^9, 3.9777541353134556`*^9}, 
+   3.9777544891665287`*^9},ExpressionUUID->"7ad0e6c0-147f-1445-970b-\
+a021255d3be1"],
+
+Cell["\<\
+Gene 1: Reproductive Behavior -- Choose randomly between first parent and \
+second parent\[CloseCurlyQuote]s allele\
+\>", "Subitem",
+ CellChangeTimes->{{3.9777541275762444`*^9, 
+  3.977754155278471*^9}},ExpressionUUID->"3dd1f451-0bc7-a147-8a53-\
+0b32cda95bdc"],
+
+Cell["\<\
+Gene 2: Parenting Behavior -- Choose randomly between first parent and second \
+parent\[CloseCurlyQuote]s allele\
+\>", "Subitem",
+ CellChangeTimes->{{3.9777541275762444`*^9, 
+  3.9777541674959774`*^9}},ExpressionUUID->"be82ca47-c32a-454b-bfdf-\
+0e4952e3050c"]
+}, Open  ]],
+
+Cell["This is called haploid mixing.", "Item",
+ CellChangeTimes->{{3.9777541275762444`*^9, 
+  3.9777541722636642`*^9}},ExpressionUUID->"1d036bc2-5f25-1348-963b-\
+5f019ac3bb31"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Parenting", "Subsubsection",
+ CellChangeTimes->{{3.9777542032719746`*^9, 
+  3.9777542066556873`*^9}},ExpressionUUID->"4f571003-7de0-ec4d-92d1-\
+ffc4c3f2517c"],
+
+Cell["\<\
+\tParenting behavior as explained earlier comes from the second agent gene. \
+Agents that have instructions to abandon their children and not feed them \
+will not follow their children upon their birth. Agents that have \
+instructions to care for their children will travel with them, and donate \
+energy to them. The exact mechanics of parenting aren\[CloseCurlyQuote]t yet \
+fleshed out, but different parenting strategies are described in the \
+\[OpenCurlyDoubleQuote]Parenting Strategies\[CloseCurlyDoubleQuote] \
+subsection.\
+\>", "Text",
+ CellChangeTimes->{{3.9777542125971317`*^9, 3.9777543200278625`*^9}, {
+  3.9777543502894287`*^9, 
+  3.977754369066242*^9}},ExpressionUUID->"a9216b98-58f3-fd47-96ee-\
+2c876c8b8d3d"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Reproductive Strategies", "Subsection",
+ CellChangeTimes->{{3.977754390326084*^9, 
+  3.977754393065157*^9}},ExpressionUUID->"d422e3b0-80b0-2042-bd2c-\
+6e33d2f46b8a"],
+
+Cell[CellGroupData[{
+
+Cell["Mutational Emergence", "Subsubsection",
+ CellChangeTimes->{{3.977754583849676*^9, 
+  3.977754586799942*^9}},ExpressionUUID->"b32b81f3-9852-fa4e-a12b-\
+846c79883363"],
+
+Cell["...", "Text",
+ CellChangeTimes->{{3.977754604143511*^9, 
+  3.977754604383396*^9}},ExpressionUUID->"43326580-38c6-214f-8dc7-\
+fa0aefbcc1f1"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["r/K Archetypes", "Subsubsection",
+ CellChangeTimes->{{3.97775461788241*^9, 
+  3.977754620372566*^9}},ExpressionUUID->"8c6874da-b6c3-094a-9069-\
+ba424003fbaa"],
+
+Cell["...", "Text",
+ CellChangeTimes->{{3.9777546260952053`*^9, 
+  3.9777546263805256`*^9}},ExpressionUUID->"626f3a24-fbb5-014e-8d1a-\
+0784a4613833"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Parenting Strategies", "Subsection",
+ CellChangeTimes->{{3.9777546478237343`*^9, 
+  3.977754651335022*^9}},ExpressionUUID->"243cd68f-9b2f-9e47-b274-\
+ed56d5829c7b"],
+
+Cell[CellGroupData[{
+
+Cell["Mutational Emergence", "Subsubsection",
+ CellChangeTimes->{
+  3.977754671950779*^9},ExpressionUUID->"50e402bf-f710-2845-8db7-\
+eac0827ac834"],
+
+Cell["...", "Text",
+ CellChangeTimes->{{3.9777546761172943`*^9, 
+  3.9777546763679295`*^9}},ExpressionUUID->"a46dd8f4-4ceb-4845-bd80-\
+795e40db748c"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Evolutionary Game Theory Modeling of Parenting Behaviors", \
+"Subsubsection",
+ CellChangeTimes->{{3.9777546965305557`*^9, 
+  3.9777546994299545`*^9}},ExpressionUUID->"5d66a0a4-a6cc-1b48-9ada-\
+68cf8e33803d"],
+
+Cell["\<\
+\tParenting behaviors will be modeled using Evolutionary Game Theory. \
+Specifically, interactions between parents and their children will be modeled \
+with reward matrices. Children will either be in one or two situations: above \
+a specific energy threshold, or below that threshold. The parent will be able \
+to make one of two decisions, and the decision they make will be \
+deterministic based off there parenting allele. Parents can either feed their \
+children, or lead them to starve. One example of such a reward matrix may \
+look like this:
+
+reward matrix...
+
+Parenting behavior alleles that we will introduce:\
+\>", "Text",
+ CellChangeTimes->{{3.97775470496834*^9, 3.977754832313711*^9}, {
+  3.9777548834242783`*^9, 
+  3.977754925472004*^9}},ExpressionUUID->"5bf1d58b-0489-034b-9b90-\
+ebf72c37eacb"],
+
+Cell["\<\
+Base strategy: my children do not exist -- I only care about myself, so I \
+will always choose STARVE, no matter what\
+\>", "Item",
+ CellChangeTimes->{{3.97775494969705*^9, 
+  3.97775497705122*^9}},ExpressionUUID->"c9efe1c2-57ad-6b49-8835-\
+759cea4e1042"],
+
+Cell["\<\
+Loving parent: always FEED all my children equally no matter what\
+\>", "Item",
+ CellChangeTimes->{{3.97775494969705*^9, 3.977755001942814*^9}, {
+  3.9777550371849327`*^9, 
+  3.9777550397503757`*^9}},ExpressionUUID->"f4384a61-c521-8749-877e-\
+a6099fce6b07"],
+
+Cell["\<\
+Practical parent: only FEED my children accordingly, if they are STARVING\
+\>", "Item",
+ CellChangeTimes->{{3.97775494969705*^9, 3.9777550066887608`*^9}, {
+  3.977755044043049*^9, 
+  3.977755049269331*^9}},ExpressionUUID->"d073edda-531c-5442-a190-\
+28021c9ab5ac"],
+
+Cell["\<\
+Favoritism parent: only FEED the children that are able to find food. STARVE \
+the children that aren\[CloseCurlyQuote]t able to (the excess energy converts \
+into improved well-being of the children, while the children that are \
+starving merely survive)\
+\>", "Item",
+ CellChangeTimes->{{3.97775494969705*^9, 3.977755005366556*^9}, {
+  3.9777550553144016`*^9, 
+  3.977755118163887*^9}},ExpressionUUID->"02ded27f-5998-6747-9332-\
+e52bc0b28c02"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Sprints and Task Maps", "Section",
+ CellChangeTimes->{{3.9776636218667507`*^9, 
+  3.9776636247714195`*^9}},ExpressionUUID->"957c2ea5-d83a-0e48-bbc2-\
+e46f34898025"],
+
+Cell["lorem ipsum", "Text",
+ CellChangeTimes->{
+  3.977663629398081*^9},ExpressionUUID->"af91c47a-1b35-3e4e-93d0-\
+a6475728b585"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Demonstration", "Section",
+ CellChangeTimes->{{3.9776636391262093`*^9, 
+  3.9776636469418526`*^9}},ExpressionUUID->"44f62858-274a-3e4c-8d20-\
+ce673cdfd6c3"],
+
+Cell["lorem ipsum", "Text",
+ CellChangeTimes->{
+  3.9776636548466473`*^9},ExpressionUUID->"bbe36462-d83e-3f4e-9a39-\
+57661dd064d3"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Data", "Section",
+ CellChangeTimes->{{3.9776636616130695`*^9, 
+  3.977663661926258*^9}},ExpressionUUID->"32358720-da01-c340-9105-\
+3ddd031382fc"],
+
+Cell["lorem ipsum", "Text",
+ CellChangeTimes->{
+  3.977663666573164*^9},ExpressionUUID->"cb34a0af-993c-ae47-ae4a-\
+afcbeb5c9dbd"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["References", "Section",
+ CellChangeTimes->{{3.9776985664196587`*^9, 
+  3.9776985672092056`*^9}},ExpressionUUID->"11863a8a-2c34-094f-b9ea-\
+87f581d076b6"],
+
+Cell[TextData[{
+ "1. The ",
+ StyleBox["Primer",
+  FontSlant->"Italic"],
+ " YouTube Channel: https://www.youtube.com/@PrimerBlobs"
+}], "Text",
+ CellChangeTimes->{{3.9776985786968327`*^9, 3.9776985796619263`*^9}, {
+  3.977749211153078*^9, 
+  3.9777492405352116`*^9}},ExpressionUUID->"2d8704f0-438c-d945-9b28-\
+d2e251a40096"]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{1288.5, 999.75},
+WindowMargins->{{530.25, Automatic}, {Automatic, 278.25}},
+Magnification:>0.8 Inherited,
+FrontEndVersion->"14.3 for Microsoft Windows (64-bit) (July 8, 2025)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"71bf39f7-ba00-014d-a601-1a94f5364a38"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[576, 22, 209, 4, 96, "Title",ExpressionUUID->"12e3845f-e16d-fc4b-897f-273abfdd0040"],
+Cell[788, 28, 551, 9, 83, "Subtitle",ExpressionUUID->"9a5b0013-8b30-284a-9cc8-f6a8808a4c22"],
+Cell[1342, 39, 184, 3, 33, "Text",ExpressionUUID->"4580851f-af58-df4d-bf5c-75644240a4d6"],
+Cell[CellGroupData[{
+Cell[1551, 46, 221, 4, 66, "Section",ExpressionUUID->"be1b8abb-a084-5f43-b189-787da0f294ea"],
+Cell[1775, 52, 3973, 63, 383, "Text",ExpressionUUID->"e0e41088-64d5-d64b-862a-7a8846769a8c"],
+Cell[CellGroupData[{
+Cell[5773, 119, 703, 12, 70, "Item",ExpressionUUID->"0da7c77e-2393-1b4f-8514-8f69cfe01993"],
+Cell[6479, 133, 290, 7, 25, "Subitem",ExpressionUUID->"39aac43f-c293-f541-87b7-520a13abdd06"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[6806, 145, 562, 10, 50, "Item",ExpressionUUID->"8b340c47-3801-0841-a5d4-a218430ff308"],
+Cell[7371, 157, 454, 9, 44, "Subitem",ExpressionUUID->"08c25739-eea4-7842-9c59-ab7f91f946f4"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[7874, 172, 207, 4, 66, "Section",ExpressionUUID->"49b35a96-3ef8-bd41-8631-ba725d378bc8"],
+Cell[8084, 178, 4933, 72, 540, "Text",ExpressionUUID->"a39c3e64-d141-0a4f-a42c-eff48a142729"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[13054, 255, 163, 3, 66, "Section",ExpressionUUID->"8bc61b01-5bb8-274f-8245-31fd0f14f4b0"],
+Cell[13220, 260, 1036, 21, 77, "Text",ExpressionUUID->"fdf77f3e-708f-a542-83f5-391acf0b61c2"],
+Cell[CellGroupData[{
+Cell[14281, 285, 220, 4, 53, "Subsection",ExpressionUUID->"3cb2d0ac-80d3-c348-81dd-d903dbe12ffd"],
+Cell[14504, 291, 212, 4, 30, "Item",ExpressionUUID->"ca34d2bc-f0a8-b84e-a99b-34539007b040"],
+Cell[CellGroupData[{
+Cell[14741, 299, 234, 4, 30, "Item",ExpressionUUID->"09fee705-70a3-b64c-87a6-d6be3fa33688"],
+Cell[14978, 305, 307, 5, 25, "Subitem",ExpressionUUID->"69184712-77d9-d84e-ae10-581e556b9fbd"],
+Cell[15288, 312, 318, 5, 25, "Subitem",ExpressionUUID->"88bf829f-5669-bb40-9237-e6ea6182ca74"],
+Cell[15609, 319, 257, 4, 25, "Subitem",ExpressionUUID->"70852041-4d4a-0f40-b233-324966cb09c8"],
+Cell[15869, 325, 308, 5, 25, "Subitem",ExpressionUUID->"91276606-391d-aa4e-bdb6-e613e153e007"],
+Cell[16180, 332, 357, 6, 25, "Subitem",ExpressionUUID->"e34e3629-7747-ce4b-9e18-30c5ae2fc015"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[16574, 343, 259, 4, 30, "Item",ExpressionUUID->"0c95cec5-9990-084d-bc6e-0595ec8a75ae"],
+Cell[16836, 349, 282, 5, 25, "Subitem",ExpressionUUID->"29c71804-a65d-ad46-8697-1ee9c16cc842"],
+Cell[17121, 356, 255, 4, 25, "Subitem",ExpressionUUID->"4762aaee-9c46-e142-a4d6-618b055db5c2"],
+Cell[17379, 362, 252, 4, 25, "Subitem",ExpressionUUID->"46227616-cf4e-1d47-aaac-7abcd6f1513e"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[17668, 371, 448, 7, 30, "Item",ExpressionUUID->"7b67e02a-c807-884d-a6d1-5be3490960ba"],
+Cell[18119, 380, 414, 6, 25, "Subitem",ExpressionUUID->"d0fc1f87-eb41-494c-9e55-debe99d7b9d0"],
+Cell[18536, 388, 507, 8, 25, "Subitem",ExpressionUUID->"843cff2c-e4cb-9849-b67c-cb46fa6e403d"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[19080, 401, 541, 8, 30, "Item",ExpressionUUID->"68cde640-916e-6147-b606-e8c1b9b8bc86"],
+Cell[19624, 411, 516, 8, 25, "Subitem",ExpressionUUID->"e234de48-fcca-f248-9d08-ca9b887b1434"],
+Cell[20143, 421, 602, 8, 25, "Subitem",ExpressionUUID->"c65099b7-795b-6647-8d04-415f063daacf"],
+Cell[20748, 431, 599, 8, 25, "Subitem",ExpressionUUID->"8db6feae-cc56-d244-ad70-b1e4f7787da3"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[21384, 444, 448, 7, 30, "Item",ExpressionUUID->"5d3dfdf2-e3dc-4d48-b7db-b8f4270ebb77"],
+Cell[21835, 453, 458, 7, 25, "Subitem",ExpressionUUID->"6cf59ec6-3b7d-bc4c-b2a7-a436ff6ac23e"],
+Cell[22296, 462, 645, 9, 25, "Subitem",ExpressionUUID->"4dbd7e3c-d893-4c4f-b3dc-7f6837223d43"],
+Cell[22944, 473, 635, 9, 25, "Subitem",ExpressionUUID->"5df283fc-e72b-894f-a67a-d773357a9f8b"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[23628, 488, 165, 3, 53, "Subsection",ExpressionUUID->"685a71fc-609c-2b43-a1d6-84f6d9a90f13"],
+Cell[23796, 493, 931, 15, 77, "Text",ExpressionUUID->"ac0f2e2f-663c-fc42-b65a-0682e6f194e7"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[24764, 513, 169, 3, 53, "Subsection",ExpressionUUID->"fa9ff3b8-c88f-5646-b5ca-28b43de1e239"],
+Cell[CellGroupData[{
+Cell[24958, 520, 161, 3, 43, "Subsubsection",ExpressionUUID->"7174897e-a64d-5743-8367-8ece14c230ea"],
+Cell[25122, 525, 1993, 30, 252, "Text",ExpressionUUID->"87343269-ab67-7d44-babb-1986530f7058"],
+Cell[27118, 557, 350, 7, 30, "Item",ExpressionUUID->"d2e9baea-fa85-404a-99a3-a6aae8853294"],
+Cell[27471, 566, 990, 24, 73, "Item",ExpressionUUID->"5dc9a0c9-faa0-1e44-9db6-8c7b6e2b2e2b"],
+Cell[28464, 592, 365, 7, 30, "Item",ExpressionUUID->"11e8c2ce-5d01-104d-96a2-6e7082d74bd5"],
+Cell[28832, 601, 545, 9, 50, "Item",ExpressionUUID->"6a78cf3d-3bf6-8b42-a7f8-0d2dd52f422f"],
+Cell[29380, 612, 902, 14, 70, "Item",ExpressionUUID->"c4a701d3-18ca-9c4b-9507-89166ccb45aa"],
+Cell[30285, 628, 1187, 17, 121, "Text",ExpressionUUID->"1086e55a-c9b6-cf4a-b188-d4bd94474347"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[31509, 650, 170, 3, 43, "Subsubsection",ExpressionUUID->"e8033681-13fb-e940-b889-0623ae64b7f9"],
+Cell[31682, 655, 704, 11, 77, "Text",ExpressionUUID->"747835fa-8ba7-df44-bfec-030551143602"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[32423, 671, 166, 3, 43, "Subsubsection",ExpressionUUID->"d5659be7-f23c-3b42-a325-aa7e2499a92d"],
+Cell[32592, 676, 1769, 27, 186, "Text",ExpressionUUID->"ee3213e0-6870-024c-910e-7f6c4db4a4ab"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[34398, 708, 161, 3, 43, "Subsubsection",ExpressionUUID->"989a9a19-0b8b-9c4e-b025-08ce876f22ea"],
+Cell[34562, 713, 323, 7, 33, "Text",ExpressionUUID->"4ef23000-0b3e-bc4d-882e-f1fb86004a44"],
+Cell[CellGroupData[{
+Cell[34910, 724, 165, 3, 30, "Item",ExpressionUUID->"e9cdf0c2-cc92-5749-9536-97d3b8ed7d4b"],
+Cell[35078, 729, 169, 3, 25, "Subitem",ExpressionUUID->"076474fd-0ce0-fc4f-a226-7d04f1694c08"],
+Cell[35250, 734, 158, 3, 25, "Subitem",ExpressionUUID->"db1190ce-cb89-694d-a43c-e91e30617d8f"],
+Cell[35411, 739, 202, 3, 25, "Subitem",ExpressionUUID->"15768b9e-8ae0-8d44-b4c2-2a975ab9cd4f"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[35650, 747, 147, 3, 30, "Item",ExpressionUUID->"6873567b-0495-0b4b-b5a8-8066aea1a690"],
+Cell[35800, 752, 250, 4, 25, "Subitem",ExpressionUUID->"ed01289b-dae2-7c44-b97d-d2c46a15cb97"],
+Cell[36053, 758, 184, 3, 25, "Subitem",ExpressionUUID->"22eb0a3c-e74c-5148-beb6-56ba59a6f10d"],
+Cell[36240, 763, 174, 3, 25, "Subitem",ExpressionUUID->"b3dd9b4b-0c0c-0148-bdc0-c76495331c94"],
+Cell[36417, 768, 180, 3, 25, "Subitem",ExpressionUUID->"614469f2-cb08-ac4e-b8e3-b8ebd9af82b9"],
+Cell[36600, 773, 164, 3, 25, "Subitem",ExpressionUUID->"35734d3c-ea53-9843-a58e-41fee08bad03"],
+Cell[CellGroupData[{
+Cell[36789, 780, 196, 3, 25, "Subitem",ExpressionUUID->"e9dbd4c2-dbd5-934d-9df4-5b78114480cd"],
+Cell[36988, 785, 231, 4, 24, "Subsubitem",ExpressionUUID->"9eda7c70-dc49-354f-a3d5-c84e7a05b78f"]
+}, Open  ]],
+Cell[37234, 792, 219, 4, 25, "Subitem",ExpressionUUID->"ed580055-ce2e-fd49-a3b5-4a4b187a3e6c"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[37490, 801, 147, 3, 30, "Item",ExpressionUUID->"a59dafe4-2b00-9647-b9bb-5cc74a9c59a3"],
+Cell[37640, 806, 147, 3, 25, "Subitem",ExpressionUUID->"c8b57e45-c4f3-c64d-8a79-1b0b9f8c2df1"],
+Cell[37790, 811, 216, 5, 25, "Subitem",ExpressionUUID->"dd9b3e12-25bd-134c-8f2a-4fe4af22f050"],
+Cell[38009, 818, 156, 3, 25, "Subitem",ExpressionUUID->"c3cb4e7a-1d4b-fd48-b432-9fa51eebb3e9"]
+}, Open  ]],
+Cell[38180, 824, 361, 7, 50, "Item",ExpressionUUID->"aeba584b-25ee-4540-8b98-043f4680aee6"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[38578, 836, 162, 3, 43, "Subsubsection",ExpressionUUID->"17143292-b851-5e45-8bc2-e57a92470a80"],
+Cell[38743, 841, 760, 12, 77, "Text",ExpressionUUID->"591b5bc4-6b92-cf41-b33a-2788f3497080"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[39552, 859, 166, 3, 53, "Subsection",ExpressionUUID->"f00c7bd0-d8e8-7147-b482-6f4bd0bd4255"],
+Cell[CellGroupData[{
+Cell[39743, 866, 213, 4, 43, "Subsubsection",ExpressionUUID->"91e03789-d043-ce4f-bf61-d45f9f7bca55"],
+Cell[39959, 872, 1199, 18, 121, "Text",ExpressionUUID->"9a005540-18b7-9940-a11b-4abc4b6de22d"],
+Cell[CellGroupData[{
+Cell[41183, 894, 191, 3, 30, "Item",ExpressionUUID->"de1eea90-0575-fa43-ab46-f842c965eb82"],
+Cell[CellGroupData[{
+Cell[41399, 901, 174, 3, 25, "Subitem",ExpressionUUID->"d0d50a5b-c95c-f94d-8279-5b626d7d2918"],
+Cell[41576, 906, 300, 7, 24, "Subsubitem",ExpressionUUID->"eef63250-7274-4045-9cef-2a662064076f"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[41913, 918, 171, 3, 25, "Subitem",ExpressionUUID->"b872775c-74ec-574e-8d9a-591a1faba1b8"],
+Cell[42087, 923, 344, 7, 24, "Subsubitem",ExpressionUUID->"ccaec08f-a548-2f45-8de2-337e39d742ad"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[42480, 936, 197, 3, 30, "Item",ExpressionUUID->"7ad0e6c0-147f-1445-970b-a021255d3be1"],
+Cell[42680, 941, 270, 6, 25, "Subitem",ExpressionUUID->"3dd1f451-0bc7-a147-8a53-0b32cda95bdc"],
+Cell[42953, 949, 269, 6, 25, "Subitem",ExpressionUUID->"be82ca47-c32a-454b-bfdf-0e4952e3050c"]
+}, Open  ]],
+Cell[43237, 958, 176, 3, 30, "Item",ExpressionUUID->"1d036bc2-5f25-1348-963b-5f019ac3bb31"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[43450, 966, 164, 3, 43, "Subsubsection",ExpressionUUID->"4f571003-7de0-ec4d-92d1-ffc4c3f2517c"],
+Cell[43617, 971, 734, 13, 77, "Text",ExpressionUUID->"a9216b98-58f3-fd47-96ee-2c876c8b8d3d"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[44400, 990, 171, 3, 53, "Subsection",ExpressionUUID->"d422e3b0-80b0-2042-bd2c-6e33d2f46b8a"],
+Cell[CellGroupData[{
+Cell[44596, 997, 171, 3, 43, "Subsubsection",ExpressionUUID->"b32b81f3-9852-fa4e-a12b-846c79883363"],
+Cell[44770, 1002, 145, 3, 33, "Text",ExpressionUUID->"43326580-38c6-214f-8dc7-fa0aefbcc1f1"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[44952, 1010, 164, 3, 43, "Subsubsection",ExpressionUUID->"8c6874da-b6c3-094a-9069-ba424003fbaa"],
+Cell[45119, 1015, 149, 3, 33, "Text",ExpressionUUID->"626f3a24-fbb5-014e-8d1a-0784a4613833"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[45317, 1024, 170, 3, 53, "Subsection",ExpressionUUID->"243cd68f-9b2f-9e47-b274-ed56d5829c7b"],
+Cell[CellGroupData[{
+Cell[45512, 1031, 147, 3, 43, "Subsubsection",ExpressionUUID->"50e402bf-f710-2845-8db7-eac0827ac834"],
+Cell[45662, 1036, 149, 3, 33, "Text",ExpressionUUID->"a46dd8f4-4ceb-4845-bd80-795e40db748c"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[45848, 1044, 213, 4, 43, "Subsubsection",ExpressionUUID->"5d66a0a4-a6cc-1b48-9ada-68cf8e33803d"],
+Cell[46064, 1050, 820, 17, 164, "Text",ExpressionUUID->"5bf1d58b-0489-034b-9b90-ebf72c37eacb"],
+Cell[46887, 1069, 265, 6, 30, "Item",ExpressionUUID->"c9efe1c2-57ad-6b49-8835-759cea4e1042"],
+Cell[47155, 1077, 267, 6, 30, "Item",ExpressionUUID->"f4384a61-c521-8749-877e-a6099fce6b07"],
+Cell[47425, 1085, 273, 6, 30, "Item",ExpressionUUID->"d073edda-531c-5442-a190-28021c9ab5ac"],
+Cell[47701, 1093, 455, 9, 50, "Item",ExpressionUUID->"02ded27f-5998-6747-9332-e52bc0b28c02"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[48217, 1109, 170, 3, 66, "Section",ExpressionUUID->"957c2ea5-d83a-0e48-bbc2-e46f34898025"],
+Cell[48390, 1114, 129, 3, 33, "Text",ExpressionUUID->"af91c47a-1b35-3e4e-93d0-a6475728b585"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[48556, 1122, 162, 3, 66, "Section",ExpressionUUID->"44f62858-274a-3e4c-8d20-ce673cdfd6c3"],
+Cell[48721, 1127, 131, 3, 33, "Text",ExpressionUUID->"bbe36462-d83e-3f4e-9a39-57661dd064d3"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[48889, 1135, 151, 3, 66, "Section",ExpressionUUID->"32358720-da01-c340-9105-3ddd031382fc"],
+Cell[49043, 1140, 129, 3, 33, "Text",ExpressionUUID->"cb34a0af-993c-ae47-ae4a-afcbeb5c9dbd"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[49209, 1148, 159, 3, 66, "Section",ExpressionUUID->"11863a8a-2c34-094f-b9ea-87f581d076b6"],
+Cell[49371, 1153, 322, 9, 33, "Text",ExpressionUUID->"2d8704f0-438c-d945-9b28-d2e251a40096"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
