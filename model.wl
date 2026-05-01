@@ -3,7 +3,7 @@
 SetDirectory[NotebookDirectory[]];
 Needs["BasicMethods`"]
 
-parameters = <| (*agent energy is currently unbounded, but we can change that*)
+parameters = <|
   "proximityRadius" -> 0.5, (*proximity radius for food consumption action*)
   "sensingDistance" -> 2,
   "metabolism" -> 0.2, (*energy lost due to metabolism*)
@@ -59,11 +59,11 @@ initializeModel[params_] :=
  ]
 
 propagateModelStep[params_, model_] := Module[{model2=model, params2=params},
-  params2["nextAgentID"] = model2["nextAgentID"];
+  params2["nextAgentID"] = model2["nextAgentID"]; (*huh?*)
   model2 = spawnFoodCheck[model2, params];
   model2 = randomizeAndKill[model2, params]; (*randomization*)
   model2 = agentActions[model2, params];
-  model2 = reproduceAgents[model2, params2];
+  model2 = reproduceAgents[model2, params2]; (*why do we have params2?*)
   model2 = metabolizeAgents[model2, params];
   model2 = ageAgents[model2, params];
   model2["time"] = model2["time"] + params["dt"];
@@ -215,8 +215,6 @@ plotPopulationStats[Simulation]
 
 (*old version of displayGrid*)
 (*displayGrid[model_] := Grid[{{"Food Length: "<>ToString@Length@model["foods"], "Time: "<>ToString@model["time"]}, {Dataset@model["agents"], Dataset@model["foods"]}}*)
-
-
 
 
 
