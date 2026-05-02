@@ -270,5 +270,4 @@ plotPopulationStats[Simulation]
 (*displayGrid[model_] := Grid[{{"Food Length: "<>ToString@Length@model["foods"], "Time: "<>ToString@model["time"]}, {Dataset@model["agents"], Dataset@model["foods"]}}*)
 
 
-(* ::Input:: *)
-(*Quit*)
+
