@@ -2,9 +2,13 @@
 
 BeginPackage["BasicMethods`"]
 
-initializeModel::usage = "Description of the function here"
-genSimulationStates::usage = ""
-renderSimulation::usage = ""
+createAgent::usage = "Returns agent association."
+spawnFoodCheck::usage = "Spawns food at the appropriate time."
+randomizeAndKill::usage = "Randomizes and kills agents that reach death condition."
+agentActions::usage = "Main agent decision logic."
+reproduceAgents::usage = "Agent reproduction function."
+metabolizeAgents::usage = "Applies metabolism to agents"
+ageAgents::usage = "Ages agents"
 
 Begin["`Private`"]
 
@@ -15,7 +19,7 @@ createAgent[pos_, energy_, age_, id_, currentDirection_, parents_:{-1, -1}] := <
     "energy" -> energy,
     "age" -> age, 
 	"id" -> id,
-	"currentDirection" -> currentDirection,
+	"currentDirection" -> currentDirection, (*unit vector*)
 	"parents" -> parents,
     "ancestors" -> ancestors
 |>
@@ -67,12 +71,21 @@ ageAgents[model_, params_] := Module[
 	model2
 ]
 
+(*Obsolete.*)
 randomActionWalk[agent_, params_] := Module[
     {theta = RandomReal[{0, 2 Pi}], agent2 = agent, newPos, min, max},
     {min, max} = params["squareBounds"];
     newPos = agent2["pos"] + {params["stepLength"] * Cos[theta], params["stepLength"] * Sin[theta]}; (*+ operator threadwise*)
     agent2["pos"] = Clip[newPos,  {min, max}];
     agent2
+]
+
+explorationOrIntentionalWalk[agent_, params_] := Module[ (*direction is set in agentActions[], depending on exploration or intentional*)
+	{agent2 = agent, currentDir = agent["currentDirection"], newPos, min, max},
+	{min, max} = params["squareBounds"];
+	newPos = agent2["pos"] + {params["stepLength"] * currentDir[[1]], params["stepLength"] * currentDir[[2]]}; (*+ operator threadwise*)
+	agent2["pos"] = Clip[newPos, {min, max}];
+	agent2
 ]
 
 agentEat[agent_, params_] := Module[
@@ -82,7 +95,28 @@ agentEat[agent_, params_] := Module[
 	agent2
 ]
 
+agentSetDir[agent_, foodPos_] := Module[
+	{agent2 = agent, dirV},
+	dirV = foodPos - agent["pos"]; (*- operator threadwise*)
+	agent2["currentDirection"] = (1/Norm[dirV]) * dirV;
+	agent2
+]
+
+agentSetExploreDir[agent_, params_] := Module[
+	{agent2 = agent, randomTheta},
+	agent2["currentDirection"] = 
+	If[RandomReal[] < params["dirChangeProb"],
+		randomTheta = RandomReal[{0, 2 Pi}]; {Cos[randomTheta], Sin[randomTheta]}, 
+		agent2["currentDirection"]
+	];
+	agent2
+]
+
 (*I believe agents will never have more than max energy due to metabolism sending it to max-1 metabolism*)
+
+(*Old agentActions[] without intentional movement.*)
+
+(*
 agentActions[model_, params_] :=  Module[
     {model2 = model, agents = model["agents"], foods = model["foods"], agent, nearFoodI, nearFoodDist},
 	agents = Table[
@@ -99,6 +133,31 @@ agentActions[model_, params_] :=  Module[
 	model2["agents"] = agents;
 	model2
 ]
+*)
+
+
+
+agentActions[model_, params_] :=  Module[
+    {model2 = model, agents = model["agents"], foods = model["foods"], agent, nearFoodI, nearFoodDist, nearFoodPos},
+	agents = Table[
+		agent = agents[[i]];
+		{nearFoodDist, nearFoodI} = findNearestSensableFoodPosAndI[agent, foods, params];
+		nearFoodPos = foods[[nearFoodI]];
+		Which[
+            nearFoodI>=1 && nearFoodDist < params["proximityRadius"], 
+			foods = Delete[foods, nearFoodI]; agentEat[agent, params], 
+			nearFoodI>=1,
+			agent = agentSetDir[agent, nearFoodPos]; agent = explorationOrIntentionalWalk[agent, params]; agent, (*don't know if we want to use up a timestep as a change of direction cost...*)
+			True,
+			agent = agentSetExploreDir[agent, params]; agent = explorationOrIntentionalWalk[agent, params]; agent
+        ],
+	    {i, Length@agents}
+    ];
+	model2["foods"] = foods;
+	model2["agents"] = agents;
+	model2
+]
+
 
 findClosestAgentI[agentI_Integer, agents_List] := Module[
     {pos, dists},
