@@ -3,7 +3,7 @@
 SetDirectory[NotebookDirectory[]];
 Needs["BasicMethods`"]
 
-parameters = <| (*agent energy is currently unbounded, but we can change that*)
+parameters = <|
   "proximityRadius" -> 0.5, (*proximity radius for food consumption action*)
   "sensingDistance" -> 2,
   "metabolism" -> 0.2, (*energy lost due to metabolism*)
@@ -20,8 +20,8 @@ parameters = <| (*agent energy is currently unbounded, but we can change that*)
   "lifespan" -> 20, (*20 units*)
   "maxEnergy" -> 10,
   "imageSize" -> 500,
-  "agentSize" -> 0.025, (*radius in pure length units*)
-  "foodSize" -> 0.01,
+  "agentSize" -> 0.005, (*radius in pure length units*)
+  "foodSize" -> 0.0025,
   "reproductionRadius" -> 1.5, (*we should cut this out in favor of proximityRadius, since proxRad is supposed to encompass this as well.*)
   "minReproductionEnergy" -> 6.0,
   "minReproductionAge" -> 2.0,
@@ -35,7 +35,7 @@ lPixelsToUnits[lPixels_, params_]:= lPixels * ((params["squareBounds"][[2]] - pa
 
 initializeModel[params_] :=
 
-  Module[{agents, foods, nStartingAgents, nStartingFood, startingEnergy, min, max},  
+  Module[{agents, foods, nStartingAgents, nStartingFood, startingEnergy, min, max, randomDir},  
 
     nStartingAgents = params["nStartingAgents"]; (*parameter for number of agents*)
     nStartingFood = params["nStartingFood"]; (*parameter for number of food items*)
@@ -44,7 +44,8 @@ initializeModel[params_] :=
 
     agents =
     Table[
-      createAgent[RandomReal[{min, max}, 2], startingEnergy, 0.0, i, RandomReal[{0, 2 Pi}]], {i, nStartingAgents}
+      randomDir = RandomReal[{0, 2 Pi}];
+      createAgent[RandomReal[{min, max}, 2], startingEnergy, 0.0, i, {Cos[randomDir], Sin[randomDir]}], {i, nStartingAgents}
     ];
 
     foods = RandomReal[{min, max}, {nStartingFood, 2}];
@@ -59,11 +60,11 @@ initializeModel[params_] :=
  ]
 
 propagateModelStep[params_, model_] := Module[{model2=model, params2=params},
-  params2["nextAgentID"] = model2["nextAgentID"];
+  params2["nextAgentID"] = model2["nextAgentID"]; (*huh?*)
   model2 = spawnFoodCheck[model2, params];
   model2 = randomizeAndKill[model2, params]; (*randomization*)
   model2 = agentActions[model2, params];
-  model2 = reproduceAgents[model2, params2];
+  model2 = reproduceAgents[model2, params2]; (*why do we have params2?*)
   model2 = metabolizeAgents[model2, params];
   model2 = ageAgents[model2, params];
   model2["time"] = model2["time"] + params["dt"];
@@ -104,7 +105,7 @@ chooseBarCenter[pos_, others_, min_, max_, barW_, barH_, barGap_] := Module[{can
   candidates[[First @ Ordering[scores, -1]]]
 ];
  
-displayGrid[model_, params_] := Module[
+displayGrid[model_, params_] := Module[ (*we should use conversion functions instead of span imo.*)
   {
     agents, foods, min, max, span, nAgents,
     hudPad, agentR, foodR, barW, barH, barGap,
@@ -118,8 +119,8 @@ displayGrid[model_, params_] := Module[
   span = max - min;
   nAgents = Length[agents];
 
-  agentR = params["agentSize"]*span;
-  foodR  = params["foodSize"]*span;
+  agentR = lUnitsToPixels[params["agentSize"], params];
+  foodR = lUnitsToPixels[params["foodSize"], params];
 
   barW = 0.10 span;
   barH = 0.015 span;
@@ -180,7 +181,7 @@ plotPopulationStats[simulation_List] := Module[
 ];
 
 model = initializeModel[parameters];
-Simulation = genSimulationStates[parameters, model, 100];
+Simulation = genSimulationStates[parameters, model, 200];
 simulationGraphics = renderSimulation[Simulation, parameters];
 
 Manipulate[simulationGraphics[[j]], {j, 1, Length@simulationGraphics, 1, Appearance->Labeled}]
@@ -191,10 +192,5 @@ plotPopulationStats[Simulation]
 (*displayGrid[model_] := Grid[{{"Food Length: "<>ToString@Length@model["foods"], "Time: "<>ToString@model["time"]}, {Dataset@model["agents"], Dataset@model["foods"]}}*)
 
 
-
-
-
-
-
-
-
+(* ::Input:: *)
+(*Quit*)
