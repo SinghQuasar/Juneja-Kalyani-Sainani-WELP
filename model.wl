@@ -129,33 +129,7 @@ displayGrid[model_, params_] := Module[
 
   showEnergyBars = nAgents < 6;
 
-  agentGraphics = Table[
-    Module[
-      {
-        pos, age, e, frac, percent,
-        fillColor, txtColor,
-        barCenter, barLeft, barBottom
-      },
-
-      pos = agent["pos"];
-      age = agent["age"];
-      e = agent["energy"];
-
-      frac = Clip[e/params["maxEnergy"], {0, 1}];
-      percent = Round[100 frac];
-
-	fillColor = ageColor[age, params];
-	txtColor = ageTextColor[age, params];
-	barCenter = chooseBarCenter[pos, otherAgentPositions[pos, agents], min, max, barW, barH, barGap];
-	
-      barLeft = barCenter[[1]] - barW/2;
-      barBottom = barCenter[[2]] - barH/2;
-
-      {EdgeForm[Directive[White, Thickness[0.0015]]],fillColor,Disk[pos, agentR],Text[Style[ToString[Round[age]],Max[7, Round[0.018 params["imageSize"]]],txtColor,Bold],pos],
-
-        If[showEnergyBars,{EdgeForm[Directive[White, Thickness[0.0012]]],Darker[Gray, 0.75],Rectangle[{barLeft, barBottom},{barLeft + barW, barBottom + barH}],energyColor[frac],
-        Rectangle[{barLeft, barBottom},{barLeft + barW frac, barBottom + barH}],
-            Text[Style[ToString[percent],Max[6, Round[0.014 params["imageSize"]]],Magenta],barCenter]},Nothing]}],{agent, agents}];
+  agentGraphics = drawAgentGraphic[#,agents,params,min,max,span,agentR,barW,barH,barGap,showEnergyBars] & /@ agents;
 
   foodGraphics = Table[{White,Disk[f, foodR]},{f, foods}];
 
@@ -215,6 +189,7 @@ plotPopulationStats[Simulation]
 
 (*old version of displayGrid*)
 (*displayGrid[model_] := Grid[{{"Food Length: "<>ToString@Length@model["foods"], "Time: "<>ToString@model["time"]}, {Dataset@model["agents"], Dataset@model["foods"]}}*)
+
 
 
 
