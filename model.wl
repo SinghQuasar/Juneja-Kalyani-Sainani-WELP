@@ -105,6 +105,12 @@ chooseBarCenter[pos_, others_, min_, max_, barW_, barH_, barGap_] := Module[{can
   candidates[[First @ Ordering[scores, -1]]]
 ];
  
+(* 
+  - drawAgentGraphic creates the graphics for one individual agent (agent circle, age counter, and energy bar)
+  - Helps reduce bloat b/c this method allows us to avoid using Module inside of Table
+  - Can consider putting this method inside of basicMethods.wl
+*)
+
 drawAgentGraphic[agent_, agents_, params_, min_, max_, span_, agentR_, barW_, barH_, barGap_, showEnergyBars_] := Module[
   {
     pos, age, e, frac, percent,
@@ -112,22 +118,26 @@ drawAgentGraphic[agent_, agents_, params_, min_, max_, span_, agentR_, barW_, ba
     barCenter, barLeft, barBottom
   },
 
+  (* get each agent's position, age, and energy from the agent association *)
+  
   pos = agent["pos"];
   age = agent["age"];
   e = agent["energy"];
 
+(* convert the agent's current energy into a fraction from 0 to 1 so that we can use it to find the energy bar length & color*)
   frac = Clip[e/params["maxEnergy"], {0, 1}];
   percent = Round[100 frac];
 
-  fillColor = ageColor[age, params];
+  fillColor = ageColor[age, params]; (*younger agents are greener, older agents are redder*)
   txtColor = ageTextColor[age, params];
 
-  barCenter = chooseBarCenter[
+  barCenter = chooseBarCenter[ (*this checks nearby agents and tries to place the bar in the least crowded area*)
     pos,
     otherAgentPositions[pos, agents],
     min, max, barW, barH, barGap
   ];
 
+(*the bar's center becomes the lower left corner so the bar doesn't go over the boundaries*)
   barLeft = barCenter[[1]] - barW/2;
   barBottom = barCenter[[2]] - barH/2;
 
@@ -135,7 +145,7 @@ drawAgentGraphic[agent_, agents_, params_, min_, max_, span_, agentR_, barW_, ba
     EdgeForm[Directive[White, Thickness[0.0015]]],
     fillColor,
     Disk[pos, agentR],
-    Text[
+    Text[ (*display agent's rounded age*)
       Style[
         ToString[Round[age]],
         Max[7, Round[0.018 params["imageSize"]]],
@@ -146,8 +156,9 @@ drawAgentGraphic[agent_, agents_, params_, min_, max_, span_, agentR_, barW_, ba
     ],
 
     If[
-      showEnergyBars,
+      showEnergyBars, (*only showing energy bars when n<6*)
       {
+      (*this code below defines specifics for the energy bar (color, numbers, size, etc.)*)
         EdgeForm[Directive[White, Thickness[0.0012]]],
         Darker[Gray, 0.75],
         Rectangle[{barLeft, barBottom}, {barLeft + barW, barBottom + barH}],
@@ -162,10 +173,15 @@ drawAgentGraphic[agent_, agents_, params_, min_, max_, span_, agentR_, barW_, ba
           barCenter
         ]
       },
-      Nothing
+      Nothing (*if n>6, don't create the bars*)
     ]
   }
 ];
+
+(* 
+  - displayGrid renders the full simulation (food, agents, legend, time, agent count, etc.)
+  - each agent is drawn by the drawAgentGraphic method
+*)
 
 displayGrid[model_, params_] := Module[ (*we should use conversion functions instead of span imo.*)
   {
