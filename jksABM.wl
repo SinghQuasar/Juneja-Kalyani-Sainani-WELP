@@ -99,11 +99,35 @@ agentSetDir[agent_, foodPos_] := Module[
 	agent2
 ]
 
+(*Without wall avoidance logic.*)
+(*
 agentSetExploreDir[agent_, params_] := Module[
 	{agent2 = agent, randomTheta},
 	agent2["currentDirection"] = 
 	If[RandomReal[] < params["dirChangeProb"],
 		randomTheta = RandomReal[{0, 2 Pi}]; {Cos[randomTheta], Sin[randomTheta]}, 
+		agent2["currentDirection"]
+	];
+	agent2
+]
+*)
+
+(*Wall avoidance logic.*)
+(*Having proxRad be << stepLength ensures no repeated direction flipping.*)
+agentSetExploreDir[agent_, params_] := Module[
+	{agent2 = agent, ax, ay, sqmin, sqmax, proxRad, randomTheta},
+	{ax, ay} = agent["pos"];
+	{sqmin, sqmax} = params["squareBounds"];
+	proxRad = params["stepLength"]/2;
+	agent2["currentDirection"] = 
+	Which[
+		(ax < sqmin + proxRad || ax > sqmax - proxRad || ay < sqmin + proxRad || ay > sqmax - proxRad),
+		-1*agent2["currentDirection"], (*direction flipping*)
+		
+		RandomReal[] < params["dirChangeProb"],
+		randomTheta = RandomReal[{0, 2 Pi}]; {Cos[randomTheta], Sin[randomTheta]}, 
+		
+		True,
 		agent2["currentDirection"]
 	];
 	agent2
