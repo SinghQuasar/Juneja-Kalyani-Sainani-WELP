@@ -18,7 +18,6 @@ createAgent[pos_, energy_, age_, id_, currentDirection_, parents_:{-1, -1}] := <
 	"id" -> id,
 	"currentDirection" -> currentDirection, (*unit vector*)
 	"parents" -> parents,
-    "ancestors" -> ancestors
 |>
 
 (* checking the proximity for all foods and putting it into a list. Implement grid/sector based optimization later. *)
@@ -190,56 +189,82 @@ findClosestAgentI[agentI_Integer, agents_List] := Module[
 
 (* WHAT IS THIS LONG BOOLEAN EXPRESSION? WHY DO WE HAVE THESE EXTRA VARS? *)
 areRelated[ai_, aj_] := Or[
-    MemberQ[ai["ancestors"], aj["id"]],
-    MemberQ[aj["ancestors"], ai["id"]],
+    MemberQ[ai["parents"], aj["id"]],
+    MemberQ[aj["parents"], ai["id"]],
     (ai["parents"] =!= {-1, -1} && ai["parents"] === aj["parents"])
 ]
 
 reproduceAgents[model_, params_] := Module[
     {
-        agents = model["agents"], model2 = model, newAgents = {},
-        reproduced, nextID, j, ai, aj, dist, midPos, newAgent
+        agents = model["agents"],
+        model2 = model,
+        newAgents = {},
+        reproduced,
+        nextID = model["nextAgentID"],
+        j,
+        ai, aj,
+        dist,
+        midPos,
+        theta, dir
     },
 
-  nextID = params["nextAgentID"];
-  reproduced = ConstantArray[False, Length[agents]];
+    (* tracks which agents have already paired this step *)
+    reproduced = ConstantArray[False, Length[agents]];
 
-  Do[
-    If[reproduced[[i]], Continue[]];
-    j = findClosestAgentI[i, agents];
-    If[j == -1 || reproduced[[j]], Continue[]];
+    Do[
+        (* skip if already paired *)
+        If[reproduced[[i]], Continue[]];
 
-    ai = agents[[i]];
-    aj = agents[[j]];
-    dist = EuclideanDistance[ai["pos"], aj["pos"]];
+        j = findClosestAgentI[i, agents];
 
-    If[dist <= params["reproductionRadius"] &&
-       ai["energy"] >= params["minReproductionEnergy"] &&
-       aj["energy"] >= params["minReproductionEnergy"] &&
-       ai["age"] >= params["minReproductionAge"] &&
-       aj["age"] >= params["minReproductionAge"] &&
-       !areRelated[ai, aj],
+        (* skip if no neighbor or neighbor already paired *)
+        If[j == -1 || reproduced[[j]], Continue[]];
 
-      (* both parents pay energy cost *)
-      agents[[i]] = ReplacePart[agents[[i]], 
-        "energy" -> ai["energy"] - params["reproductionEnergyCost"]];
-      agents[[j]] = ReplacePart[agents[[j]], 
-        "energy" -> aj["energy"] - params["reproductionEnergyCost"]];
+        ai = agents[[i]];
+        aj = agents[[j]];
+        dist = EuclideanDistance[ai["pos"], aj["pos"]];
 
-      midPos = (ai["pos"] + aj["pos"]) / 2;
-      newAncestors = DeleteDuplicates[Join[{ai["id"], aj["id"]}, ai["ancestors"], aj["ancestors"]]];
-      newAgent = createAgent[midPos, params["startingEnergy"] / 2, 0.0, nextID, {ai["id"], aj["id"]}, newAncestors];
-      AppendTo[newAgents, newAgent];
-      nextID++;
+        (* range, energy, age, and incest checks *)
+        If[
+            dist <= params["proximityRadius"]
+            && ai["energy"] >= params["minReproductionEnergy"]
+            && aj["energy"] >= params["minReproductionEnergy"]
+            && ai["age"] >= params["minReproductionAge"]
+            && aj["age"] >= params["minReproductionAge"]
+            && !areRelated[ai, aj]
+            ,
 
-      reproduced[[i]] = True;
-      reproduced[[j]] = True;
+            (* parents pay energy cost *)
+            agents[[i, "energy"]] = ai["energy"] - params["reproductionEnergyCost"];
+            agents[[j, "energy"]] = aj["energy"] - params["reproductionEnergyCost"];
+
+            midPos = (ai["pos"] + aj["pos"]) / 2;
+            theta = RandomReal[{0, 2 Pi}];
+            dir = {Cos[theta], Sin[theta]};
+            
+            AppendTo[
+                newAgents,
+                createAgent[
+                    midPos,
+                    params["startingEnergy"] / 2,
+                    0.0,
+                    nextID,
+                    dir,
+                    {ai["id"], aj["id"]},
+                ]
+            ];
+
+            nextID++;
+            reproduced[[i]] = True;
+            reproduced[[j]] = True;
+        ];
+        ,
+        {i, Length[agents]}
     ];
-  , {i, Length[agents]}];
 
-  model2["agents"] = Join[agents, newAgents];
-  model2["nextAgentID"] = nextID;
-  model2
+    model2["agents"] = Join[agents, newAgents];
+    model2["nextAgentID"] = nextID;
+    model2
 ]
 
 (*Previously in model.wl*)
@@ -274,12 +299,11 @@ initializeModel[params_] :=
     |>
  ]
 
-propagateModelStep[params_, model_] := Module[{model2=model, params2=params},
-  params2["nextAgentID"] = model2["nextAgentID"]; (*huh?*)
+propagateModelStep[params_, model_] := Module[{model2=model},
   model2 = spawnFoodCheck[model2, params];
   model2 = randomizeAndKill[model2, params]; (*randomization*)
   model2 = agentActions[model2, params];
-  model2 = reproduceAgents[model2, params2]; (*why do we have params2?*)
+  model2 = reproduceAgents[model2, params]; (*why do we have params2?*)
   model2 = metabolizeAgents[model2, params];
   model2 = ageAgents[model2, params];
   model2["time"] = model2["time"] + params["dt"];

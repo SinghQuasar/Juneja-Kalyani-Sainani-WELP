@@ -22,12 +22,10 @@ parameters = <|
   "imageSize" -> 500,
   "agentSize" -> 0.005, (*radius in pure length units*)
   "foodSize" -> 0.0025,
-  "reproductionRadius" -> 1.5, (*we should cut this out in favor of proximityRadius, since proxRad is supposed to encompass this as well.*)
   "minReproductionEnergy" -> 6.0,
   "minReproductionAge" -> 2.0,
-  "reproductionEnergyCost" -> 3.0,
-  "nextAgentID" -> 1 (*if this is a holder for the next agent id, and it evolves as the model does, it should go in the model data struct. If it's a parameter for number ID to start at, then it should stay here.*)
-|>;
+  "reproductionEnergyCost" -> 3.0
+  |>;
 
 model = initializeModel[parameters];
 Simulation = genSimulationStates[parameters, model, 3000];
