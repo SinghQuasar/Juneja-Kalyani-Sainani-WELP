@@ -1,5 +1,5 @@
 (* ::Package:: *)
-
+(*9:08 push*)
 SetDirectory[NotebookDirectory[]];
 Needs["jksABM`"]
 
@@ -24,7 +24,7 @@ parameters = <|
   "foodSize" -> 0.005,
   "minReproductionEnergy" -> 5.0,
   "minReproductionAge" -> 3.0,
-  "reproductionEnergyCost" -> 3.0,
+  "reproductionEnergyCost" -> 3.0
 |>;
 
 model = initializeModel[parameters];
