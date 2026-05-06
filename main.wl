@@ -31,12 +31,67 @@ parameters = <|
 |>;
 
 model = initializeModel[parameters];
-Simulation = genSimulationStates[parameters, model, 500];
+Simulation = genSimulationStates[parameters, model, 5000];
 simulationGraphics = renderSimulation[Simulation, parameters];
-
 Manipulate[simulationGraphics[[j]], {j, 1, Length@simulationGraphics, 1, Appearance->Labeled}]
-
 plotPopulationStats[Simulation]
+
+
+(*Logistic Growth Model*)
+basePopulationPlot = plotPopulationStats[Simulation];
+
+agentCounts = Length[#["agents"]] & /@ Simulation;
+
+times = Range[0, Length[agentCounts] - 1] * parameters["dt"];
+
+agentData = Transpose[{times, agentCounts}];
+
+Clear[t, c, K, r, t0, d];
+
+populationFit = NonlinearModelFit[
+  agentData,
+  c + K/(1 + Exp[-r (t - t0)]) - d t,
+  {
+    {c, Min[agentCounts]},
+    {K, Max[agentCounts] - Min[agentCounts]},
+    {r, 0.3},
+    {t0, 15},
+    {d, 0.2}
+  },
+  t
+];
+
+Show[
+  basePopulationPlot,
+  Plot[
+    populationFit[t],
+    {t, Min[times], Max[times]},
+    PlotStyle -> {Red, Thick, Dashed}
+  ]
+]
+
+
+Table[
+	parameters["nFoodSpawn"] = nFS;
+	model = initializeModel[parameters];
+	Simulation = genSimulationStates[parameters, model, 500];
+	simulationGraphics = renderSimulation[Simulation, parameters];
+	
+	{nFS, Manipulate[simulationGraphics[[j]], {j, 1, Length@simulationGraphics, 1, Appearance->Labeled}],
+	plotPopulationStats[Simulation]},
+	{nFS, 1, 4}
+]
+
+Table[
+	parameters["metabolism"] = met;
+	model = initializeModel[parameters];
+	Simulation = genSimulationStates[parameters, model, 500];
+	simulationGraphics = renderSimulation[Simulation, parameters];
+	
+	{met, Manipulate[simulationGraphics[[j]], {j, 1, Length@simulationGraphics, 1, Appearance->Labeled}],
+	plotPopulationStats[Simulation]},
+	{met, {0.025, 0.05, 0.1}}
+]
 
 
 
