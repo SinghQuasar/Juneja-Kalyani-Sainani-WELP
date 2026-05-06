@@ -22,11 +22,9 @@ parameters = <|
   "imageSize" -> 500,
   "agentSize" -> 0.01, (*radius in pure length units*)
   "foodSize" -> 0.005,
-  "reproductionRadius" -> 1.5, (*we should cut this out in favor of proximityRadius, since proxRad is supposed to encompass this as well.*)
   "minReproductionEnergy" -> 5.0,
   "minReproductionAge" -> 3.0,
   "reproductionEnergyCost" -> 3.0,
-  "nextAgentID" -> 1 (*if this is a holder for the next agent id, and it evolves as the model does, it should go in the model data struct. If it's a parameter for number ID to start at, then it should stay here.*)
 |>;
 
 model = initializeModel[parameters];
