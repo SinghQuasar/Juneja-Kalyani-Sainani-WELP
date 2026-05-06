@@ -17,7 +17,7 @@ createAgent[pos_, energy_, age_, id_, currentDirection_, parents_:{-1, -1}] := <
     "age" -> age, 
 	"id" -> id,
 	"currentDirection" -> currentDirection, (*unit vector*)
-	"parents" -> parents,
+	"parents" -> parents
 |>
 
 (* checking the proximity for all foods and putting it into a list. Implement grid/sector based optimization later. *)
@@ -250,7 +250,7 @@ reproduceAgents[model_, params_] := Module[
                     0.0,
                     nextID,
                     dir,
-                    {ai["id"], aj["id"]},
+                    {ai["id"], aj["id"]}
                 ]
             ];
 

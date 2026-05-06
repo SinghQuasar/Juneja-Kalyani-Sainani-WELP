@@ -28,12 +28,13 @@ parameters = <|
   |>;
 
 model = initializeModel[parameters];
-Simulation = genSimulationStates[parameters, model, 3000];
+Simulation = genSimulationStates[parameters, model, 1000];
 simulationGraphics = renderSimulation[Simulation, parameters];
 
 Manipulate[simulationGraphics[[j]], {j, 1, Length@simulationGraphics, 1, Appearance->Labeled}]
 
 plotPopulationStats[Simulation]
+
 
 
 
