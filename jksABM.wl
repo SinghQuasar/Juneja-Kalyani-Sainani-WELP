@@ -21,15 +21,15 @@ createAgent[pos_, energy_, age_, id_, currentDirection_, parents_:{-1, -1}] := <
 |>
 
 (* checking the proximity for all foods and putting it into a list. Implement grid/sector based optimization later. *)
-findNearestSensableFoodPosAndI[agent_, foodPositions_List, params_] := Module[
+findNearestSensableFoodInfo[agent_, foodPositions_List, params_] := Module[
     {agentPos, foodPosAndI, foodsWithinRadiusPosAndI, dists},
     agentPos = agent["pos"];
     foodPosAndI = Table[{foodPositions[[i]], i}, {i, Length[foodPositions]}];
     foodsWithinRadiusPosAndI = Select[foodPosAndI, checkWithinRadius[agentPos, #[[1]], params["sensingDistance"]]&];
     If[
         Length[foodsWithinRadiusPosAndI] == 0,
-        {-1, -1}, (*no food*)
-        dists = {EuclideanDistance[agentPos, #[[1]]], #[[2]]}& /@ foodsWithinRadiusPosAndI;
+        {-1, -1, -1}, (*no food*)
+        dists = {EuclideanDistance[agentPos, #[[1]]], #[[2]], #[[1]]}& /@ foodsWithinRadiusPosAndI;
         First@MinimalBy[dists, First]
     ]
 ]
@@ -91,9 +91,16 @@ agentEat[agent_, params_] := Module[
 	agent2
 ]
 
-agentSetDir[agent_, foodPos_] := Module[
+agentSetFoodDir[agent_, foodPos_] := Module[
 	{agent2 = agent, dirV},
 	dirV = foodPos - agent["pos"]; (*- operator threadwise*)
+	agent2["currentDirection"] = (1/Norm[dirV]) * dirV;
+	agent2
+]
+
+agentSetMateDir[agent_, matePos_] := Module[
+	{agent2 = agent, dirV},
+	dirV = matePos - agent["pos"]; (*- operator threadwise*)
 	agent2["currentDirection"] = (1/Norm[dirV]) * dirV;
 	agent2
 ]
@@ -120,10 +127,8 @@ agentSetExploreDir[agent_, params_] := Module[
 	proxRad = params["stepLength"]/2;
 	agent2["currentDirection"] = 
 	Which[
-		(ax < sqmin + proxRad || ax > sqmax - proxRad || ay < sqmin + proxRad || ay > sqmax - proxRad),
-		-1*agent2["currentDirection"], (*direction flipping*)
-		
-		RandomReal[] < params["dirChangeProb"],
+		(ax < sqmin + proxRad || ax > sqmax - proxRad || ay < sqmin + proxRad || ay > sqmax - proxRad) 
+		|| (RandomReal[] < params["dirChangeProb"]),
 		randomTheta = RandomReal[{0, 2 Pi}]; {Cos[randomTheta], Sin[randomTheta]}, 
 		
 		True,
@@ -156,16 +161,24 @@ agentActions[model_, params_] :=  Module[
 *)
 
 agentActions[model_, params_] :=  Module[
-    {model2 = model, agents = model["agents"], foods = model["foods"], agent, nearFoodI, nearFoodDist, nearFoodPos},
+    {model2 = model, agents = model["agents"], agentsSnapshot, foods = model["foods"], agent, 
+    nearFoodDist, nearFoodI, nearFoodPos, nearMateDist, nearMateI, nearMatePos},
+    agentsSnapshot = agents;
 	agents = Table[
 		agent = agents[[i]];
-		{nearFoodDist, nearFoodI} = findNearestSensableFoodPosAndI[agent, foods, params];
-		nearFoodPos = foods[[nearFoodI]];
+		{nearFoodDist, nearFoodI, nearFoodPos} = findNearestSensableFoodInfo[agent, foods, params];
+		{nearMateDist, nearMateI, nearMatePos} = findNearestSensableAgentInfo[i, agentsSnapshot, params];
 		Which[
+			agent["energy"] > params["minReproductionEnergy"] && nearMateI>=1,
+			agent = agentSetMateDir[agent, nearMatePos]; agent = explorationOrIntentionalWalk[agent, params]; agent,
+			
             nearFoodI>=1 && nearFoodDist < params["proximityRadius"], 
 			foods = Delete[foods, nearFoodI]; agentEat[agent, params], 
+			
 			nearFoodI>=1,
-			agent = agentSetDir[agent, nearFoodPos]; agent = explorationOrIntentionalWalk[agent, params]; agent, (*don't know if we want to use up a timestep as a change of direction cost...*)
+			agent = agentSetFoodDir[agent, nearFoodPos]; agent = explorationOrIntentionalWalk[agent, params]; agent, 
+			(*don't know if we want to use up a timestep as a change of direction cost...*)
+			
 			True,
 			agent = agentSetExploreDir[agent, params]; agent = explorationOrIntentionalWalk[agent, params]; agent
         ],
@@ -186,6 +199,18 @@ findClosestAgentI[agentI_Integer, agents_List] := Module[
     ];
     First@Ordering[dists, 1]
 ]
+
+
+findNearestSensableAgentInfo[agentI_Integer, agents_List, params_] := Module[
+	{agent, nearAgentI, nearAgent, nearAgentPos, nearAgentDist},
+	agent = agents[[agentI]];
+	nearAgentI = findClosestAgentI[agentI, agents];
+	nearAgent = agents[[nearAgentI]];
+	nearAgentPos = nearAgent["pos"];
+	nearAgentDist = EuclideanDistance[agent["pos"], nearAgentPos];
+	If[nearAgentDist < params["sensingDistance"], {nearAgentDist, nearAgentI, nearAgentPos}, {-1, -1, -1}]
+]
+
 
 (* WHAT IS THIS LONG BOOLEAN EXPRESSION? WHY DO WE HAVE THESE EXTRA VARS? *)
 areRelated[ai_, aj_] := Or[
@@ -299,11 +324,11 @@ initializeModel[params_] :=
     |>
  ]
 
-propagateModelStep[params_, model_] := Module[{model2=model},
+propagateModelStep[params_, model_] := Module[{model2=model, params2=params},
   model2 = spawnFoodCheck[model2, params];
   model2 = randomizeAndKill[model2, params]; (*randomization*)
   model2 = agentActions[model2, params];
-  model2 = reproduceAgents[model2, params]; (*why do we have params2?*)
+  model2 = reproduceAgents[model2, params]; 
   model2 = metabolizeAgents[model2, params];
   model2 = ageAgents[model2, params];
   model2["time"] = model2["time"] + params["dt"];
