@@ -92,17 +92,17 @@ agentEat[agent_, params_] := Module[
 	agent2
 ]
 
-agentSetFoodDir[agent_, foodPos_] := Module[
+agentSetFoodDir[agent_, foodPos_, params_] := Module[
 	{agent2 = agent, dirV},
 	dirV = foodPos - agent["pos"]; (*- operator threadwise*)
-	agent2["currentDirection"] = (1/Norm[dirV]) * dirV;
+	agent2["currentDirection"] = (1/(Norm[dirV]+params["epsilon"])) * dirV;
 	agent2
 ]
 
-agentSetMateDir[agent_, matePos_] := Module[
+agentSetMateDir[agent_, matePos_, params_] := Module[
 	{agent2 = agent, dirV},
 	dirV = matePos - agent["pos"]; (*- operator threadwise*)
-	agent2["currentDirection"] = (1/Norm[dirV]) * dirV;
+	agent2["currentDirection"] = (1/(Norm[dirV] + params["epsilon"])) * dirV;
 	agent2
 ]
 
@@ -170,13 +170,13 @@ agentActions[model_, params_] :=  Module[
 		{nearMateDist, nearMateI, nearMatePos} = findNearestSensableAgentInfo[i, agentsSnapshot, params];
 		Which[
 			agent["energy"] > params["minReproductionEnergy"] && nearMateI>=1,
-			agent = agentSetMateDir[agent, nearMatePos]; agent = explorationOrIntentionalWalk[agent, params]; agent,
+			agent = agentSetMateDir[agent, nearMatePos, params]; agent = explorationOrIntentionalWalk[agent, params]; agent,
 			
             nearFoodI>=1 && nearFoodDist < params["proximityRadius"], 
 			foods = Delete[foods, nearFoodI]; agentEat[agent, params], 
 			
 			nearFoodI>=1,
-			agent = agentSetFoodDir[agent, nearFoodPos]; agent = explorationOrIntentionalWalk[agent, params]; agent, 
+			agent = agentSetFoodDir[agent, nearFoodPos, params]; agent = explorationOrIntentionalWalk[agent, params]; agent, 
 			(*don't know if we want to use up a timestep as a change of direction cost...*)
 			
 			True,

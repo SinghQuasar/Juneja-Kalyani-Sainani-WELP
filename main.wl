@@ -9,10 +9,10 @@ parameters = <|
   "metabolism" -> 0.05, (*energy lost due to metabolism*)
   "dt" -> 0.1, (*timestep in seconds (we can change this later)*)
   "foodEnergy" -> 5.0, (*how much energy 1 food particle gives*)
-  "foodSpawnCooldown" -> 1,
-  "nFoodSpawn" -> 6,
-  "nStartingAgents" -> 4,
-  "nStartingFood" -> 7,
+  "foodSpawnCooldown" -> 0.5,
+  "nFoodSpawn" -> 3,
+  "nStartingAgents" -> 5,
+  "nStartingFood" -> 3,
   "squareBounds" -> {0, 13}, (*min, max. Square environment*)
   "startingEnergy" -> 10,
   "stepLength" -> 0.2,
@@ -26,7 +26,8 @@ parameters = <|
   "minReproductionEnergy" -> 6.0,
   "minReproductionAge" -> 2.0,
   "reproductionEnergyCost" -> 3.0,
-  "nextAgentID" -> 1 (*if this is a holder for the next agent id, and it evolves as the model does, it should go in the model data struct. If it's a parameter for number ID to start at, then it should stay here.*)
+  "nextAgentID" -> 1, (*if this is a holder for the next agent id, and it evolves as the model does, it should go in the model data struct. If it's a parameter for number ID to start at, then it should stay here.*)
+  "epsilon" -> 0.001
 |>;
 
 model = initializeModel[parameters];
@@ -36,8 +37,6 @@ simulationGraphics = renderSimulation[Simulation, parameters];
 Manipulate[simulationGraphics[[j]], {j, 1, Length@simulationGraphics, 1, Appearance->Labeled}]
 
 plotPopulationStats[Simulation]
-
-
 
 
 
