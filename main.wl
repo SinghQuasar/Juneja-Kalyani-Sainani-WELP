@@ -31,7 +31,7 @@ parameters = <|
 |>;
 
 model = initializeModel[parameters];
-Simulation = genSimulationStates[parameters, model, 5000];
+Simulation = genSimulationStates[parameters, model, 1000];
 simulationGraphics = renderSimulation[Simulation, parameters];
 Manipulate[simulationGraphics[[j]], {j, 1, Length@simulationGraphics, 1, Appearance->Labeled}]
 plotPopulationStats[Simulation]
@@ -82,6 +82,7 @@ Table[
 	{nFS, 1, 4}
 ]
 
+
 Table[
 	parameters["metabolism"] = met;
 	model = initializeModel[parameters];
@@ -92,6 +93,3 @@ Table[
 	plotPopulationStats[Simulation]},
 	{met, {0.025, 0.05, 0.1}}
 ]
-
-
-
