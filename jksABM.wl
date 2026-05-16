@@ -18,7 +18,8 @@ createAgent[pos_, energy_, age_, id_, currentDirection_, parents_:{-1, -1}] := <
 	"id" -> id,
 	"currentDirection" -> currentDirection, (*unit vector*)
 	"parents" -> parents,
-    "ancestors" -> ancestors
+    "ancestors" -> ancestors,
+    "tSinceLastReproduction" -> 0
 |>
 
 (* checking the proximity for all foods and putting it into a list. Implement grid/sector based optimization later. *)
@@ -167,7 +168,7 @@ agentActions[model_, params_] :=  Module[
 	agents = Table[
 		agent = agents[[i]];
 		{nearFoodDist, nearFoodI, nearFoodPos} = findNearestSensableFoodInfo[agent, foods, params];
-		{nearMateDist, nearMateI, nearMatePos} = findNearestSensableAgentInfo[i, agentsSnapshot, params];
+		{nearMateDist, nearMateI, nearMatePos} = findNearestSensableMateInfo[i, agentsSnapshot, params];
 		Which[
 			agent["energy"] > params["minReproductionEnergy"] && nearMateI>=1,
 			agent = agentSetMateDir[agent, nearMatePos, params]; agent = explorationOrIntentionalWalk[agent, params]; agent,
@@ -200,10 +201,22 @@ findClosestAgentI[agentI_Integer, agents_List] := Module[
     First@Ordering[dists, 1]
 ]
 
-findNearestSensableAgentInfo[agentI_Integer, agents_List, params_] := Module[
+findClosestMateI[agentI_Integer, agents_List] := Module[
+    {pos, dists, agent},
+    If[Length[agents] < 2, Return[-1]];
+    pos = agents[[agentI]]["pos"];
+    agent = agents[[agentI]];
+    dists = Table[
+        If[i == agentI || areRelated[agent, agents[[i]]], Infinity, EuclideanDistance[pos, agents[[i]]["pos"]]],
+        {i, Length[agents]}
+    ];
+    First@Ordering[dists, 1]
+]
+
+findNearestSensableMateInfo[agentI_Integer, agents_List, params_] := Module[
 	{agent, nearAgentI, nearAgent, nearAgentPos, nearAgentDist},
 	agent = agents[[agentI]];
-	nearAgentI = findClosestAgentI[agentI, agents];
+	nearAgentI = findClosestMateI[agentI, agents];
 	nearAgent = agents[[nearAgentI]];
 	nearAgentPos = nearAgent["pos"];
 	nearAgentDist = EuclideanDistance[agent["pos"], nearAgentPos];
