@@ -5,70 +5,94 @@ Needs["jksABM`"]
 
 parameters = <|
   "proximityRadius" -> 0.5, (*proximity radius for food consumption action*)
-  "sensingDistance" -> 2,
+  "sensingDistance" -> 4,
   "metabolism" -> 0.05, (*energy lost due to metabolism*)
   "dt" -> 0.1, (*timestep in seconds (we can change this later)*)
   "foodEnergy" -> 5.0, (*how much energy 1 food particle gives*)
-  "foodSpawnCooldown" -> 0.5,
-  "nFoodSpawn" -> 3,
-  "nStartingAgents" -> 5,
-  "nStartingFood" -> 3,
-  "squareBounds" -> {0, 13}, (*min, max. Square environment*)
+  "foodSpawnCooldown" -> 1,
+  "nFoodSpawn" -> 5,
+  "nStartingAgents" -> 4,
+  "nStartingFood" -> 4,
+  "squareBounds" -> {0, 20}, (*min, max. Square environment*)
   "startingEnergy" -> 10,
-  "stepLength" -> 0.2,
+  "stepLength" -> 0.4,
   "dirChangeProb" -> 0.025,
-  "lifespan" -> 40, (*20 units*)
+  "lifespan" -> 30,
   "maxEnergy" -> 10,
   "imageSize" -> 500,
   "agentSize" -> 0.005, (*radius in pure length units*)
   "foodSize" -> 0.0025,
   "reproductionRadius" -> 1.5, (*we should cut this out in favor of proximityRadius, since proxRad is supposed to encompass this as well.*)
-  "minReproductionEnergy" -> 6.0,
+  "minReproductionEnergy" -> 5.0,
   "minReproductionAge" -> 2.0,
-  "reproductionEnergyCost" -> 3.0,
-  "reproductionCooldown" -> 1.0,
+  "reproductionEnergyCost" -> 2.0,
+  "reproductionCooldown" -> 2,
   "epsilon" -> 0.001
 |>;
 
 model = initializeModel[parameters];
-Simulation = genSimulationStates[parameters, model, 500];
+Simulation = genSimulationStates[parameters, model, 100];
 simulationGraphics = renderSimulation[Simulation, parameters];
 Manipulate[simulationGraphics[[j]], {j, 1, Length@simulationGraphics, 1, Appearance->Labeled}]
 plotPopulationStats[Simulation]
 
 
-(*Logistic Growth Model*)
-basePopulationPlot = plotPopulationStats[Simulation];
-
-agentCounts = Length[#["agents"]] & /@ Simulation;
-
-times = Range[0, Length[agentCounts] - 1] * parameters["dt"];
-
-agentData = Transpose[{times, agentCounts}];
-
-Clear[t, c, K, r, t0, d];
-
-populationFit = NonlinearModelFit[
-  agentData,
-  c + K/(1 + Exp[-r (t - t0)]) - d t,
+logisticGrowth[simulation_, parameters_] := Module[
   {
-    {c, Min[agentCounts]},
-    {K, Max[agentCounts] - Min[agentCounts]},
-    {r, 0.3},
-    {t0, 15},
-    {d, 0.2}
-  },
-  t
-];
-
-Show[
-  basePopulationPlot,
-  Plot[
-    populationFit[t],
-    {t, Min[times], Max[times]},
-    PlotStyle -> {Red, Thick, Dashed}
+   agentCounts, times, agentData,
+   logisticModel, populationFit, carryingCapacity,
+   basePopulationPlot
+   },
+  
+  agentCounts = Length[#["agents"]] & /@ simulation;
+  times = Range[0, Length[agentCounts] - 1] * parameters["dt"];
+  agentData = Transpose[{times, agentCounts}];
+  
+  basePopulationPlot = plotPopulationStats[simulation];
+  
+  Clear[t, K, r, t0, y0];
+  
+  logisticModel[t_] := y0 + (K - y0)/(1 + Exp[-r (t - t0)]);
+  
+  populationFit = NonlinearModelFit[
+    agentData,
+    {
+     logisticModel[t],
+     K > Max[agentCounts],
+     r > 0,
+     y0 >= 0,
+     y0 <= First[agentCounts] + 5,
+     Min[times] <= t0 <= Max[times]
+     },
+    {
+     {K, Max[agentCounts]},
+     {r, 0.25},
+     {t0, Mean[times]},
+     {y0, First[agentCounts]}
+     },
+    t,
+    Method -> "NMinimize"
+    ];
+  
+  carryingCapacity = K /. populationFit["BestFitParameters"];
+  
+  Column[
+   { 
+    Row[{"Carrying Capacity: ", 
+      NumberForm[carryingCapacity, {6, 2}]}],
+    Show[
+     basePopulationPlot,
+     Plot[
+      populationFit[t],
+      {t, Min[times], Max[times]},
+      PlotStyle -> {Red, Thick, Dashed}
+      ]
+     ]
+    }
+   ]
   ]
-]
+  
+  logisticGrowth[Simulation, parameters]
 
 
 Table[

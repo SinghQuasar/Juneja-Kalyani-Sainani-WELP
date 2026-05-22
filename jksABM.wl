@@ -169,7 +169,12 @@ agentActions[model_, params_] :=  Module[
 		{nearFoodDist, nearFoodI, nearFoodPos} = findNearestSensableFoodInfo[agent, foods, params];
 		{nearMateDist, nearMateI, nearMatePos} = findNearestSensableMateInfo[i, agentsSnapshot, params];
 		Which[
-			agent["energy"] > params["minReproductionEnergy"] && nearMateI>=1,
+			And[
+				agent["age"] > params["minReproductionAge"],
+				agent["reproductionCooldown"] == 0,
+				agent["energy"] > params["minReproductionEnergy"],
+				nearMateI>=1
+			],
 			agent = agentSetMateDir[agent, nearMatePos, params]; agent = explorationOrIntentionalWalk[agent, params]; agent,
 			
             nearFoodI>=1 && nearFoodDist < params["proximityRadius"], 
