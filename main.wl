@@ -26,7 +26,7 @@ parameters = <|
   "minReproductionEnergy" -> 6.0,
   "minReproductionAge" -> 2.0,
   "reproductionEnergyCost" -> 3.0,
-  "nextAgentID" -> 1, (*if this is a holder for the next agent id, and it evolves as the model does, it should go in the model data struct. If it's a parameter for number ID to start at, then it should stay here.*)
+  "reproductionCooldown" -> 1.0,
   "epsilon" -> 0.001
 |>;
 
