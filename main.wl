@@ -37,38 +37,62 @@ Manipulate[simulationGraphics[[j]], {j, 1, Length@simulationGraphics, 1, Appeara
 plotPopulationStats[Simulation]
 
 
-(*Logistic Growth Model*)
-basePopulationPlot = plotPopulationStats[Simulation];
-
-agentCounts = Length[#["agents"]] & /@ Simulation;
-
-times = Range[0, Length[agentCounts] - 1] * parameters["dt"];
-
-agentData = Transpose[{times, agentCounts}];
-
-Clear[t, c, K, r, t0, d];
-
-populationFit = NonlinearModelFit[
-  agentData,
-  c + K/(1 + Exp[-r (t - t0)]) - d t,
+logisticGrowth[simulation_, parameters_] := Module[
   {
-    {c, Min[agentCounts]},
-    {K, Max[agentCounts] - Min[agentCounts]},
-    {r, 0.3},
-    {t0, 15},
-    {d, 0.2}
-  },
-  t
-];
-
-Show[
-  basePopulationPlot,
-  Plot[
-    populationFit[t],
-    {t, Min[times], Max[times]},
-    PlotStyle -> {Red, Thick, Dashed}
+   agentCounts, times, agentData,
+   logisticModel, populationFit, carryingCapacity,
+   basePopulationPlot
+   },
+  
+  agentCounts = Length[#["agents"]] & /@ simulation;
+  times = Range[0, Length[agentCounts] - 1] * parameters["dt"];
+  agentData = Transpose[{times, agentCounts}];
+  
+  basePopulationPlot = plotPopulationStats[simulation];
+  
+  Clear[t, K, r, t0, y0];
+  
+  logisticModel[t_] := y0 + (K - y0)/(1 + Exp[-r (t - t0)]);
+  
+  populationFit = NonlinearModelFit[
+    agentData,
+    {
+     logisticModel[t],
+     K > Max[agentCounts],
+     r > 0,
+     y0 >= 0,
+     y0 <= First[agentCounts] + 5,
+     Min[times] <= t0 <= Max[times]
+     },
+    {
+     {K, Max[agentCounts]},
+     {r, 0.25},
+     {t0, Mean[times]},
+     {y0, First[agentCounts]}
+     },
+    t,
+    Method -> "NMinimize"
+    ];
+  
+  carryingCapacity = K /. populationFit["BestFitParameters"];
+  
+  Column[
+   { 
+    Row[{"Carrying Capacity: ", 
+      NumberForm[carryingCapacity, {6, 2}]}],
+    Show[
+     basePopulationPlot,
+     Plot[
+      populationFit[t],
+      {t, Min[times], Max[times]},
+      PlotStyle -> {Red, Thick, Dashed}
+      ]
+     ]
+    }
+   ]
   ]
-]
+  
+  logisticGrowth[Simulation, parameters]
 
 
 Table[
