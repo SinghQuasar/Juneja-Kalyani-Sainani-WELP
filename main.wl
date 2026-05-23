@@ -24,75 +24,22 @@ parameters = <|
   "foodSize" -> 0.0025,
   "reproductionRadius" -> 1.5, (*we should cut this out in favor of proximityRadius, since proxRad is supposed to encompass this as well.*)
   "minReproductionEnergy" -> 5.0,
-  "minReproductionAge" -> 2.0,
+  "minReproductionAge" -> 4.0,
   "reproductionEnergyCost" -> 2.0,
   "reproductionCooldown" -> 2,
   "epsilon" -> 0.001
 |>;
 
 model = initializeModel[parameters];
-Simulation = genSimulationStates[parameters, model, 100];
+(*Simulation = genSimulationStates[parameters, model, 2000]*)
+(*Save[NotebookDirectory[] <> "carryingCSims\\sim1.wl", Simulation]*)
+Simulation = Get[NotebookDirectory[] <> "carryingCSims\\sim1.wl"];
 simulationGraphics = renderSimulation[Simulation, parameters];
 Manipulate[simulationGraphics[[j]], {j, 1, Length@simulationGraphics, 1, Appearance->Labeled}]
 plotPopulationStats[Simulation]
 
 
-logisticGrowth[simulation_, parameters_] := Module[
-  {
-   agentCounts, times, agentData,
-   logisticModel, populationFit, carryingCapacity,
-   basePopulationPlot
-   },
-  
-  agentCounts = Length[#["agents"]] & /@ simulation;
-  times = Range[0, Length[agentCounts] - 1] * parameters["dt"];
-  agentData = Transpose[{times, agentCounts}];
-  
-  basePopulationPlot = plotPopulationStats[simulation];
-  
-  Clear[t, K, r, t0, y0];
-  
-  logisticModel[t_] := y0 + (K - y0)/(1 + Exp[-r (t - t0)]);
-  
-  populationFit = NonlinearModelFit[
-    agentData,
-    {
-     logisticModel[t],
-     K > Max[agentCounts],
-     r > 0,
-     y0 >= 0,
-     y0 <= First[agentCounts] + 5,
-     Min[times] <= t0 <= Max[times]
-     },
-    {
-     {K, Max[agentCounts]},
-     {r, 0.25},
-     {t0, Mean[times]},
-     {y0, First[agentCounts]}
-     },
-    t,
-    Method -> "NMinimize"
-    ];
-  
-  carryingCapacity = K /. populationFit["BestFitParameters"];
-  
-  Column[
-   { 
-    Row[{"Carrying Capacity: ", 
-      NumberForm[carryingCapacity, {6, 2}]}],
-    Show[
-     basePopulationPlot,
-     Plot[
-      populationFit[t],
-      {t, Min[times], Max[times]},
-      PlotStyle -> {Red, Thick, Dashed}
-      ]
-     ]
-    }
-   ]
-  ]
-  
-  logisticGrowth[Simulation, parameters]
+showCarryCLogistic[Simulation]
 
 
 Table[

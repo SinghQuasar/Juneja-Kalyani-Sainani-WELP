@@ -6,6 +6,7 @@ initializeModel::usage = "Creates model object with desired parameters"
 genSimulationStates::usage = "Generates simulation time-series"
 renderSimulation::usage = "Renders frames from time-series"
 plotPopulationStats::usage = "Plots population statistics from simulation time-series"
+showCarryCLogistic::usage = "Fits logistic curve to obtain carrying capacity"
 
 Begin["`Private`"]
 
@@ -525,6 +526,37 @@ plotPopulationStats[simulation_List] := Module[
     ImageSize  -> 500
   ]
 ];
+
+showCarryCLogistic[simulation_] := Module[{agentCounts, times, series, fit},
+	agentCounts = Length@#[[1]]& /@ simulation;
+	times = #[[4]]& /@ simulation;
+	series = Transpose[{times, agentCounts}];
+	
+	fit = NonlinearModelFit[
+	    series,
+	    K/(1 + A Exp[-r t]),
+	    {{K, 35}, {A, 10}, {r, 1}},
+	    t];
+	   
+	Show[
+		ListLinePlot[series],
+		Plot[fit[x], {x, times[[1]], times[[-1]]}]
+	]
+]
+
+retCarryCLogistic[simulation_] := Module[{agentCounts, times, series, fit},
+	agentCounts = Length@#[[1]]& /@ simulation;
+	times = #[[4]]& /@ simulation;
+	series = Transpose[{times, agentCounts}];
+	
+	fit = NonlinearModelFit[
+	    series,
+	    K/(1 + A Exp[-r t]),
+	    {{K, 35}, {A, 10}, {r, 1}},
+	    t];
+	
+	fit["BestFitParameters"]["K"]
+]
 
 End[]
 EndPackage[]
