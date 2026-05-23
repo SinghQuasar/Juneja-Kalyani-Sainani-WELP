@@ -6,20 +6,20 @@ initializeModel::usage = "Creates model object with desired parameters"
 genSimulationStates::usage = "Generates simulation time-series"
 renderSimulation::usage = "Renders frames from time-series"
 plotPopulationStats::usage = "Plots population statistics from simulation time-series"
+showCarryCLogistic::usage = "Fits logistic curve to obtain carrying capacity"
 
 Begin["`Private`"]
 
 checkWithinRadius[p1_, p2_, r_] := EuclideanDistance[p1, p2] <= r;
 
-createAgent[pos_, energy_, age_, id_, currentDirection_, parents_:{-1, -1}] := <|
-    "pos" -> pos,
-    "energy" -> energy,
-    "age" -> age, 
+createAgent[pos_, energy_, age_, id_, currentDirection_, parents_:{-1, -1}, reproductionCooldown_] := <|
+  "pos" -> pos,
+  "energy" -> energy,
+  "age" -> age, 
 	"id" -> id,
 	"currentDirection" -> currentDirection, (*unit vector*)
 	"parents" -> parents,
-    "ancestors" -> ancestors,
-    "tSinceLastReproduction" -> 0
+  "reproductionCooldown" -> reproductionCooldown
 |>
 
 (* checking the proximity for all foods and putting it into a list. Implement grid/sector based optimization later. *)
@@ -170,7 +170,12 @@ agentActions[model_, params_] :=  Module[
 		{nearFoodDist, nearFoodI, nearFoodPos} = findNearestSensableFoodInfo[agent, foods, params];
 		{nearMateDist, nearMateI, nearMatePos} = findNearestSensableMateInfo[i, agentsSnapshot, params];
 		Which[
-			agent["energy"] > params["minReproductionEnergy"] && nearMateI>=1,
+			And[
+				agent["age"] > params["minReproductionAge"],
+				agent["reproductionCooldown"] == 0,
+				agent["energy"] > params["minReproductionEnergy"],
+				nearMateI>=1
+			],
 			agent = agentSetMateDir[agent, nearMatePos, params]; agent = explorationOrIntentionalWalk[agent, params]; agent,
 			
             nearFoodI>=1 && nearFoodDist < params["proximityRadius"], 
@@ -223,20 +228,26 @@ findNearestSensableMateInfo[agentI_Integer, agents_List, params_] := Module[
 	If[nearAgentDist < params["sensingDistance"], {nearAgentDist, nearAgentI, nearAgentPos}, {-1, -1, -1}]
 ]
 
-(* WHAT IS THIS LONG BOOLEAN EXPRESSION? WHY DO WE HAVE THESE EXTRA VARS? *)
 areRelated[ai_, aj_] := Or[
-    MemberQ[ai["ancestors"], aj["id"]],
-    MemberQ[aj["ancestors"], ai["id"]],
-    (ai["parents"] =!= {-1, -1} && ai["parents"] === aj["parents"])
+    MemberQ[ai["parents"], aj["id"]],   
+    MemberQ[aj["parents"], ai["id"]], 
+    (ai["parents"] =!= {-1, -1} && Sort[ai["parents"]] === Sort[aj["parents"]])  (* siblings: same parent pair *)
+]
+
+decrementReproductionCooldowns[model_, params_] := Module[
+    {agents = model["agents"], model2 = model},
+	agents = MapAt[Max[# - params["dt"], 0]&, agents, {All, "reproductionCooldown"}];
+	model2["agents"] = agents;
+	model2
 ]
 
 reproduceAgents[model_, params_] := Module[
     {
         agents = model["agents"], model2 = model, newAgents = {},
-        reproduced, nextID, j, ai, aj, dist, midPos, newAgent
+        reproduced, nextID, j, ai, aj, dist, midPos, newAgent, newDir
     },
 
-  nextID = params["nextAgentID"];
+  nextID = model["nextAgentID"];
   reproduced = ConstantArray[False, Length[agents]];
 
   Do[
@@ -253,22 +264,27 @@ reproduceAgents[model_, params_] := Module[
        aj["energy"] >= params["minReproductionEnergy"] &&
        ai["age"] >= params["minReproductionAge"] &&
        aj["age"] >= params["minReproductionAge"] &&
+        ai["reproductionCooldown"] <= 0 &&
+        aj["reproductionCooldown"] <= 0 &&
        !areRelated[ai, aj],
 
       (* both parents pay energy cost *)
-      agents[[i]] = ReplacePart[agents[[i]], 
-        "energy" -> ai["energy"] - params["reproductionEnergyCost"]];
-      agents[[j]] = ReplacePart[agents[[j]], 
-        "energy" -> aj["energy"] - params["reproductionEnergyCost"]];
+      agents[[i]] = <|ai,
+      "energy" -> ai["energy"] - params["reproductionEnergyCost"],
+      "reproductionCooldown" -> params["reproductionCooldown"]|>;
+      agents[[j]] = <|aj,
+      "energy" -> aj["energy"] - params["reproductionEnergyCost"],
+      "reproductionCooldown" -> params["reproductionCooldown"]|>;
 
       midPos = (ai["pos"] + aj["pos"]) / 2;
-      newAncestors = DeleteDuplicates[Join[{ai["id"], aj["id"]}, ai["ancestors"], aj["ancestors"]]];
-      newAgent = createAgent[midPos, params["startingEnergy"] / 2, 0.0, nextID, {ai["id"], aj["id"]}, newAncestors];
+      newDir = {Cos[#], Sin[#]} &[RandomReal[{0, 2 Pi}]];
+      newAgent = createAgent[midPos, params["startingEnergy"]/2, 0.0, nextID, newDir, {ai["id"], aj["id"]}, params["reproductionCooldown"]];
       AppendTo[newAgents, newAgent];
       nextID++;
 
       reproduced[[i]] = True;
       reproduced[[j]] = True;
+
     ];
   , {i, Length[agents]}];
 
@@ -295,7 +311,7 @@ initializeModel[params_] :=
     agents =
     Table[
       randomDir = RandomReal[{0, 2 Pi}];
-      createAgent[RandomReal[{min, max}, 2], startingEnergy, 0.0, i, {Cos[randomDir], Sin[randomDir]}], {i, nStartingAgents}
+      createAgent[RandomReal[{min, max}, 2], startingEnergy, 0.0, i, {Cos[randomDir], Sin[randomDir]}, params["reproductionCooldown"]], {i, nStartingAgents}
     ];
 
     foods = RandomReal[{min, max}, {nStartingFood, 2}];
@@ -309,12 +325,12 @@ initializeModel[params_] :=
     |>
  ]
 
-propagateModelStep[params_, model_] := Module[{model2=model, params2=params},
-  params2["nextAgentID"] = model2["nextAgentID"]; (*huh?*)
+propagateModelStep[params_, model_] := Module[{model2=model},
   model2 = spawnFoodCheck[model2, params];
   model2 = randomizeAndKill[model2, params]; (*randomization*)
   model2 = agentActions[model2, params];
-  model2 = reproduceAgents[model2, params2]; (*why do we have params2?*)
+  model2 = decrementReproductionCooldowns[model2, params];
+  model2 = reproduceAgents[model2, params]; 
   model2 = metabolizeAgents[model2, params];
   model2 = ageAgents[model2, params];
   model2["time"] = model2["time"] + params["dt"];
@@ -510,6 +526,37 @@ plotPopulationStats[simulation_List] := Module[
     ImageSize  -> 500
   ]
 ];
+
+showCarryCLogistic[simulation_] := Module[{agentCounts, times, series, fit},
+	agentCounts = Length@#[[1]]& /@ simulation;
+	times = #[[4]]& /@ simulation;
+	series = Transpose[{times, agentCounts}];
+	
+	fit = NonlinearModelFit[
+	    series,
+	    K/(1 + A Exp[-r t]),
+	    {{K, 35}, {A, 10}, {r, 1}},
+	    t];
+	   
+	Show[
+		ListLinePlot[series],
+		Plot[fit[x], {x, times[[1]], times[[-1]]}]
+	]
+]
+
+retCarryCLogistic[simulation_] := Module[{agentCounts, times, series, fit},
+	agentCounts = Length@#[[1]]& /@ simulation;
+	times = #[[4]]& /@ simulation;
+	series = Transpose[{times, agentCounts}];
+	
+	fit = NonlinearModelFit[
+	    series,
+	    K/(1 + A Exp[-r t]),
+	    {{K, 35}, {A, 10}, {r, 1}},
+	    t];
+	
+	fit["BestFitParameters"]["K"]
+]
 
 End[]
 EndPackage[]
