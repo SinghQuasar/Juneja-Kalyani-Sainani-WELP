@@ -16,6 +16,7 @@ r::usage = "Growth rate"
 visualizeTimestep::usage = "The timestep being visualized in simVisualize"
 ExportSim::usage = "handy function for exporting sim from file using Export[], defaults to .wdx in dir:'simFiles'"
 ImportSim::usage = "handy function for importing sim from file using Import[], defaults to .wdx in dir:'simFiles'"
+rKIVPlot::usage = "plots r and k for paired simulation data"
 
 
 Begin["`Private`"]
@@ -562,6 +563,30 @@ logisticStats[simulation_] := Module[{agentCounts, times, series, fit},
 	    t];
 	
 	Association@fit["BestFitParameters"]
+]
+
+rKIVPlot[data_, yLabel_, plotLabel_] := 
+ ListLinePlot[
+  data,
+  
+  PlotMarkers -> Automatic,
+  PlotStyle -> Thick,
+  
+  Frame -> True,
+  Axes -> False,
+  
+  FrameLabel -> {
+    Style["Metabolism Rate", 14],
+    Style[yLabel, 14]
+    },
+  
+  PlotLabel -> Style[plotLabel, 16, Bold],
+  
+  GridLines -> Automatic,
+  
+  ImageSize -> Large,
+  
+  InterpolationOrder -> 2
 ]
 
 End[]

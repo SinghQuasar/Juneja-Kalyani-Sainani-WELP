@@ -46,6 +46,3 @@ simVisualize[Simulation, parameters, 1, 100]
 
 showLogistic[Simulation]
 logisticStats[Simulation]
-
-
-
