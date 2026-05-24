@@ -27,13 +27,14 @@ parameters = <|
   "minReproductionAge" -> 4.0,
   "reproductionEnergyCost" -> 2.0,
   "reproductionCooldown" -> 2,
-  "epsilon" -> 0.001
+  "epsilon" -> 0.001,
+  "rnd" -> N@10^(-3)
 |>;
 
 model = initializeModel[parameters];
-(*Simulation = genSimulationStates[parameters, model, 2000]*)
-(*Save[NotebookDirectory[] <> "carryingCSims\\sim1.wl", Simulation]*)
-Simulation = Get[NotebookDirectory[] <> "carryingCSims\\sim1.wl"];
+(*Simulation = genSimulationStates[parameters, model, 1000];*)
+(*Export[NotebookDirectory[] <> "carryingCSims\\sim1.wdx", Simulation];*)
+Simulation = Import[NotebookDirectory[] <> "carryingCSims\\sim1.wdx"];
 simulationGraphics = renderSimulation[Simulation, parameters];
 Manipulate[simulationGraphics[[j]], {j, 1, Length@simulationGraphics, 1, Appearance->Labeled}]
 plotPopulationStats[Simulation]

@@ -36,7 +36,7 @@ findNearestSensableFoodInfo[agent_, foodPositions_List, params_] := Module[
     ]
 ]
 
-spawnFoods[foods_, params_] := Join[foods, RandomReal[params["squareBounds"], {params["nFoodSpawn"], 2}]]
+spawnFoods[foods_, params_] := Join[foods, Round[RandomReal[params["squareBounds"], {params["nFoodSpawn"], 2}], params["rnd"]]]
 
 spawnFoodCheck[model_, params_] := Module[
     {model2 = model},
@@ -73,7 +73,7 @@ ageAgents[model_, params_] := Module[
 randomActionWalk[agent_, params_] := Module[
     {theta = RandomReal[{0, 2 Pi}], agent2 = agent, newPos, min, max},
     {min, max} = params["squareBounds"];
-    newPos = agent2["pos"] + {params["stepLength"] * Cos[theta], params["stepLength"] * Sin[theta]}; (*+ operator threadwise*)
+    newPos = agent2["pos"] + Round[{params["stepLength"] * Cos[theta], params["stepLength"] * Sin[theta]}, params["rnd"]]; (*+ operator threadwise*)
     agent2["pos"] = Clip[newPos,  {min, max}];
     agent2
 ]
@@ -97,6 +97,7 @@ agentSetFoodDir[agent_, foodPos_, params_] := Module[
 	{agent2 = agent, dirV},
 	dirV = foodPos - agent["pos"]; (*- operator threadwise*)
 	agent2["currentDirection"] = (1/(Norm[dirV]+params["epsilon"])) * dirV;
+	agent2["currentDirection"] = Round[agent2["currentDirection"], params["rnd"]];
 	agent2
 ]
 
@@ -104,6 +105,7 @@ agentSetMateDir[agent_, matePos_, params_] := Module[
 	{agent2 = agent, dirV},
 	dirV = matePos - agent["pos"]; (*- operator threadwise*)
 	agent2["currentDirection"] = (1/(Norm[dirV] + params["epsilon"])) * dirV;
+	agent2["currentDirection"] = Round[agent2["currentDirection"], params["rnd"]];
 	agent2
 ]
 
@@ -130,7 +132,7 @@ agentSetExploreDir[agent_, params_] := Module[
 	agent2["currentDirection"] = 
 	Which[
 		RandomReal[] < params["dirChangeProb"] || (ax < sqmin + proxRad || ax > sqmax - proxRad || ay < sqmin + proxRad || ay > sqmax - proxRad),
-		randomTheta = RandomReal[{0, 2 Pi}]; {Cos[randomTheta], Sin[randomTheta]}, 
+		randomTheta = RandomReal[{0, 2 Pi}]; Round[{Cos[randomTheta], Sin[randomTheta]}, params["rnd"]], 
 		
 		True,
 		agent2["currentDirection"]
@@ -277,7 +279,7 @@ reproduceAgents[model_, params_] := Module[
       "reproductionCooldown" -> params["reproductionCooldown"]|>;
 
       midPos = (ai["pos"] + aj["pos"]) / 2;
-      newDir = {Cos[#], Sin[#]} &[RandomReal[{0, 2 Pi}]];
+      newDir = Round[#, params["rnd"]]& /@ {Cos[#], Sin[#]}&[RandomReal[{0, 2 Pi}]];
       newAgent = createAgent[midPos, params["startingEnergy"]/2, 0.0, nextID, newDir, {ai["id"], aj["id"]}, params["reproductionCooldown"]];
       AppendTo[newAgents, newAgent];
       nextID++;
@@ -311,10 +313,10 @@ initializeModel[params_] :=
     agents =
     Table[
       randomDir = RandomReal[{0, 2 Pi}];
-      createAgent[RandomReal[{min, max}, 2], startingEnergy, 0.0, i, {Cos[randomDir], Sin[randomDir]}, params["reproductionCooldown"]], {i, nStartingAgents}
+      createAgent[Round[RandomReal[{min, max}, 2], params["rnd"]], startingEnergy, 0.0, i, Round[{Cos[randomDir], Sin[randomDir]}, params["rnd"]], params["reproductionCooldown"]], {i, nStartingAgents}
     ];
 
-    foods = RandomReal[{min, max}, {nStartingFood, 2}];
+    foods = Round[RandomReal[{min, max}, {nStartingFood, 2}], params["rnd"]];
 	
     <| 
       "agents" -> agents, (*list of agent associations*)
