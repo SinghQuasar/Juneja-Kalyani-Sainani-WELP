@@ -17,6 +17,7 @@ visualizeTimestep::usage = "The timestep being visualized in simVisualize"
 ExportSim::usage = "handy function for exporting sim from file using Export[], defaults to .wdx in dir:'simFiles'"
 ImportSim::usage = "handy function for importing sim from file using Import[], defaults to .wdx in dir:'simFiles'"
 rKIVPlot::usage = "plots r and k for paired simulation data"
+plotDeathAgeDistribution::usage = "returns histogram of agent death ages"
 
 
 Begin["`Private`"]
@@ -565,7 +566,7 @@ logisticStats[simulation_] := Module[{agentCounts, times, series, fit},
 	Association@fit["BestFitParameters"]
 ]
 
-rKIVPlot[data_, yLabel_, plotLabel_] := 
+rKIVPlot[data_, xLabel_, yLabel_, plotLabel_] := 
  ListLinePlot[
   data,
   
@@ -576,7 +577,7 @@ rKIVPlot[data_, yLabel_, plotLabel_] :=
   Axes -> False,
   
   FrameLabel -> {
-    Style["Metabolism Rate", 14],
+    Style[xLabel, 14],
     Style[yLabel, 14]
     },
   
@@ -587,6 +588,35 @@ rKIVPlot[data_, yLabel_, plotLabel_] :=
   ImageSize -> Large,
   
   InterpolationOrder -> 2
+]
+
+getDeathAges[simulation] := Module[
+  {nStates, lastSeen},
+  nStates = Length[simulation];
+  lastSeen = <||>; 
+  Do[
+    ((lastSeen[#["id"]] = {s, #["age"]}) &) /@ simulation[[s]]["agents"],
+    {s, nStates}
+  ];
+  Last /@ Select[Values[lastSeen], First[#] < nStates &]
+]
+
+plotDeathAgeDistribution[simulation] := Module[
+  {deathAges, nStates, lastSeen},
+  nStates = Length[simulation];
+  lastSeen = <||>;
+  Do[
+    ((lastSeen[#["id"]] = {s, #["age"]}) &) /@ simulation[[s]]["agents"],
+    {s, nStates}
+  ];
+  deathAges = Last /@ Select[Values[lastSeen], First[#] < nStates &];
+
+  SmoothHistogram[
+    deathAges,
+    Filling -> Axis,
+    AxesLabel -> {"Age at Death", "Fraction of Population"},
+    PlotLabel -> "Distribution of Death Ages"
+  ]
 ]
 
 End[]

@@ -139,8 +139,8 @@ graphRKPipeline[name_String, label_String, impDir_String] := Module[{kSeries, rS
   kSeries = ImportSim[name <> "KSeries", impDir];
   rSeries = ImportSim[name <> "rSeries", impDir];
 
-  Row[{rKIVPlot[kSeries, "Carrying Capacity", label <> " vs Carrying Capacity"], 
-  rKIVPlot[rSeries, "Growth Rate r", label <> " vs Growth Rate"]}]
+  Row[{rKIVPlot[kSeries, label, "Carrying Capacity", label <> " vs Carrying Capacity"], 
+  rKIVPlot[rSeries, label, "Growth Rate r", label <> " vs Growth Rate"]}]
 ]
 
 
@@ -150,6 +150,67 @@ graphRKPipeline["nFoodSpawn", "Food Spawned/Timestep (1/T)", impDir]
 graphRKPipeline["foodEnergy", "Food Energy (E)", impDir]
 graphRKPipeline["reproductionCooldown", "Reproduction Cooldown (T)", impDir]
 graphRKPipeline["reproductionEnergyCost", "Reproduction Energy Cost (E)", impDir]
+
+
+metabolismKSeries = ImportSim["metabolismKSeries", impDir]
+fit = NonlinearModelFit[
+  metabolismKSeries,
+  {c + a Exp[-b x], {c < 20}},
+  {{a, 1}, {b, 0.1}, {c, 0}},
+  x
+];
+
+fit["RSquared"]
+Show[
+	graphRKPipeline["metabolism", "Metabolism (E/T)", impDir][[1]][[1]],
+	Plot[fit[x], {x, metabolismKSeries[[1]][[1]], metabolismKSeries[[-1]][[1]]}]
+]
+
+nFoodSpawnKSeries = ImportSim["nFoodSpawnKSeries", impDir][[2;;]]
+fit = LinearModelFit[nFoodSpawnKSeries, x, x]
+fit["RSquared"]
+Show[
+	rKIVPlot[nFoodSpawnKSeries, "Food Spawned/Timestep (1/T)", "Carrying Capacity", "Food Spawned/Timestep (1/T)" <> " vs Carrying Capacity"],
+	Plot[fit[x], {x, nFoodSpawnKSeries[[1]][[1]], nFoodSpawnKSeries[[-1]][[1]]}]
+]
+
+
+metabolismKSeries=ImportSim["metabolismKSeries",impDir]
+fit=NonlinearModelFit[metabolismKSeries,{c+a Exp[-b x],{c<20}},{{a,1},{b,0.1},{c,0}},x];
+rSq=fit["RSquared"];
+params=fit["BestFitParameters"];
+{aV,bV,cV}={a,b,c}/. params;
+xMin=metabolismKSeries[[1]][[1]];
+xMax=metabolismKSeries[[-1]][[1]];
+Show[graphRKPipeline["metabolism","Metabolism (E/T)",impDir][[1]][[1]],Plot[fit[x],{x,xMin,xMax},PlotStyle->Red],Epilog->Inset[Column[{Row[{"y = ",ScientificForm[cV,3]," + ",ScientificForm[aV,3]," exp(-",ScientificForm[bV,3],"x)"}],Row[{"Valid for x \[Element] {",xMin,", ",xMax,"}"}],Row[{"R^2 = ",NumberForm[rSq,{4,3}]}]}],Scaled[{0.97,0.97}],Scaled[{1,1}]]]
+
+nFoodSpawnKSeries=ImportSim["nFoodSpawnKSeries",impDir][[2;;]]
+fit=LinearModelFit[nFoodSpawnKSeries,x,x]
+rSq=fit["RSquared"];
+params=fit["BestFitParameters"];
+{intercept,slope}={a,b}/. {"a"->(fit["BestFitParameters"][[1]]),"b"->(fit["BestFitParameters"][[2]])};
+xMin=nFoodSpawnKSeries[[1]][[1]];
+xMax=nFoodSpawnKSeries[[-1]][[1]];
+Show[rKIVPlot[nFoodSpawnKSeries,"Food Spawned/Timestep (1/T)","Carrying Capacity","Food Spawned/Timestep (1/T)"<>" vs Carrying Capacity"],Plot[fit[x],{x,xMin,xMax},PlotStyle->Red],Epilog->Inset[Column[{Row[{"y = ",ScientificForm[fit["BestFitParameters"][[1]],3]," + ",ScientificForm[fit["BestFitParameters"][[2]],3],"x"}],Row[{"Valid for x \[Element] {",xMin,", ",xMax,"}"}],Row[{"R^2 = ",NumberForm[rSq,{4,3}]}]}],Scaled[{0.97,0.97}],Scaled[{1,1}]]]
+
+
+foodEnergyKSeries = ImportSim["FoodEnergyKSeries", impDir]
+fit = LinearModelFit[foodEnergyKSeries, x, x]
+rSq = fit["RSquared"];
+xMin = foodEnergyKSeries[[1]][[1]];
+xMax = foodEnergyKSeries[[-1]][[1]];
+Show[
+  rKIVPlot[foodEnergyKSeries, "Food Energy (E)", "Carrying Capacity", "Food Energy (E)" <> " vs Carrying Capacity"],
+  Plot[fit[x], {x, xMin, xMax}, PlotStyle -> Red],
+  Epilog -> Inset[
+    Column[{
+      Row[{"y = ", ScientificForm[fit["BestFitParameters"][[1]], 3], " + ", ScientificForm[fit["BestFitParameters"][[2]], 3], "x"}],
+      Row[{"Valid for x \[Element] {", xMin, ", ", xMax, "}"}],
+      Row[{"R^2 = ", NumberForm[rSq, {4, 3}]}]
+    }],
+    Scaled[{0.97, 0.97}], Scaled[{1, 1}]
+  ]
+]
 
 
 
