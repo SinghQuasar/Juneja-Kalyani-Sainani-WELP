@@ -3,15 +3,19 @@
 BeginPackage["jksABM`"]
 
 initializeModel::usage = "Creates model object with desired parameters"
-genSimulationStates::usage = "Generates simulation time-series"
+genSimulationStates::usage = "Generates simulation states"
 renderSimulation::usage = "Renders frames from time-series"
 plotPopulationStats::usage = "Plots population statistics from simulation time-series"
 simVisualize::usage = "Gives us our visualization"
 showLogistic::usage = "shows logistic curve"
 logisticStats::usage "returns the stats of fitted logistic curve"
-	K::usage = "Carrying capacity"
-	A::usage = "Amplitude"
-	r::usage = "Growth rate"
+K::usage = "Carrying capacity"
+A::usage = "Amplitude"
+r::usage = "Growth rate"
+visualizeTimestep::usage = "The timestep being visualized in simVisualize"
+ExportSim::usage = "handy function for exporting sim from file using Export[], defaults to .wdx in dir:'simFiles'"
+ImportSim::usage = "handy function for importing sim from file using Import[], defaults to .wdx in dir:'simFiles'"
+
 
 Begin["`Private`"]
 
@@ -516,9 +520,18 @@ genSimulationStates[params_, model_, timesteps_] := Module[{model2 = model}, Joi
 
 renderSimulation[states_List, params_] := displayGrid[#, params] & /@ states
 
-simVisualize[simulation_, params_] := Module[{simulationGraphics},
-	simulationGraphics = renderSimulation[simulation, params];
-	Manipulate[simulationGraphics[[j]], {j, 1, Length@simulationGraphics, 1, Appearance->Labeled}]
+ExportSim[simulation_, name_String, directory_String:NotebookDirectory[] <> "simFiles\\", extension_String:".wdx"] := Export[
+	directory <> name <> extension,
+	simulation
+]
+
+ImportSim[name_String, directory_String:NotebookDirectory[] <> "simFiles\\", extension_String:".wdx"] := Import[
+	directory <> name <> extension
+]
+
+simVisualize[simulation_, params_, timesteps_] := Module[{simulationGraphics},
+	simulationGraphics = renderSimulation[simulation[[;;timesteps]], params];
+	Manipulate[simulationGraphics[[visualizeTimestep]], {visualizeTimestep, 1, Length@simulationGraphics, 1, Appearance->Labeled}]
 ]
 
 plotPopulationStats[simulation_List] := Module[
@@ -564,7 +577,7 @@ logisticStats[simulation_] := Module[{agentCounts, times, series, fit},
 	fit = NonlinearModelFit[
 	    series,
 	    K/(1 + A Exp[-r t]),
-	    {{k, 35}, {A, 10}, {r, 1}},
+	    {{K, 35}, {A, 10}, {r, 1}},
 	    t];
 	
 	fit["BestFitParameters"]
