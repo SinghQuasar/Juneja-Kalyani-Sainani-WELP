@@ -31,166 +31,17 @@ parameters = <|
   "rnd" -> N@10^(-3)
 |>;
 
-model = initializeModel[parameters];
+(*model = initializeModel[parameters];*)
 (*Simulation = genSimulationStates[parameters, model, 1000];*)
 (*Export[NotebookDirectory[] <> "carryingCSims\\sim1.wdx", Simulation];*)
 Simulation = Import[NotebookDirectory[] <> "carryingCSims\\sim1.wdx"];
-simulationGraphics = renderSimulation[Simulation, parameters];
-Manipulate[simulationGraphics[[j]], {j, 1, Length@simulationGraphics, 1, Appearance->Labeled}]
+
+
 plotPopulationStats[Simulation]
 
 
-logisticGrowth[simulation_, parameters_] := Module[
-  {
-   agentCounts, times, agentData,
-   logisticModel, populationFit, carryingCapacity,
-   basePopulationPlot
-   },
-  
-  agentCounts = Length[#["agents"]] & /@ simulation;
-  times = Range[0, Length[agentCounts] - 1] * parameters["dt"];
-  agentData = Transpose[{times, agentCounts}];
-  
-  basePopulationPlot = plotPopulationStats[simulation];
-  
-  Clear[t, K, r, t0, y0];
-  
-  logisticModel[t_] := y0 + (K - y0)/(1 + Exp[-r (t - t0)]);
-  
-  populationFit = NonlinearModelFit[
-    agentData,
-    {
-     logisticModel[t],
-     K > Max[agentCounts],
-     r > 0,
-     y0 >= 0,
-     y0 <= First[agentCounts] + 5,
-     Min[times] <= t0 <= Max[times]
-     },
-    {
-     {K, Max[agentCounts]},
-     {r, 0.25},
-     {t0, Mean[times]},
-     {y0, First[agentCounts]}
-     },
-    t,
-    Method -> "NMinimize"
-    ];
-  
-  carryingCapacity = K /. populationFit["BestFitParameters"];
-  
-  Column[
-   { 
-    Row[{"Carrying Capacity: ", 
-      NumberForm[carryingCapacity, {6, 2}]}],
-    Show[
-     basePopulationPlot,
-     Plot[
-      populationFit[t],
-      {t, Min[times], Max[times]},
-      PlotStyle -> {Red, Thick, Dashed}
-      ]
-     ]
-    }
-   ]
-  ]
-  
-  logisticGrowth[Simulation, parameters]
-showCarryCLogistic[Simulation]
+simVisualize[Simulation, parameters]
 
 
-(*mean first reproduction age represented by a smooth histogram*)
-meanFirstReproductionAge[simulation_, params_] := Module[
-  {
-    firstAges = <||>,
-    prevAgents, currAgents, prevIDs, newAgents,
-    parentIDs, parentAges
-  },
-
-  Do[
-    prevAgents = simulation[[i - 1, "agents"]];
-    currAgents = simulation[[i, "agents"]];
-
-    prevIDs = Lookup[prevAgents, "id"];
-
-    newAgents = Select[
-      currAgents,
-      ! MemberQ[prevIDs, #["id"]] && #["parents"] =!= {-1, -1} &
-    ];
-
-    Do[
-      parentIDs = child["parents"];
-
-      parentAges = Cases[
-        prevAgents,
-        a_ /; MemberQ[parentIDs, a["id"]] :> a["age"]
-      ];
-
-      Do[
-        If[! KeyExistsQ[firstAges, parentIDs[[j]]],
-          firstAges[parentIDs[[j]]] = parentAges[[j]]
-        ],
-        {j, Length[parentAges]}
-      ],
-
-      {child, newAgents}
-    ],
-
-    {i, 2, Length[simulation]}
-  ];
-
-  If[
-    Length[Values[firstAges]] == 0,
-
-    "No reproduction events occurred.",
-
-    Column[{
-      Row[{
-        "Mean First Age at Reproduction: ",
-        NumberForm[Mean[Values[firstAges]], {5, 2}]
-      }],
-
-      Row[{
-        "Number of Agents Who Reproduced: ",
-        Length[Values[firstAges]]
-      }],
-
-SmoothHistogram[
-  Values[firstAges],
-  Filling -> Axis,
-  AxesLabel -> {
-    "First Age at Reproduction",
-    "Probability Density"
-  },
-  PlotLabel -> "Density of First Reproduction Ages",
-  ImageSize -> 500
-]
-    }]
-  ]
-]
-
-meanFirstReproductionAge[Simulation, parameters]
-
-
-Table[
-	parameters["nFoodSpawn"] = nFS;
-	model = initializeModel[parameters];
-	Simulation = genSimulationStates[parameters, model, 500];
-	simulationGraphics = renderSimulation[Simulation, parameters];
-	
-	{nFS, Manipulate[simulationGraphics[[j]], {j, 1, Length@simulationGraphics, 1, Appearance->Labeled}],
-	plotPopulationStats[Simulation]},
-	{nFS, 1, 4}
-]
-
-
-Table[
-	parameters["metabolism"] = met;
-	model = initializeModel[parameters];
-	Simulation = genSimulationStates[parameters, model, 500];
-	simulationGraphics = renderSimulation[Simulation, parameters];
-	
-	{met, Manipulate[simulationGraphics[[j]], {j, 1, Length@simulationGraphics, 1, Appearance->Labeled}],
-	plotPopulationStats[Simulation]},
-	{met, {0.025, 0.05, 0.1}}
-]
+showLogistic[Simulation]
+logisticStats[Simulation]

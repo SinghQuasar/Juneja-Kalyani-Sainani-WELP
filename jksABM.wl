@@ -6,7 +6,12 @@ initializeModel::usage = "Creates model object with desired parameters"
 genSimulationStates::usage = "Generates simulation time-series"
 renderSimulation::usage = "Renders frames from time-series"
 plotPopulationStats::usage = "Plots population statistics from simulation time-series"
-showCarryCLogistic::usage = "Fits logistic curve to obtain carrying capacity"
+simVisualize::usage = "Gives us our visualization"
+showLogistic::usage = "shows logistic curve"
+logisticStats::usage "returns the stats of fitted logistic curve"
+	K::usage = "Carrying capacity"
+	A::usage = "Amplitude"
+	r::usage = "Growth rate"
 
 Begin["`Private`"]
 
@@ -511,6 +516,11 @@ genSimulationStates[params_, model_, timesteps_] := Module[{model2 = model}, Joi
 
 renderSimulation[states_List, params_] := displayGrid[#, params] & /@ states
 
+simVisualize[simulation_, params_] := Module[{simulationGraphics},
+	simulationGraphics = renderSimulation[simulation, params];
+	Manipulate[simulationGraphics[[j]], {j, 1, Length@simulationGraphics, 1, Appearance->Labeled}]
+]
+
 plotPopulationStats[simulation_List] := Module[
   {times, agentCounts, foodCounts},
   times = #["time"] & /@ simulation;
@@ -529,7 +539,7 @@ plotPopulationStats[simulation_List] := Module[
   ]
 ];
 
-showCarryCLogistic[simulation_] := Module[{agentCounts, times, series, fit},
+showLogistic[simulation_] := Module[{agentCounts, times, series, fit},
 	agentCounts = Length@#[[1]]& /@ simulation;
 	times = #[[4]]& /@ simulation;
 	series = Transpose[{times, agentCounts}];
@@ -546,7 +556,7 @@ showCarryCLogistic[simulation_] := Module[{agentCounts, times, series, fit},
 	]
 ]
 
-retCarryCLogistic[simulation_] := Module[{agentCounts, times, series, fit},
+logisticStats[simulation_] := Module[{agentCounts, times, series, fit},
 	agentCounts = Length@#[[1]]& /@ simulation;
 	times = #[[4]]& /@ simulation;
 	series = Transpose[{times, agentCounts}];
@@ -554,10 +564,10 @@ retCarryCLogistic[simulation_] := Module[{agentCounts, times, series, fit},
 	fit = NonlinearModelFit[
 	    series,
 	    K/(1 + A Exp[-r t]),
-	    {{K, 35}, {A, 10}, {r, 1}},
+	    {{k, 35}, {A, 10}, {r, 1}},
 	    t];
 	
-	fit["BestFitParameters"]["K"]
+	fit["BestFitParameters"]
 ]
 
 End[]
