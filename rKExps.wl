@@ -214,3 +214,14 @@ Show[
 
 
 
+metabolismKSeries = ImportSim["metabolismKSeries", impDir];
+metabolismKLnSeries = {#[[1]], Log[#[[2]]]}& /@ metabolismKSeries;
+fit = LinearModelFit[metabolismKLnSeries, x, x]
+fit["RSquared"]
+Show[
+	rKIVPlot[metabolismKLnSeries, "Metabolism (E/T)", "ln(Carrying Capacity)", "Metabolism (E/T)" <> " vs ln(Carrying Capacity)"],
+	Plot[fit[x], {x, metabolismKLnSeries[[1]][[1]], metabolismKLnSeries[[-1]][[1]]}]
+]
+
+
+
