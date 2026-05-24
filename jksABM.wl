@@ -4,6 +4,7 @@ BeginPackage["jksABM`"]
 
 initializeModel::usage = "Creates model object with desired parameters"
 genSimulationStates::usage = "Generates simulation states"
+genSimulation::usage = "The above 2 in 1 for ease of use"
 renderSimulation::usage = "Renders frames from time-series"
 plotPopulationStats::usage = "Plots population statistics from simulation time-series"
 simVisualize::usage = "Gives us our visualization"
@@ -150,28 +151,6 @@ agentSetExploreDir[agent_, params_] := Module[
 ]
 
 (*I believe agents will never have more than max energy due to metabolism sending it to max-1 metabolism*)
-
-(*Old agentActions[] without intentional movement.*)
-
-(*
-agentActions[model_, params_] :=  Module[
-    {model2 = model, agents = model["agents"], foods = model["foods"], agent, nearFoodI, nearFoodDist},
-	agents = Table[
-		agent = agents[[i]];
-		{nearFoodDist, nearFoodI} = findNearestSensableFoodPosAndI[agent, foods, params];
-		If[
-            nearFoodI>=1 && nearFoodDist < params["proximityRadius"], 
-			foods = Delete[foods, nearFoodI]; agentEat[agent, params], 
-			randomActionWalk[agent, params]
-        ],
-	    {i, Length@agents}
-    ];
-	model2["foods"] = foods;
-	model2["agents"] = agents;
-	model2
-]
-*)
-
 agentActions[model_, params_] :=  Module[
     {model2 = model, agents = model["agents"], agentsSnapshot, foods = model["foods"], agent, 
     nearFoodDist, nearFoodI, nearFoodPos, nearMateDist, nearMateI, nearMatePos},
@@ -520,6 +499,8 @@ genSimulationStates[params_, model_, timesteps_] := Module[{model2 = model}, Joi
 
 renderSimulation[states_List, params_] := displayGrid[#, params] & /@ states
 
+genSimulation[params_, tsteps_] := genSimulationStates[params, initializeModel[params], tsteps]
+
 ExportSim[simulation_, name_String, directory_String:NotebookDirectory[] <> "simFiles\\", extension_String:".wdx"] := Export[
 	directory <> name <> extension,
 	simulation
@@ -529,8 +510,8 @@ ImportSim[name_String, directory_String:NotebookDirectory[] <> "simFiles\\", ext
 	directory <> name <> extension
 ]
 
-simVisualize[simulation_, params_, timesteps_] := Module[{simulationGraphics},
-	simulationGraphics = renderSimulation[simulation[[;;timesteps]], params];
+simVisualize[simulation_, params_, timestepStart_:1, timestepEnd_:Length@simulation_] := Module[{simulationGraphics},
+	simulationGraphics = renderSimulation[simulation[[timestepStart;;timestepEnd]], params];
 	Manipulate[simulationGraphics[[visualizeTimestep]], {visualizeTimestep, 1, Length@simulationGraphics, 1, Appearance->Labeled}]
 ]
 
@@ -580,7 +561,7 @@ logisticStats[simulation_] := Module[{agentCounts, times, series, fit},
 	    {{K, 35}, {A, 10}, {r, 1}},
 	    t];
 	
-	fit["BestFitParameters"]
+	Association@fit["BestFitParameters"]
 ]
 
 End[]

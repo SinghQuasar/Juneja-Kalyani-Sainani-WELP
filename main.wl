@@ -20,8 +20,8 @@ parameters = <|
   "lifespan" -> 30,
   "maxEnergy" -> 10,
   "imageSize" -> 500,
-  "agentSize" -> 0.005, (*radius in pure length units*)
-  "foodSize" -> 0.0025,
+  "agentSize" -> 0.01, (*radius in pure length units*)
+  "foodSize" -> 0.0075,
   "reproductionRadius" -> 1.0,
   "minReproductionEnergy" -> 5.0,
   "minReproductionAge" -> 4.0,
@@ -31,9 +31,9 @@ parameters = <|
   "rnd" -> N@10^(-3)
 |>;
 
-(*model = initializeModel[parameters];*)
-(*Simulation = genSimulationStates[parameters, model, 100]*)
-(*ExportSim[Simulation, "sim2"];*)
+(*Simulation = genSimulation[parameters, 100];
+ExportSim[Simulation, "sim2"];
+Clear[Simulation]*) (*clear the variable after saving to not waste RAM and instead put in file for later access.*)
 
 Simulation = ImportSim["sim1"];
 
@@ -41,7 +41,7 @@ Simulation = ImportSim["sim1"];
 plotPopulationStats[Simulation]
 
 
-simVisualize[Simulation, parameters, 20]
+simVisualize[Simulation, parameters, 1, 100]
 
 
 showLogistic[Simulation]
