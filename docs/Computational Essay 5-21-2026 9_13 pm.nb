@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       154,          7]
-NotebookDataLength[    145918,       3391]
-NotebookOptionsPosition[    133497,       3221]
-NotebookOutlinePosition[    133978,       3239]
-CellTagsIndexPosition[    133935,       3236]
+NotebookDataLength[    192472,       4597]
+NotebookOptionsPosition[    178271,       4393]
+NotebookOutlinePosition[    179524,       4429]
+CellTagsIndexPosition[    179332,       4421]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -21,12 +21,13 @@ Notebook[{
 
 Cell[CellGroupData[{
 Cell["\<\
-Simulating the Emergence of Reproductive and Parenting Strategies using \
-Agent-Based Modeling with Evolutionary Game Theory\
+Investigating Ecological Energy and Population Dynamics in Artificial \
+Colonies Through Creation of an Agent-Based Modeling System with Detailed \
+Interactively-Seeded Environmental Parameters\
 \>", "Title",
  CellChangeTimes->{{3.9821898656762505`*^9, 3.9821898716910725`*^9}, {
-  3.9821909533992023`*^9, 
-  3.9821909930457573`*^9}},ExpressionUUID->"fc779f64-94a4-1645-96da-\
+  3.9821909533992023`*^9, 3.9821909930457573`*^9}, {3.9886678056455383`*^9, 
+  3.988667806978819*^9}},ExpressionUUID->"fc779f64-94a4-1645-96da-\
 b7c48e9320a8"],
 
 Cell[TextData[{
@@ -46,10 +47,27 @@ Cell["Abstract", "Section",
   3.9821914059070625`*^9}},ExpressionUUID->"b47a9adc-7996-504b-8c35-\
 2c9e4daa3d69"],
 
-Cell["We\[CloseCurlyQuote]ll work on this during the last couple of \
-sprints.", "Text",
- CellChangeTimes->{{3.9821914125019894`*^9, 
-  3.9821914624889736`*^9}},ExpressionUUID->"badd546a-7765-9842-941a-\
+Cell["\<\
+\tIn this work, we present a custom bioenergetics-informed ecological \
+Agent-Based Modeling (ABM) toolbox for colonies of artificial organisms in \
+the Wolfram Language and an investigation of energy and population dynamics \
+with connections to real-world biology using this toolbox. Unlike previous \
+Agent-Based Modeling projects done in the Wolfram Language, this interactive \
+toolbox provides the user with the ability to change and visualize the \
+effects of many more parameters on the outcomes of artificial colonies such \
+as resolution of simulation time-discretization, sensing and interaction \
+abilities of organisms, metabolic rates, lifespans, exploration/foraging \
+behaviors, reproductive frequencies, and bioenergetics like digestion and \
+reproduction energies. In the investigations performed using this toolbox, we \
+show that ecological models produced by the toolbox mimic population dynamics \
+on a macro-level seen in real-world ecology through experimentation on \
+metabolic rates, primary production rates, caloric densities and reproductive \
+frequencies with a logistic analysis of population growth and collection of \
+other demographic data.\
+\>", "Text",
+ CellChangeTimes->{{3.9821914125019894`*^9, 3.9821914624889736`*^9}, {
+  3.9886678201103325`*^9, 
+  3.9886678217355022`*^9}},ExpressionUUID->"badd546a-7765-9842-941a-\
 3decf455c43d"]
 }, Open  ]],
 
@@ -62,40 +80,169 @@ Cell["Introduction", "Section",
 
 Cell["\<\
 \tThe processes by which life interacts with its environment, sustains \
-itself, and continues on through its posterity (reproduces) are complex and \
-intricately shaped by environmental factors and evolution. One interesting \
-aspect of organism\[CloseCurlyQuote]s behavior is the reasons why organisms \
-reproduce the way they do, and how they take care of their young: their \
-reproductive and parenting behaviors. Agent-Based Modeling (ABM) simulations, \
-while greatly simplified, can provide interesting theory that can provide a \
-basis and a framework for actual studies of ecological behaviors and traits \
-in organisms. Agent-Based Modeling simulations consist of agents that \
-interact with each other and their environment through simple rules. As the \
-simulation evolves through time, the rules produce interesting behavior among \
-the agents that can be studied. These rules ideally mimic real life to create \
-a realistic, albeit simplified, simulation.
-\tIn this work, we apply Agent-Based Modeling and Evolutionary Game Theory in \
-Wolfram Language to create a testing ground for investigating the emergence \
-of reproductive and parenthood strategies in organisms. Specifically, through \
-simulated genes dictating behavior through Evolutionary Game Theory, we \
-explore two areas: 1) fecundity, and 2) parental feeding strategies. \
-[describe fecundity and the feeding strategies in more detail]. With our \
-model, we tweak environment setups, agent behavior, and other parameters of \
-our model to analyze statistical data produced by the simulation and gain \
-insights on reproductive and parenting strategies of organisms. In doing \
-this, we perform experiments with [describe experiments]. Through these \
-experiments, we explore two distinct, but interrelated questions: [questions]
-\t
-[would like to put a bit about r/k selection in here as well, can be found in \
-project plan.]\
+itself, and reproduces are complex and intricately shaped by environmental \
+factors and evolution. Agent-Based Modeling (ABM) simulations, while greatly \
+simplified, can provide interesting theory that can provide a basis and a \
+framework for actual studies of ecological behaviors and traits in organisms. \
+Agent-Based Modeling simulations consist of agents representing organisms \
+that interact with each other and their environment through simple rules. As \
+the simulation evolves through time, the rules produce interesting behavior \
+among the agents that can be studied. These rules ideally mimic real life to \
+create a realistic, albeit simplified, simulation. Our model works as a \
+toolbox for producing ecological simulations of colonies of artificial \
+organisms and experimenting with how changing organisms\[CloseCurlyQuote] \
+characteristics or their environment, including, but not limited to, factors \
+like metabolism, energy, reproduction age, and food availability, can \
+influence population dynamics such as population growth, carrying capacity, \
+age distributions, and life expectancies. The toolbox\[CloseCurlyQuote]s \
+simulation logic incorporates movement, organisms dynamically sensing their \
+environment and adjusting foraging and mating decisions, energy consumption, \
+reproduction, and aging, as well as a visualization that maps each timestep \
+to show how agents undergo all of these behaviors, which are informed through \
+bioenergetics. Bioenergetics is the study of how organisms acquire, \
+transform, store, and expend energy, and how those energy flows determine \
+biological outcomes like growth, reproduction, movement, and survival. 
+
+\tWith this toolbox, we create several experiments and graphs that show \
+dynamics like logistic population growth and carrying capacity, the \
+distribution of first reproduction ages, and life expectancies are affected \
+by environmental parameters. Since our model has constrained space that \
+introduces competition between agents (if two agents attempt to eat the same \
+food it is determined randomly which eats it) and a constrained amount of \
+food that is spawned (simulating primary production in an ecosystem), the \
+environment naturally has a limited potential for growth, and the populations \
+of our colonies naturally lend themselves towards logistic growth. Logistic \
+growth is governed by the following differential equation, which embeds the \
+constrained nature of the population growth into its structure:\
 \>", "Text",
  CellChangeTimes->{{3.9861323120985794`*^9, 3.9861323179159927`*^9}, 
    3.9861323561213703`*^9, {3.9861327597572536`*^9, 3.9861328696856537`*^9}, {
    3.986132940158207*^9, 3.9861329886130104`*^9}, {3.986133114661625*^9, 
    3.986133161320118*^9}, {3.9861334921382465`*^9, 3.9861335766738815`*^9}, {
-   3.986133761947159*^9, 
-   3.986133790376301*^9}},ExpressionUUID->"78c80cea-78cf-0b4a-a189-\
-9310aef30d0b"]
+   3.986133761947159*^9, 3.986133790376301*^9}, {3.988667841027857*^9, 
+   3.9886679197390842`*^9}, {3.988667974136898*^9, 3.9886679784752083`*^9}, {
+   3.9886680190840263`*^9, 
+   3.9886680195578976`*^9}},ExpressionUUID->"78c80cea-78cf-0b4a-a189-\
+9310aef30d0b"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  FormBox[
+   StyleBox[
+    RowBox[{
+     FractionBox["dP", "dt"], "=", " ", 
+     RowBox[{"rP", "(", 
+      RowBox[{"1", "-", 
+       FractionBox["P", "K"]}], ")"}]}],
+    FontSize->18], TraditionalForm]],
+  FontSlant->"Italic",ExpressionUUID->"c4e91b6f-ecae-ce44-9412-88f9abf87198"],
+ "\t\t(1)"
+}], "Text",
+ CellChangeTimes->{{3.988667983903784*^9, 3.9886679854296*^9}, {
+  3.9886680432898235`*^9, 3.988668062317316*^9}, {3.988668577821993*^9, 
+  3.988668583097761*^9}},
+ TextAlignment->Center,ExpressionUUID->"780029f3-2d5c-794d-be82-4e148ec67383"],
+
+Cell[TextData[{
+ StyleBox["P",
+  FontSlant->"Italic"],
+ " here is the population size as a function of ",
+ StyleBox["t",
+  FontSlant->"Italic"],
+ ", the time. ",
+ StyleBox["r ",
+  FontSlant->"Italic"],
+ "is called the intrinsic growth rate and and ",
+ StyleBox["K",
+  FontSlant->"Italic"],
+ " is the carrying capacity. When the population is very small, the ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"(", 
+    RowBox[{"1", "-", 
+     FractionBox["P", "K"]}], ")"}], TraditionalForm]],
+  FontSlant->"Italic",ExpressionUUID->"15d5b8d3-a15e-d049-aa0a-79736b777db5"],
+ " is close to 1 as ",
+ StyleBox["P ",
+  FontSlant->"Italic"],
+ "<< ",
+ StyleBox["K",
+  FontSlant->"Italic"],
+ ". Thus the population grows exponentially according to ",
+ StyleBox["r",
+  FontSlant->"Italic"],
+ ", hence its name. Once the ",
+ StyleBox["P",
+  FontSlant->"Italic"],
+ " approaches ",
+ StyleBox["K",
+  FontSlant->"Italic"],
+ ", that term becomes significantly smaller than 1 and begins to dampen how \
+fast the population grows, exemplifying how a population\[CloseCurlyQuote]s \
+growth slows down as it approaches the maximum amount its environment can \
+hold due to competition for resources leading to reduced overall prosperity \
+of the population. In biology, there is usually a fluctuation around the \
+carrying capacity as time goes on, as a population increases over the \
+carrying capacity and ends up correcting due to the inability of the \
+environment to support that excess population, but the asymptotic behavior of \
+a logistic curve follows the average of those fluctuations in the long run, \
+and thus describes the carrying capacity of a population. Separating and \
+integrating this differential equation gives the form that we use among other \
+curves to fit to our data for analysis:"
+}], "Text",
+ CellChangeTimes->{{3.9886680218284607`*^9, 3.9886680339560013`*^9}, {
+   3.9886680871550217`*^9, 3.9886684035609074`*^9}, {3.9886684564480705`*^9, 
+   3.9886684692912884`*^9}, 
+   3.9886687350280476`*^9},ExpressionUUID->"8d46ef41-0c09-f24e-8d51-\
+b3fad24562d0"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{"P", "(", "t", ")"}], "=", " ", 
+    FractionBox["K", 
+     RowBox[{"1", 
+      StyleBox[" ",
+       FontSlant->"Italic"], "+", 
+      StyleBox[" ",
+       FontSlant->"Italic"], 
+      StyleBox[
+       SuperscriptBox["Ae", 
+        RowBox[{
+         RowBox[{"-", "r"}], " ", "t"}]],
+       FontSlant->"Italic"]}]]}], TraditionalForm]],
+  FontSize->18,ExpressionUUID->"cd4e98c3-4e7d-4c41-b820-8f7c09138581"],
+ StyleBox["\t\t",
+  FontSize->18],
+ StyleBox["(2)",
+  FontSize->15]
+}], "Text",
+ CellChangeTimes->{{3.9886685755629025`*^9, 3.988668600000784*^9}, {
+  3.988668638795864*^9, 3.9886686964579735`*^9}},
+ TextAlignment->Center,ExpressionUUID->"97567dfe-0700-ac46-94f3-0f3410304221"],
+
+Cell[TextData[{
+ "This equation provides information about the initial population through an \
+analysis of ",
+ StyleBox["A",
+  FontSlant->"Italic"],
+ ", carrying capacity ",
+ StyleBox["K",
+  FontSlant->"Italic"],
+ ", and unconstrained growth rate ",
+ StyleBox["r",
+  FontSlant->"Italic"],
+ " in a useful form.\n\n\tOverall, through these experiments, we show how \
+simple rules can influence a population\[CloseCurlyQuote]s dynamics and \
+characteristics, and how our Agent-Based Modeling toolbox can be used as a \
+flexible foundation for studying further ecological systems and emergent \
+population-level and agent-level behaviors."
+}], "Text",
+ CellChangeTimes->{{3.988668728888998*^9, 3.9886687455668926`*^9}, {
+  3.988668869889372*^9, 
+  3.988668895236967*^9}},ExpressionUUID->"a1cd6812-7d12-3b4c-ae90-\
+800f78fb099b"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -135,14 +282,17 @@ framing and don\[CloseCurlyQuote]t seem arbitrary.]\
 56a86a1d7b26"],
 
 Cell["\<\
-Currently, our model simulates the basic behaviors within a population, \
-consisting of agents that move, search for and consume nearby food, and gain \
-or lose energy. We\[CloseCurlyQuote]ve also created a visualization for our \
-ABM so far.\
+From paper: If there is sufficient energy intake, an animal allocates the \
+energy obtained in the order: maintenance, growth, reproduction, energy \
+storage, until its energy stores reach an optimal level. If there is a \
+shortfall, the priorities for maintenance and growth/reproduction remain the \
+same until reserves fall to a critical threshold below which all are \
+allocated to maintenance. [cite]\
 \>", "Text",
  CellChangeTimes->{{3.982253020855629*^9, 3.982253031160576*^9}, {
   3.982255872361162*^9, 3.982256007212734*^9}, {3.982949042916792*^9, 
-  3.982949052745554*^9}},ExpressionUUID->"2f6dff15-ac40-5946-9765-\
+  3.982949052745554*^9}, {3.988668762843704*^9, 
+  3.988668771359005*^9}},ExpressionUUID->"2f6dff15-ac40-5946-9765-\
 dfadd688eaf0"]
 }, Open  ]]
 }, Open  ]],
@@ -153,6 +303,15 @@ Cell["Legend", "Section",
  CellChangeTimes->{{3.9866533201718006`*^9, 
   3.98665332367041*^9}},ExpressionUUID->"4c8fbf71-3deb-6f4f-a4a6-\
 de5a6680d72a"],
+
+Cell[TextData[{
+ StyleBox["something bolded",
+  FontWeight->"Bold"],
+ " - it\[CloseCurlyQuote]s an important word/symbol"
+}], "Text",
+ CellChangeTimes->{{3.9886690722929115`*^9, 
+  3.988669116118908*^9}},ExpressionUUID->"8dae3ea2-bd77-374b-8091-\
+0db84123d5d4"],
 
 Cell["\<\
 CodeText - used to briefly explain smaller specific bits of code.\
@@ -177,15 +336,37 @@ ca7d4aab18cf"],
 Cell[TextData[{
  Cell[BoxData["parameter"], "InlineCode",
   FontSlant->"Italic",ExpressionUUID->"2f3861a9-f0f3-3949-b4b4-c7351713123e"],
- " - Text formatted like this references a model parameter (see ",
- StyleBox["Model Parameters",
+ " - Text formatted like this references a ",
+ StyleBox["model",
+  FontWeight->"Bold"],
+ " or ",
+ StyleBox["agent",
+  FontWeight->"Bold"],
+ " parameter (see ",
+ StyleBox[ButtonBox["Model Parameters",
+  BaseStyle->"Hyperlink",
+  ButtonData->"modelParams"],
   FontColor->RGBColor[
    0.792156862745098, 0.3176470588235294, 0.09803921568627451]],
+ StyleBox[" ",
+  FontColor->RGBColor[
+   0.792156862745098, 0.3176470588235294, 0.09803921568627451]],
+ "and ",
+ Cell[BoxData[
+  ButtonBox[
+   RowBox[{"createAgent", "[", "]"}],
+   BaseStyle->"Hyperlink",
+   ButtonData->"createAgent[]"]], "InlineCode",ExpressionUUID->
+  "7a83ebc2-db52-9f4f-ab8e-0f4afb2c5c66"],
  ")"
 }], "Text",
  CellChangeTimes->{{3.9866538215848713`*^9, 3.986653841154051*^9}, {
-   3.9866540503424263`*^9, 3.9866540598938313`*^9}, 
-   3.9866565344549026`*^9},ExpressionUUID->"d94d1240-cf10-f24d-be70-\
+   3.9866540503424263`*^9, 3.9866540598938313`*^9}, 3.9866565344549026`*^9, {
+   3.98866069937986*^9, 3.988660736922714*^9}, {3.988660812461939*^9, 
+   3.9886608124629383`*^9}, {3.9886609535240345`*^9, 
+   3.9886609535240345`*^9}, {3.9886610498816967`*^9, 3.988661072931261*^9}, {
+   3.9886611051938267`*^9, 
+   3.988661105194828*^9}},ExpressionUUID->"d94d1240-cf10-f24d-be70-\
 15dcab168e92"]
 }, Open  ]],
 
@@ -194,20 +375,31 @@ Cell[CellGroupData[{
 Cell["Model Parameters", "Section",
  CellChangeTimes->{{3.9861346944682255`*^9, 3.986134699014679*^9}, {
   3.9861347846181145`*^9, 3.9861347951362133`*^9}, {3.9861366439729843`*^9, 
-  3.9861366489353695`*^9}, {3.9866530520267925`*^9, 
-  3.9866530526883984`*^9}},ExpressionUUID->"7dc9621c-5827-ef4a-8786-\
-41ddeeebf367"],
+  3.9861366489353695`*^9}, {3.9866530520267925`*^9, 3.9866530526883984`*^9}},
+ CellTags->
+  "modelParams",ExpressionUUID->"7dc9621c-5827-ef4a-8786-41ddeeebf367"],
 
-Cell["\<\
-These are model parameters stored as an association that set the rules for a \
-simulation, and a user may freely tweak them to model certain environmental \
+Cell[TextData[{
+ "These are model parameters stored as an association that set the rules for \
+a simulation, and a user may freely tweak them to model certain environmental \
 scenarios or use these as independent variables to run empirical experiments. \
 Most functions of the model take in this parameters association to understand \
 how they should work and to what extent their functions should affect \
 model/agent state. Comments following each parameter outlines its purpose. \
-Parameters, and thus the model, is defined in arbitrary units: arbitrary \
-distance units, arbitrary time units, and arbitrary energy units.\
-\>", "Text",
+Parameters, and thus the model, is defined in ",
+ StyleBox["nondimensionalized",
+  FontWeight->"Bold"],
+ " arbitrary units: arbitrary distance units denoted (",
+ StyleBox["D",
+  FontWeight->"Bold"],
+ "), arbitrary time units denoted (",
+ StyleBox["T",
+  FontWeight->"Bold"],
+ "), and arbitrary energy units denoted (",
+ StyleBox["E",
+  FontWeight->"Bold"],
+ ") throughout."
+}], "Text",
  CellChangeTimes->{
   3.986134702431364*^9, {3.9861349670242786`*^9, 3.9861350151841335`*^9}, {
    3.9866530586789455`*^9, 3.9866530630536213`*^9}, {3.9866539617015514`*^9, 
@@ -215,13 +407,15 @@ distance units, arbitrary time units, and arbitrary energy units.\
    3.9866543327970047`*^9, 3.986654545327215*^9}, {3.986654578512396*^9, 
    3.986654579597225*^9}, {3.9866546113092575`*^9, 3.9866546690151215`*^9}, {
    3.9866547079760723`*^9, 3.9866547221788425`*^9}, {3.986654994727091*^9, 
-   3.986655051410116*^9}},ExpressionUUID->"8ff26a7a-b98b-fb49-a9f6-\
+   3.986655051410116*^9}, {3.988668795851225*^9, 3.9886688178396187`*^9}, {
+   3.9886690538873158`*^9, 
+   3.988669055448925*^9}},ExpressionUUID->"8ff26a7a-b98b-fb49-a9f6-\
 7615dc0ce169"],
 
 Cell[BoxData[
  RowBox[{
   RowBox[{"parameters", " ", "=", " ", 
-   RowBox[{"<|", " ", "\n", "  ", 
+   RowBox[{"<|", "\n", "  ", 
     RowBox[{
      RowBox[{"\"\<proximityRadius\>\"", " ", "->", " ", "0.5"}], ",", " ", 
      RowBox[{"(*", 
@@ -229,39 +423,42 @@ Cell[BoxData[
        RowBox[{"(", 
         RowBox[{
          RowBox[{"agent", "/", "food"}], ",", " ", 
-         RowBox[{"agent", "/", "agent"}], ",", " ", 
-         RowBox[{"child", "/", "parent"}], ",", " ", 
-         RowBox[{"etc", "."}]}], ")"}], " ", "need", " ", "to", " ", "be", " ",
-        "to", " ", "interact", " ", 
+         RowBox[{"agent", "/", "agent"}]}], ")"}], " ", "need", " ", "to", " ",
+        "be", " ", "to", " ", "interact", " ", 
        RowBox[{"(", 
-        RowBox[{"eat", ",", " ", "reproduce", ",", " ", "feed", ",", " ", 
+        RowBox[{"eat", ",", " ", "reproduce", ",", " ", 
          RowBox[{"etc", "."}]}], ")"}]}], "*)"}], "\n", "  ", 
-     RowBox[{"\"\<sensingDistance\>\"", " ", "->", " ", "2"}], ",", " ", 
+     RowBox[{"\"\<sensingDistance\>\"", " ", "->", " ", "4"}], ",", " ", 
      RowBox[{"(*", 
       RowBox[{
        RowBox[{
        "How", " ", "far", " ", "away", " ", "agents", " ", "can", " ", 
-        "sense", " ", "in", " ", "arbitrar", " ", "distance", " ", "units"}], 
-       ",", " ", 
+        "sense", " ", "in", " ", 
+        StyleBox["D",
+         FontWeight->"Bold"], " ", "units"}], ",", " ", 
        RowBox[{
        "and", " ", "by", " ", "consequence", " ", "intentionally", " ", 
         "travel", " ", "to"}], ",", " ", 
        RowBox[{
        "pieces", " ", "of", " ", "food", " ", "or", " ", "other", " ", 
-        "agents", " ", "like", " ", "children", " ", "and", " ", "mating", " ",
-         "partners"}]}], "*)"}], "\n", "  ", 
+        "agents", " ", "like", " ", "mating", " ", "partners"}]}], "*)"}], 
+     "\n", "  ", 
+     RowBox[{"\"\<metabolism\>\"", " ", "->", " ", "0.05"}], ",", " ", 
+     RowBox[{"(*", 
+      RowBox[{"How", " ", "much", " ", "energy", " ", "in", " ", 
+       StyleBox["E",
+        FontWeight->"Bold"], " ", "untis", " ", "is", " ", "expended", " ", 
+       "each", " ", "timestep", " ", "by", " ", "an", " ", "agent"}], "*)"}], 
+     "\n", "  ", 
      RowBox[{"\"\<dt\>\"", " ", "->", " ", "0.1"}], ",", " ", 
      RowBox[{"(*", 
       RowBox[{
-      "The", " ", "timestep", " ", "in", " ", "arbitrary", " ", "time", " ", 
-       "units", " ", "used", " ", "in", " ", "the", " ", "discretization", " ",
-        "of", " ", "the", " ", "simulation"}], "*)"}], "\n", "  ", 
-     RowBox[{"\"\<metabolism\>\"", " ", "->", " ", "0.2"}], ",", " ", 
-     RowBox[{"(*", 
-      RowBox[{
-      "How", " ", "much", " ", "energy", " ", "is", " ", "expended", " ", 
-       "each", " ", "timestep", " ", "by", " ", "an", " ", "agent"}], "*)"}], 
-     "\n", "  ", 
+       RowBox[{"The", " ", "timestep", " ", "in", " ", "arbitrary", " ", 
+        StyleBox["T",
+         FontWeight->"Bold"], " ", "units", " ", "used", " ", "in", " ", 
+        "the", " ", "time"}], "-", 
+       RowBox[{"discretization", " ", "of", " ", "the", " ", "simulation"}]}],
+       "*)"}], "\n", "  ", 
      RowBox[{"\"\<foodEnergy\>\"", " ", "->", " ", "5.0"}], ",", " ", 
      RowBox[{"(*", 
       RowBox[{
@@ -270,22 +467,26 @@ Cell[BoxData[
         "an", " ", "agent"}], "*)"}], "\n", "  ", 
      RowBox[{"\"\<foodSpawnCooldown\>\"", " ", "->", " ", "1"}], ",", " ", 
      RowBox[{"(*", 
-      RowBox[{
-      "The", " ", "cooldown", " ", "in", " ", "arbitrary", " ", "time", " ", 
-       "units", " ", "of", " ", "food", " ", "spawning"}], "*)"}], "\n", "  ", 
-     RowBox[{"\"\<nFoodSpawn\>\"", " ", "->", " ", "3"}], ",", " ", 
+      RowBox[{"The", " ", "cooldown", " ", "in", " ", 
+       StyleBox["T",
+        FontWeight->"Bold"], " ", "of", " ", "food", " ", "spawning"}], 
+      "*)"}], "\n", "  ", 
+     RowBox[{"\"\<nFoodSpawn\>\"", " ", "->", " ", "5"}], ",", " ", 
      RowBox[{"(*", 
       RowBox[{
       "The", " ", "number", " ", "of", " ", "pieces", " ", "of", " ", "food", 
        " ", "spawned", " ", "at", " ", "random", " ", "locations", " ", 
-       "every", " ", "time", " ", "foodSpawnCooldown", " ", "passes"}], 
-      "*)"}], "\n", "  ", 
-     RowBox[{"\"\<nStartingAgents\>\"", " ", "->", " ", "5"}], ",", " ", 
+       "every", " ", "time", " ", 
+       StyleBox[Cell[
+        "foodSpawnCooldown",ExpressionUUID->
+         "202b5060-c689-a54f-97b2-4274e4d9bdf6"],
+        FontSlant->"Italic"], " ", "passes"}], "*)"}], "\n", "  ", 
+     RowBox[{"\"\<nStartingAgents\>\"", " ", "->", " ", "4"}], ",", " ", 
      RowBox[{"(*", 
       RowBox[{
       "The", " ", "number", " ", "of", " ", "agents", " ", "the", " ", 
        "simulation", " ", "starts", " ", "with"}], "*)"}], "\n", "  ", 
-     RowBox[{"\"\<nStartingFood\>\"", " ", "->", " ", "7"}], ",", " ", 
+     RowBox[{"\"\<nStartingFood\>\"", " ", "->", " ", "4"}], ",", " ", 
      RowBox[{"(*", 
       RowBox[{
       "The", " ", "number", " ", "of", " ", "pieces", " ", "of", " ", "food", 
@@ -293,57 +494,69 @@ Cell[BoxData[
        "with"}], "*)"}], "\n", "  ", 
      RowBox[{"\"\<squareBounds\>\"", " ", "->", " ", 
       RowBox[{"{", 
-       RowBox[{"0", ",", " ", "10"}], "}"}]}], ",", " ", 
+       RowBox[{"0", ",", " ", "20"}], "}"}]}], ",", " ", 
      RowBox[{"(*", 
       RowBox[{
-       RowBox[{"The", " ", "bounds", " ", "of", " ", "the", " ", "model"}], ",",
-        " ", 
+       RowBox[{
+       "The", " ", "bounds", " ", "of", " ", "the", " ", "model", " ", "in", " ", 
+        StyleBox["D",
+         FontWeight->"Bold"]}], ",", " ", 
        RowBox[{
        "with", " ", "both", " ", "dimensions", " ", "of", " ", "the", " ", 
         "model", " ", "taking", " ", "this", " ", "range", " ", "of", " ", 
-        RowBox[{"numbers", ".", " ", "The"}], " ", "lower", " ", "bound", " ",
-         "must", " ", "be", " ", "zero"}], ",", " ", 
+        RowBox[{"numbers", "--"}], "\n", "  ", "the", " ", "lower", " ", 
+        "bound", " ", "must", " ", "be", " ", "0"}], ",", " ", 
        RowBox[{
        "and", " ", "by", " ", "consequence", " ", "of", " ", "this", " ", 
         "design"}], ",", " ", 
-       RowBox[{"the", " ", "model", " ", "is", " ", 
+       RowBox[{"the", " ", "model", " ", "environment", " ", "is", " ", 
         RowBox[{"square", "."}]}]}], "*)"}], "\n", "  ", 
      RowBox[{"\"\<startingEnergy\>\"", " ", "->", " ", "10"}], ",", " ", 
      RowBox[{"(*", 
-      RowBox[{
-      "The", " ", "amount", " ", "of", " ", "energy", " ", "an", " ", "agent",
-        " ", "starts", " ", "with"}], "*)"}], "\n", "  ", 
-     RowBox[{"\"\<stepLength\>\"", " ", "->", " ", "1"}], ",", " ", 
+      RowBox[{"The", " ", "amount", " ", "of", " ", "energy", " ", "in", " ", 
+       StyleBox["E",
+        FontWeight->"Bold"], 
+       StyleBox[" ",
+        FontWeight->"Bold"], "that", " ", "an", " ", "agent", " ", "starts", " ",
+        "with"}], "*)"}], "\n", "  ", 
+     RowBox[{"\"\<stepLength\>\"", " ", "->", " ", "0.4"}], ",", " ", 
      RowBox[{"(*", 
       RowBox[{
        RowBox[{
        "How", " ", "far", " ", "an", " ", "agent", " ", "can", " ", "travel", 
-        " ", "in", " ", "one", " ", "timestep"}], ",", " ", 
+        " ", "in", " ", "one", " ", "timestep", " ", "in", " ", 
+        StyleBox["D",
+         FontWeight->"Bold"]}], ",", " ", 
        RowBox[{"if", " ", "they", " ", "choose", " ", "to", " ", "travel"}]}],
        "*)"}], "\n", "  ", 
-     RowBox[{"\"\<dirChangeProb\>\"", " ", "->", " ", "0.2"}], ",", " ", 
+     RowBox[{"\"\<dirChangeProb\>\"", " ", "->", " ", "0.025"}], ",", " ", 
      RowBox[{"(*", 
       RowBox[{
        RowBox[{
        "If", " ", "an", " ", "agent", " ", "is", " ", "not", " ", 
-        "intentionally", " ", "moving", " ", "and", " ", "exploring", " ", 
-        "instead"}], ",", " ", 
+        "intentionally", " ", "moving", " ", "towards", " ", "food", " ", 
+        "or", " ", "a", " ", "mate"}], ",", " ", "\n", "  ", 
+       RowBox[{"and", " ", "exploring", " ", "instead"}], ",", " ", 
        RowBox[{
        "this", " ", "is", " ", "the", " ", "probability", " ", "at", " ", 
         "any", " ", "timestep", " ", "that", " ", "they", " ", "will", " ", 
         "change", " ", "their", " ", "exploration", " ", 
-        RowBox[{"direction", "."}]}]}], "*)"}], "\n", "  ", 
-     RowBox[{"\"\<lifespan\>\"", " ", "->", " ", "20"}], ",", " ", 
+        RowBox[{"direction", ".", " ", "This"}], " ", "controls", " ", 
+        "their", " ", "foraging", " ", "and", " ", "mating", " ", 
+        RowBox[{"behaviors", "."}]}]}], "*)"}], "\n", "  ", 
+     RowBox[{"\"\<lifespan\>\"", " ", "->", " ", "30"}], ",", " ", 
      RowBox[{"(*", 
-      RowBox[{
-      "How", " ", "long", " ", "in", " ", "arbitrary", " ", "time", " ", 
-       "units", " ", "an", " ", "agent", " ", "is", " ", "allowed", " ", "to",
-        " ", "live"}], "*)"}], "\n", "  ", 
+      RowBox[{"How", " ", "long", " ", "in", " ", 
+       StyleBox["T",
+        FontWeight->"Bold"], " ", "an", " ", "agent", " ", "is", " ", 
+       "allowed", " ", "to", " ", "live"}], "*)"}], "\n", "  ", 
      RowBox[{"\"\<maxEnergy\>\"", " ", "->", " ", "10"}], ",", " ", 
      RowBox[{"(*", 
       RowBox[{
       "The", " ", "most", " ", "energy", " ", "an", " ", "agent", " ", "can", 
-       " ", "store"}], "*)"}], "\n", "  ", 
+       " ", "store", " ", "in", " ", 
+       StyleBox["E",
+        FontWeight->"Bold"]}], "*)"}], "\n", "  ", 
      RowBox[{"\"\<imageSize\>\"", " ", "->", " ", "500"}], ",", " ", 
      RowBox[{"(*", 
       RowBox[{
@@ -352,78 +565,174 @@ Cell[BoxData[
        RowBox[{
        "the", " ", "size", " ", "of", " ", "the", " ", "simulation", " ", 
         "is"}]}], "*)"}], "\n", "  ", 
-     RowBox[{"\"\<agentSize\>\"", " ", "->", " ", "0.025"}], ",", " ", 
+     RowBox[{"\"\<agentSize\>\"", " ", "->", " ", "0.01"}], ",", " ", 
      RowBox[{"(*", 
       RowBox[{
-      "The", " ", "radius", " ", "of", " ", "an", " ", "agent", " ", "blob", " ",
-        "in", " ", "the", " ", "visualization", " ", "in", " ", "aribtrary", " ",
-        "distance", " ", "units"}], "*)"}], "\n", "  ", 
-     RowBox[{"\"\<foodSize\>\"", " ", "->", " ", "0.01"}], ",", " ", 
+       RowBox[{
+       "The", " ", "radius", " ", "of", " ", "an", " ", "agent", " ", "blob", 
+        " ", "in", " ", "the", " ", "visualization", " ", "in", " ", 
+        StyleBox["D",
+         FontWeight->"Bold"]}], 
+       StyleBox[",",
+        FontWeight->"Plain"], 
+       StyleBox[" ",
+        FontWeight->"Plain"], 
+       StyleBox[
+        RowBox[{"not", " ", "pixels"}],
+        FontWeight->"Plain"]}], "*)"}], "\n", "  ", 
+     RowBox[{"\"\<foodSize\>\"", " ", "->", " ", "0.0075"}], ",", " ", 
      RowBox[{"(*", 
       RowBox[{
-      "The", " ", "radius", " ", "of", " ", "a", " ", "piece", " ", "of", " ",
-        "food", " ", "in", " ", "the", " ", "visualization", " ", "in", " ", 
-       "aribtrary", " ", "distance", " ", "units"}], "*)"}], "\n", "  ", 
-     RowBox[{"\"\<reproductionRadius\>\"", " ", "->", " ", "1.5"}], ",", " ", 
-     RowBox[{"(*", 
-      RowBox[{"FIX", " ", "-", " ", 
        RowBox[{
-       "this", " ", "should", " ", "be", " ", "superceded", " ", "by", " ", 
-        "proximityRadius"}]}], "*)"}], "\n", "  ", 
-     RowBox[{"\"\<minReproductionEnergy\>\"", " ", "->", " ", "6.0"}], ",", 
+       "The", " ", "radius", " ", "of", " ", "a", " ", "piece", " ", "of", " ",
+         "food", " ", "in", " ", "the", " ", "visualization", " ", "in", " ", 
+        StyleBox["D",
+         FontWeight->"Bold"]}], 
+       StyleBox[",",
+        FontWeight->"Plain"], 
+       StyleBox[" ",
+        FontWeight->"Plain"], 
+       StyleBox[
+        RowBox[{"not", " ", "pixels"}],
+        FontWeight->"Plain"]}], "*)"}], "\n", "  ", 
+     RowBox[{"\"\<reproductionRadius\>\"", " ", "->", " ", "1.0"}], ",", " ", 
+     RowBox[{"(*", 
+      RowBox[{"How", " ", "close", " ", "in", " ", 
+       StyleBox["D",
+        FontWeight->"Bold"], 
+       StyleBox[" ",
+        FontWeight->"Bold"], 
+       StyleBox["two",
+        FontWeight->"Plain"], 
+       StyleBox[" ",
+        FontWeight->"Plain"], 
+       StyleBox["agents",
+        FontWeight->"Plain"], 
+       StyleBox[" ",
+        FontWeight->"Plain"], 
+       StyleBox["must",
+        FontWeight->"Plain"], 
+       StyleBox[" ",
+        FontWeight->"Plain"], 
+       StyleBox["be",
+        FontWeight->"Plain"], 
+       StyleBox[" ",
+        FontWeight->"Plain"], 
+       StyleBox["to",
+        FontWeight->"Plain"], 
+       StyleBox[" ",
+        FontWeight->"Plain"], 
+       StyleBox["reproduce",
+        FontWeight->"Plain"], 
+       StyleBox[" ",
+        FontWeight->"Plain"], 
+       StyleBox["with",
+        FontWeight->"Plain"], 
+       StyleBox[" ",
+        FontWeight->"Plain"], 
+       StyleBox["each",
+        FontWeight->"Plain"], 
+       StyleBox[" ",
+        FontWeight->"Plain"], 
+       StyleBox["other",
+        FontWeight->"Plain"]}], "*)"}], "\n", "  ", 
+     RowBox[{"\"\<minReproductionEnergy\>\"", " ", "->", " ", "5.0"}], ",", 
      " ", 
      RowBox[{"(*", 
-      RowBox[{"FIX", " ", "-", " ", 
+      RowBox[{
        RowBox[{
-       "The", " ", "minimmum", " ", "energy", " ", "an", " ", "agent", " ", 
-        "must", " ", "have", " ", "to", " ", "devote", " ", "its", " ", 
-        "efforts", " ", "to", " ", "reproduction", " ", "opposed", " ", "to", 
-        " ", "mere", " ", "survival", " ", 
-        RowBox[{"(", 
-         RowBox[{"confirm", " ", "this", " ", "with", " ", "paper"}], 
-         ")"}]}]}], "*)"}], "\n", "  ", 
-     RowBox[{"\"\<minReproductionAge\>\"", " ", "->", " ", "2.0"}], ",", " ", 
+       "The", " ", "minimum", " ", "energy", " ", "required", " ", "for", " ",
+         "an", " ", "agent", " ", "to", " ", 
+        RowBox[{"reproduce", ".", " ", "Must"}], " ", "be"}], " ", ">", " ", 
+       RowBox[{"than", " ", 
+        StyleBox["reproductionEnergyCost",
+         FontSlant->"Italic"], 
+        StyleBox[" ",
+         FontSlant->"Italic"], "below"}]}], "*)"}], "\n", "  ", 
+     RowBox[{"\"\<minReproductionAge\>\"", " ", "->", " ", "4.0"}], ",", " ", 
      RowBox[{"(*", 
-      RowBox[{"FIX", " ", "-", " ", 
-       RowBox[{
-       "Reproductive", " ", "maturity", " ", "age", " ", "for", " ", "an", " ",
-         "agent", " ", 
-        RowBox[{"(", 
-         RowBox[{
-         "is", " ", "this", " ", "also", " ", "the", " ", "definition", " ", 
-          "of", " ", "adulthood"}], ")"}]}]}], "*)"}], "\n", "  ", 
-     RowBox[{"\"\<reproductionEnergyCost\>\"", " ", "->", " ", "3.0"}], ",", 
+      RowBox[{"Reproductive", " ", "maturity", " ", "age", " ", "in", " ", 
+       StyleBox["T",
+        FontWeight->"Bold"], " ", "for", " ", "an", " ", "agent"}], "*)"}], 
+     "\n", "  ", 
+     RowBox[{"\"\<reproductionEnergyCost\>\"", " ", "->", " ", "2.0"}], ",", 
      " ", 
      RowBox[{"(*", 
-      RowBox[{"FIX", " ", "-", " ", 
-       RowBox[{"How", " ", "much", " ", "having", " ", "one", " ", "child", " ", 
-        RowBox[{"costs", ".", " ", "Replace"}], " ", "with", " ", 
-        "reproductive", " ", "energy", " ", "function"}]}], "*)"}], "\n", 
-     "  ", 
-     RowBox[{"\"\<nextAgentID\>\"", " ", "->", " ", "1"}]}], " ", 
+      RowBox[{
+      "The", " ", "energy", " ", "cost", " ", "to", " ", "reproduce", " ", 
+       "to", " ", "an", " ", "agent"}], "*)"}], "\n", "  ", 
+     RowBox[{"\"\<reproductionCooldown\>\"", " ", "->", " ", "2"}], ",", " ", 
+     RowBox[{"(*", 
+      RowBox[{"How", " ", "long", " ", "in", " ", 
+       StyleBox["T",
+        FontWeight->"Bold"], 
+       StyleBox[" ",
+        FontWeight->"Bold"], 
+       StyleBox["an",
+        FontWeight->"Plain"], 
+       StyleBox[" ",
+        FontWeight->"Plain"], 
+       StyleBox["agent",
+        FontWeight->"Plain"], 
+       StyleBox[" ",
+        FontWeight->"Plain"], 
+       StyleBox["must",
+        FontWeight->"Plain"], 
+       StyleBox[" ",
+        FontWeight->"Plain"], 
+       StyleBox["wait",
+        FontWeight->"Plain"], 
+       StyleBox[" ",
+        FontWeight->"Plain"], 
+       StyleBox["before",
+        FontWeight->"Plain"], 
+       StyleBox[" ",
+        FontWeight->"Plain"], 
+       StyleBox["reproducing",
+        FontWeight->"Plain"], 
+       StyleBox[" ",
+        FontWeight->"Plain"], 
+       StyleBox["again",
+        FontWeight->"Plain"], 
+       StyleBox[" ",
+        FontWeight->"Plain"], 
+       StyleBox["after",
+        FontWeight->"Plain"], 
+       StyleBox[" ",
+        FontWeight->"Plain"], 
+       StyleBox[
+        RowBox[{"reproducing", ".", " ", "Constrains"}],
+        FontWeight->"Plain"], 
+       StyleBox[" ",
+        FontWeight->"Plain"], 
+       StyleBox["reproductive",
+        FontWeight->"Plain"], 
+       StyleBox[" ",
+        FontWeight->"Plain"], 
+       StyleBox["output",
+        FontWeight->"Plain"]}], "*)"}], "\n", "  ", 
+     RowBox[{"\"\<epsilon\>\"", " ", "->", " ", "0.001"}], ",", " ", 
+     RowBox[{"(*", 
+      RowBox[{
+      "Smoothing", " ", "parameter", " ", "used", " ", "to", " ", "avoid", " ",
+        "numerical", " ", 
+       RowBox[{"divergences", ".", " ", "How"}], " ", "small", " ", "a", " ", 
+       "distance", " ", "bewteen", " ", "two", " ", "agents", " ", "can", " ",
+        "theoretically", " ", "get", " ", "with", " ", "the", " ", 
+       "toolbox"}], "*)"}], "\n", "  ", 
+     RowBox[{"\"\<rnd\>\"", " ", "->", " ", 
+      RowBox[{
+       RowBox[{"N", "@", "10"}], "^", 
+       RowBox[{"(", 
+        RowBox[{"-", "3"}], ")"}]}]}]}], " ", 
     RowBox[{"(*", 
      RowBox[{
-      RowBox[{"FIX", " ", "-", " ", 
-       RowBox[{
-       "if", " ", "this", " ", "is", " ", "a", " ", "holder", " ", "for", " ",
-         "the", " ", "next", " ", "agent", " ", "id"}]}], ",", " ", 
-      RowBox[{
-      "and", " ", "it", " ", "evolves", " ", "as", " ", "the", " ", "model", " ",
-        "does"}], ",", " ", 
-      RowBox[{
-      "it", " ", "should", " ", "go", " ", "in", " ", "the", " ", "model", " ",
-        "data", " ", 
-       RowBox[{"struct", ".", " ", "If"}], " ", 
-       RowBox[{"it", "'"}], "s", " ", "a", " ", "parameter", " ", "for", " ", 
-       "number", " ", "ID", " ", "to", " ", "start", " ", "at"}], ",", " ", 
-      RowBox[{"then", " ", "it", " ", "should", " ", "stay", " ", 
-       RowBox[{"here", "."}]}]}], "*)"}], "\n", "|>"}]}], ";"}]], "Code",
- CellChangeTimes->{{3.986654637146162*^9, 3.986654640742338*^9}, {
-  3.986654729335041*^9, 3.9866549412345924`*^9}, {3.9866550627611065`*^9, 
-  3.9866552706830635`*^9}, {3.986655447095804*^9, 3.986655520662918*^9}, {
-  3.986655642749811*^9, 3.9866556978533993`*^9}, {3.9866557441201515`*^9, 
-  3.986655829067135*^9}, {3.9866558920948486`*^9, 3.986655892723957*^9}},
- CellLabel->"In[48]:=",ExpressionUUID->"06295ec5-de7c-ea44-9f2c-5f0a02e1aa34"],
+     "The", " ", "rounding", " ", "used", " ", "for", " ", "the", " ", 
+      "toolbox"}], "*)"}], "\n", "|>"}]}], ";"}]], "Code",
+ CellChangeTimes->{{3.988669338505251*^9, 3.98866935028273*^9}, {
+  3.9886693832936554`*^9, 
+  3.9886698815775986`*^9}},ExpressionUUID->"e1a92281-b459-8a46-996e-\
+764e2bffbb7f"],
 
 Cell["\<\
 To reference a parameter, use the string name of the parameter as the key for \
@@ -465,10 +774,19 @@ Cell["Data Structures", "Subsection",
 e7ae96a5edb6"],
 
 Cell[TextData[{
- "Before reproductive and parenting functions/strategies were implemented \
-into agents, the core aspects of the model like agents that moved and \
-consumed food were built first. [move up to data structures ^^] The food in a \
-simulation is represented by a list of positions of pieces of food.\n\n",
+ "Before the rest of the toolbox was built, the core aspects of the model \
+like agents that moved and consumed food were built first. The food in a \
+model at any time is represented by a ",
+ StyleBox["list",
+  FontWeight->"Bold"],
+ " of positions of pieces of food. Forthe data structure of the model as a \
+whole, see ",
+ StyleBox[ButtonBox["Model Initialization",
+  BaseStyle->"Hyperlink",
+  ButtonData->"modelInitialization"],
+  FontColor->RGBColor[
+   0.792156862745098, 0.3176470588235294, 0.09803921568627451]],
+ ".\n\n",
  Cell[BoxData[
   RowBox[{"createAgent", "[", "]"}]], "InlineCode",ExpressionUUID->
   "9bec44cb-c7ce-8d46-917e-f47b1f34c406"],
@@ -482,8 +800,11 @@ commented with a description of its nature"
    3.986657530107088*^9, 3.9866575455782146`*^9}, {3.9866590179394264`*^9, 
    3.98665902418865*^9}, {3.9866591163259716`*^9, 3.9866591324223576`*^9}, {
    3.9866593123730545`*^9, 3.9866593166233063`*^9}, {3.986659369824898*^9, 
-   3.9866593993556957`*^9}},ExpressionUUID->"10a084c6-a688-6540-a79c-\
-10fafe41d5fb"],
+   3.9866593993556957`*^9}, {3.988669909998169*^9, 3.9886699729959183`*^9}, {
+   3.988670009865801*^9, 3.9886700902819977`*^9}, {3.9886701323339214`*^9, 
+   3.9886701398959846`*^9}},
+ CellTags->
+  "createAgent[]",ExpressionUUID->"10a084c6-a688-6540-a79c-10fafe41d5fb"],
 
 Cell[BoxData[
  RowBox[{
@@ -495,7 +816,8 @@ Cell[BoxData[
      RowBox[{"{", 
       RowBox[{
        RowBox[{"-", "1"}], ",", " ", 
-       RowBox[{"-", "1"}]}], "}"}]}]}], "]"}], " ", ":=", " ", 
+       RowBox[{"-", "1"}]}], "}"}]}], ",", " ", "reproductionCooldown_"}], 
+   "]"}], " ", ":=", " ", 
   RowBox[{"<|", "\n", "    ", 
    RowBox[{
     RowBox[{"\"\<pos\>\"", " ", "->", " ", "pos"}], ",", " ", 
@@ -503,7 +825,7 @@ Cell[BoxData[
      RowBox[{
       RowBox[{
       "The", " ", "current", " ", "position", " ", "of", " ", "an", " ", 
-       "agent"}], ",", " ", 
+       "agent", " ", "in", " ", "the", " ", "environment"}], ",", " ", 
       RowBox[{"length", " ", "2", " ", "array"}]}], "*)"}], "\n", "    ", 
     RowBox[{"\"\<energy\>\"", " ", "->", " ", "energy"}], ",", " ", 
     RowBox[{"(*", 
@@ -529,7 +851,8 @@ Cell[BoxData[
       RowBox[{
        RowBox[{
        "The", " ", "current", " ", "direction", " ", "the", " ", "agent", " ",
-         "is", " ", "exploring", " ", "in"}], ";", " ", 
+         "is", " ", "exploring", " ", "in", " ", "or", " ", "seeking", " ", 
+        RowBox[{"food", "/", "mates"}], " ", "in"}], ";", " ", 
        RowBox[{"value", " ", 
         RowBox[{"from", " ", "[", 
          RowBox[{"0", ",", " ", 
@@ -549,16 +872,20 @@ Cell[BoxData[
          RowBox[{"-", "1"}], ",", " ", 
          RowBox[{"-", "1"}]}], "}"}], " ", "is", " ", "given", " ", "to", " ",
         "this", " ", 
-       RowBox[{"value", "."}]}]}], "*)"}], "\n", "    ", 
-    RowBox[{"\"\<ancestors\>\"", " ", "->", " ", "ancestors"}]}], " ", 
-   RowBox[{"(*", 
-    RowBox[{"FIX", " ", "-", " ", 
-     RowBox[{"describe", " ", "functioning", " ", "of", " ", "this"}]}], 
-    "*)"}], "\n", "|>"}]}]], "Code",
+       RowBox[{"value", ".", "\n", "\t", "used"}], " ", "to", " ", 
+       "determine", " ", "familial", " ", "relations", " ", "for", " ", "the",
+        " ", "purpose", " ", "of", " ", "incest", " ", 
+       RowBox[{"prevention", "--"}], "a", " ", "parent", " ", "will", " ", 
+       "naturally", " ", "not", " ", "reproduce", " ", "with", " ", "their", " ",
+        "child", " ", "throughout", " ", "almost", " ", "all", " ", 
+       "species"}]}], "*)"}], "\n", "    ", 
+    RowBox[{"\"\<reproductionCooldown\>\"", " ", "->", " ", 
+     "reproductionCooldown"}]}], "\n", "|>"}]}]], "Code",
  CellChangeTimes->{
   3.986656699328575*^9, {3.9866568535934486`*^9, 3.9866569508927803`*^9}, {
-   3.9866570394348106`*^9, 3.9866570581597443`*^9}},
- CellLabel->"In[49]:=",ExpressionUUID->"142145c4-95bc-4c4d-b9f0-ab021346b21d"]
+   3.9866570394348106`*^9, 3.9866570581597443`*^9}, {3.9886701758241463`*^9, 
+   3.9886702754201374`*^9}},ExpressionUUID->"142145c4-95bc-4c4d-b9f0-\
+ab021346b21d"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -583,7 +910,7 @@ Cell[TextData[{
    FontSlant->"Italic"]], "InlineCode",ExpressionUUID->
   "4c35badf-89b7-4b40-8235-afce86df8b1f"],
  ".  This goes for an agent and a piece of food, an agent and another agent \
-for reproduction, or for a parent and a child."
+for reproduction."
 }], "Text",
  CellChangeTimes->{{3.986133935459646*^9, 3.986134001026058*^9}, {
    3.986134128371048*^9, 3.9861341682006283`*^9}, {3.9861342216344566`*^9, 
@@ -592,8 +919,9 @@ for reproduction, or for a parent and a child."
    3.9866530321828423`*^9}, {3.986653282381628*^9, 3.9866532827050743`*^9}, {
    3.9866533505385036`*^9, 3.986653351202915*^9}, {3.986654009608753*^9, 
    3.986654026521841*^9}, {3.9866562304426804`*^9, 3.9866562592874737`*^9}, {
-   3.9866564609462414`*^9, 3.9866564678113003`*^9}, 
-   3.9866565595560265`*^9},ExpressionUUID->"43f7f145-fa31-224c-a685-\
+   3.9866564609462414`*^9, 3.9866564678113003`*^9}, 3.9866565595560265`*^9, {
+   3.988670288114067*^9, 
+   3.9886702882436695`*^9}},ExpressionUUID->"43f7f145-fa31-224c-a685-\
 bceff4b4876e"],
 
 Cell[BoxData[
@@ -621,39 +949,41 @@ Cell[TextData[{
   StyleBox["proximityRadius",
    FontSlant->"Italic"]], "InlineCode",ExpressionUUID->
   "41c5c3c1-b01d-6a4f-b9b5-ad4c2bd0b441"],
- "."
+ " throughout simulation."
 }], "CodeText",
  CellChangeTimes->{{3.9866533764217987`*^9, 3.986653378633711*^9}, {
   3.986653458920767*^9, 3.986653458991089*^9}, {3.9866540988145695`*^9, 
   3.986654101054394*^9}, {3.986656200421219*^9, 3.9866562061620903`*^9}, {
   3.9866565670399513`*^9, 3.9866565803603783`*^9}, {3.9866567216833496`*^9, 
-  3.9866567386902485`*^9}, {3.9866591896920757`*^9, 
-  3.9866591931780586`*^9}},ExpressionUUID->"7de17ded-2970-d14b-ba66-\
+  3.9866567386902485`*^9}, {3.9866591896920757`*^9, 3.9866591931780586`*^9}, {
+  3.9886702943350105`*^9, 
+  3.988670296926489*^9}},ExpressionUUID->"7de17ded-2970-d14b-ba66-\
 538e4eceb407"],
 
 Cell[TextData[{
  "A function called ",
  Cell[BoxData[
-  RowBox[{"findNearestSensableFoodPosAndI", "[", "]"}]], "InlineCode",
+  RowBox[{"findNearestSensableFoodInfo", "[", "]"}]], "InlineCode",
   ExpressionUUID->"c26d71fb-578d-c343-93fd-7b06faa7d216"],
  " is used to find the nearest sensable (within ",
  Cell[BoxData[
   StyleBox["sensingDistance",
    FontSlant->"Italic"]], "InlineCode",ExpressionUUID->
   "acb4512a-f37a-f045-8ca7-fed83c9bc9ab"],
- ") food to an agent and return its position and index given a list of food \
-to be considered. [fix this-> it doesn\[CloseCurlyQuote]t return the pos and \
-the I, it returns the distance and I]"
+ ") food to an agent so agents can seek and eat food. It returns this nearest \
+sensable food\[CloseCurlyQuote]s distance, index in the food list, and \
+position."
 }], "Text",
  CellChangeTimes->{{3.986656981652298*^9, 3.9866569925472775`*^9}, {
   3.9866570832146893`*^9, 3.9866571921746902`*^9}, {3.9866609992974873`*^9, 
-  3.986661000226021*^9}, {3.9866660723018055`*^9, 
-  3.9866661001094913`*^9}},ExpressionUUID->"6c4fc9dc-af10-314e-8f11-\
+  3.986661000226021*^9}, {3.9866660723018055`*^9, 3.9866661001094913`*^9}, {
+  3.9886703093240376`*^9, 
+  3.988670365683964*^9}},ExpressionUUID->"6c4fc9dc-af10-314e-8f11-\
 3220d91f0c2b"],
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"findNearestSensableFoodPosAndI", "[", 
+  RowBox[{"findNearestSensableFoodInfo", "[", 
    RowBox[{"agent_", ",", " ", "foodPositions_List", ",", " ", "params_"}], 
    "]"}], " ", ":=", " ", 
   RowBox[{"Module", "[", "\n", "    ", 
@@ -695,6 +1025,7 @@ Cell[BoxData[
        RowBox[{"{", 
         RowBox[{
          RowBox[{"-", "1"}], ",", " ", 
+         RowBox[{"-", "1"}], ",", " ", 
          RowBox[{"-", "1"}]}], "}"}], ",", " ", 
        RowBox[{"(*", 
         RowBox[{"no", " ", "food"}], "*)"}], "\n", "        ", 
@@ -709,25 +1040,28 @@ Cell[BoxData[
                RowBox[{"#", "[", 
                 RowBox[{"[", "1", "]"}], "]"}]}], "]"}], ",", " ", 
              RowBox[{"#", "[", 
-              RowBox[{"[", "2", "]"}], "]"}]}], "}"}], "&"}], " ", "/@", " ", 
+              RowBox[{"[", "2", "]"}], "]"}], ",", " ", 
+             RowBox[{"#", "[", 
+              RowBox[{"[", "1", "]"}], "]"}]}], "}"}], "&"}], " ", "/@", " ", 
           "foodsWithinRadiusPosAndI"}]}], ";", "\n", "        ", 
         RowBox[{"First", "@", 
          RowBox[{"MinimalBy", "[", 
           RowBox[{"dists", ",", " ", "First"}], "]"}]}]}]}], "\n", "    ", 
       "]"}]}]}], "\n", "]"}]}]], "Code",
- CellChangeTimes->{3.9866572058419514`*^9},
- CellLabel->"In[51]:=",ExpressionUUID->"9b0353ea-2fcd-e94e-ac8f-ae6f1b0f96a2"],
+ CellChangeTimes->{3.9866572058419514`*^9, 
+  3.988670306133047*^9},ExpressionUUID->"9b0353ea-2fcd-e94e-ac8f-\
+ae6f1b0f96a2"],
 
 Cell["\<\
 The function first compiles the food positions and indexes, and then isolates \
 the ones that are within sensing distance of the agent. If no pieces of food \
 make it into that isolation, then there are none within sensing distance and \
-{-1, -1} is returned. Else, {closest food\[CloseCurlyQuote]s position, \
-closest food\[CloseCurlyQuote]s index in the food list} is returned.\
+{-1, -1, -!} is returned. Else, the closest food\[CloseCurlyQuote]s \
+{distance, index in the food list, position in the environment} is returned.\
 \>", "CodeText",
  CellChangeTimes->{{3.986657227761652*^9, 3.9866573235387726`*^9}, {
-  3.986658968132265*^9, 
-  3.986658969049103*^9}},ExpressionUUID->"59887e7b-4161-cb4b-8ec4-\
+  3.986658968132265*^9, 3.986658969049103*^9}, {3.988670374549324*^9, 
+  3.9886704044954014`*^9}},ExpressionUUID->"59887e7b-4161-cb4b-8ec4-\
 ed0b0cc93345"],
 
 Cell[TextData[{
@@ -740,12 +1074,16 @@ the ",
   StyleBox["nFoodSpawn",
    FontSlant->"Italic"]], "InlineCode",ExpressionUUID->
   "290b8198-2f19-1744-9535-dc8eccfddd6c"],
- " parameter."
+ " parameter. Rounding is used to prevent excess precision which increases \
+the memory needed to save a simulation to a file (17.988838327 takes up more \
+space then 17.989 in a .csv file)."
 }], "Text",
  CellChangeTimes->{{3.986657355570282*^9, 3.9866573918809643`*^9}, {
    3.986657471074499*^9, 3.986657524449877*^9}, {3.986658977664772*^9, 
    3.986658996021229*^9}, {3.9866591637581673`*^9, 3.9866591714669056`*^9}, 
-   3.986660102583685*^9},ExpressionUUID->"89540473-02b0-2a40-a141-\
+   3.986660102583685*^9, {3.9886706233143883`*^9, 3.9886706358847504`*^9}, {
+   3.9886713478899517`*^9, 
+   3.988671348707386*^9}},ExpressionUUID->"89540473-02b0-2a40-a141-\
 d55c082daf0c"],
 
 Cell[BoxData[
@@ -754,15 +1092,19 @@ Cell[BoxData[
    RowBox[{"foods_", ",", " ", "params_"}], "]"}], " ", ":=", " ", 
   RowBox[{"Join", "[", 
    RowBox[{"foods", ",", " ", 
-    RowBox[{"RandomReal", "[", 
+    RowBox[{"Round", "[", 
      RowBox[{
-      RowBox[{"params", "[", "\"\<squareBounds\>\"", "]"}], ",", " ", 
-      RowBox[{"{", 
+      RowBox[{"RandomReal", "[", 
        RowBox[{
-        RowBox[{"params", "[", "\"\<nFoodSpawn\>\"", "]"}], ",", " ", "2"}], 
-       "}"}]}], "]"}]}], "]"}]}]], "Code",
- CellChangeTimes->{3.9866592357492294`*^9},
- CellLabel->"In[52]:=",ExpressionUUID->"8327f009-68e5-7d40-82c1-d38081b5b327"],
+        RowBox[{"params", "[", "\"\<squareBounds\>\"", "]"}], ",", " ", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"params", "[", "\"\<nFoodSpawn\>\"", "]"}], ",", " ", "2"}],
+          "}"}]}], "]"}], ",", " ", 
+      RowBox[{"params", "[", "\"\<rnd\>\"", "]"}]}], "]"}]}], "]"}]}]], "Code",
+ CellChangeTimes->{3.9866592357492294`*^9, 
+  3.9886704170456715`*^9},ExpressionUUID->"8327f009-68e5-7d40-82c1-\
+d38081b5b327"],
 
 Cell[TextData[{
  "To spawn food at the appropriate time, ",
@@ -782,8 +1124,9 @@ Cell[TextData[{
 }], "Text",
  CellChangeTimes->{{3.986659291647358*^9, 3.9866593004645767`*^9}, {
   3.986659464851038*^9, 3.9866594941026287`*^9}, {3.986659527640812*^9, 
-  3.9866595341682415`*^9}, {3.986659564969391*^9, 
-  3.986659583143572*^9}},ExpressionUUID->"42b7b78c-0cea-2148-9274-\
+  3.9866595341682415`*^9}, {3.986659564969391*^9, 3.986659583143572*^9}, {
+  3.9886704355120163`*^9, 3.9886704457369537`*^9}, {3.9886705306597958`*^9, 
+  3.988670621603668*^9}},ExpressionUUID->"42b7b78c-0cea-2148-9274-\
 24f62c0d8a1f"],
 
 Cell[BoxData[
@@ -814,8 +1157,8 @@ Cell[BoxData[
          "]"}], ",", "\n", "        ", 
         RowBox[{"model", "[", "\"\<foods\>\"", "]"}]}], "\n", "    ", "]"}]}],
       ";", "\n", "\t", "model2"}]}], "\n", "]"}]}]], "Code",
- CellChangeTimes->{3.986659605352833*^9},
- CellLabel->"In[53]:=",ExpressionUUID->"fe82a479-5b2e-cf4e-94dc-56936b503ac1"],
+ CellChangeTimes->{3.986659605352833*^9, 
+  3.9886706460345*^9},ExpressionUUID->"fe82a479-5b2e-cf4e-94dc-56936b503ac1"],
 
 Cell[TextData[{
  Cell[BoxData[
@@ -828,10 +1171,13 @@ Cell[TextData[{
  Cell[BoxData[
   RowBox[{"==", " ", "0"}]], "InlineCode",ExpressionUUID->
   "12b03e82-4262-ab49-8fa1-7d149eafbef7"],
- " to not have to worry about integer vs. float mismatch issues."
+ " to not have to worry about integer vs. float mismatch issues. 0 should \
+work in theory but did not. This solution is sloppy and is bad programming \
+practice; it should be considered a temporary band-aid."
 }], "CodeText",
  CellChangeTimes->{{3.9866596208732586`*^9, 3.9866596853484936`*^9}, 
-   3.9866600985061626`*^9},ExpressionUUID->"3a200fe4-e467-2447-87a1-\
+   3.9866600985061626`*^9, {3.9886706518130455`*^9, 
+   3.988670701880499*^9}},ExpressionUUID->"3a200fe4-e467-2447-87a1-\
 f2fc971c2b61"],
 
 Cell[TextData[{
@@ -965,10 +1311,77 @@ Cell[BoxData[
  CellChangeTimes->{3.986660122873667*^9},
  CellLabel->"In[56]:=",ExpressionUUID->"3b84131d-3e5b-334b-a411-0b23e9990342"],
 
-Cell["[explorationWalk[] instead of randomActionWalk[]]", "Text",
- CellChangeTimes->{{3.9866601406207695`*^9, 
-  3.986660196467783*^9}},ExpressionUUID->"825ae4ac-38c3-8b46-8157-\
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"explorationOrIntentionalWalk", "[", "]"}]], "InlineCode",
+  ExpressionUUID->"72a28794-f1ce-1247-a82a-676235d0ceb4"],
+ " is the function that makes an agent walk in the current direction it\
+\[CloseCurlyQuote]s moving in. This current direction depends on the sensory \
+input it receives from its environment, and this is determined in the ",
+ Cell[BoxData[
+  RowBox[{"agentActions", "[", "]"}]], "InlineCode",ExpressionUUID->
+  "024c85ce-b6d4-9e4b-a3a4-e88ad74168e2"],
+ "function in ",
+ StyleBox[ButtonBox["Agent Rules and Behavior",
+  BaseStyle->"Hyperlink",
+  ButtonData->"agentRulesandBehavior"],
+  FontColor->RGBColor[
+   0.792156862745098, 0.3176470588235294, 0.09803921568627451]],
+ "."
+}], "Text",
+ CellChangeTimes->{{3.9866601406207695`*^9, 3.986660196467783*^9}, {
+  3.9886714391601086`*^9, 3.9886715175715218`*^9}, {3.9886716441806107`*^9, 
+  3.9886717247194557`*^9}},ExpressionUUID->"825ae4ac-38c3-8b46-8157-\
 9a769de85987"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"explorationOrIntentionalWalk", "[", 
+   RowBox[{"agent_", ",", " ", "params_"}], "]"}], " ", ":=", " ", 
+  RowBox[{"Module", "[", " ", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{"direction", " ", "is", " ", "set", " ", "in", " ", 
+      RowBox[{"agentActions", "[", "]"}]}], ",", " ", 
+     RowBox[{
+     "depending", " ", "on", " ", "exploration", " ", "or", " ", 
+      "intentional"}]}], "*)"}], "\n", "\t", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"agent2", " ", "=", " ", "agent"}], ",", " ", 
+      RowBox[{"currentDir", " ", "=", " ", 
+       RowBox[{"agent", "[", "\"\<currentDirection\>\"", "]"}]}], ",", " ", 
+      "newPos", ",", " ", "min", ",", " ", "max"}], "}"}], ",", "\n", "\t", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"min", ",", " ", "max"}], "}"}], " ", "=", " ", 
+      RowBox[{"params", "[", "\"\<squareBounds\>\"", "]"}]}], ";", "\n", "\t", 
+     RowBox[{"newPos", " ", "=", " ", 
+      RowBox[{
+       RowBox[{"agent2", "[", "\"\<pos\>\"", "]"}], " ", "+", " ", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"params", "[", "\"\<stepLength\>\"", "]"}], " ", "*", " ", 
+          RowBox[{"currentDir", "[", 
+           RowBox[{"[", "1", "]"}], "]"}]}], ",", " ", 
+         RowBox[{
+          RowBox[{"params", "[", "\"\<stepLength\>\"", "]"}], " ", "*", " ", 
+          RowBox[{"currentDir", "[", 
+           RowBox[{"[", "2", "]"}], "]"}]}]}], "}"}]}]}], ";", "\n", "\t", 
+     RowBox[{
+      RowBox[{"agent2", "[", "\"\<pos\>\"", "]"}], " ", "=", " ", 
+      RowBox[{"Clip", "[", 
+       RowBox[{"newPos", ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"min", ",", " ", "max"}], "}"}]}], "]"}]}], ";", "\n", "\t", 
+     "agent2"}]}], "\n", "]"}]}]], "Code",
+ CellChangeTimes->{
+  3.9886713400564175`*^9, {3.9886714283229294`*^9, 
+   3.9886714284477577`*^9}},ExpressionUUID->"7edebfa1-10d4-af4e-ab5e-\
+ed089515946e"],
 
 Cell[TextData[{
  Cell[BoxData[
@@ -980,12 +1393,14 @@ food according to the ",
   StyleBox["foodEnergy",
    FontSlant->"Italic"]], "InlineCode",ExpressionUUID->
   "da945908-d151-7346-b5e8-f8d65f26518f"],
- " parameter. The specific food that is being eaten has to be removed \
-concurrently from the model\[CloseCurlyQuote]s food list."
+ " parameter. The specific food that is being eaten is removed concurrently \
+when this function is called from the model\[CloseCurlyQuote]s food list in \
+[agent actions...]."
 }], "Text",
  CellChangeTimes->{{3.986660208063463*^9, 3.9866602236412525`*^9}, {
   3.9866602835315895`*^9, 3.9866603097685356`*^9}, {3.986660574870407*^9, 
-  3.98666058938035*^9}},ExpressionUUID->"a94ed3d5-78c9-4a4d-9d85-\
+  3.98666058938035*^9}, {3.9886712596500454`*^9, 
+  3.988671294020706*^9}},ExpressionUUID->"a94ed3d5-78c9-4a4d-9d85-\
 c0e13657ff40"],
 
 Cell[BoxData[
@@ -1016,23 +1431,34 @@ Cell[BoxData[
  CellLabel->"In[57]:=",ExpressionUUID->"1d8de386-2365-ee41-894d-4da0592f83ac"],
 
 Cell[TextData[{
- "Through an ",
+ "Through the ",
  Cell[BoxData[
   RowBox[{"If", "[", "]"}]], "InlineCode",ExpressionUUID->
-  "d155da3c-d01c-4e49-aeca-ba2e525f5abb"],
- "statement, ",
+  "813995c0-dd6e-6542-a0ad-a0834b77531b"],
+ "statement in the function, ",
  Cell[BoxData[
   RowBox[{"agentEat", "[", "]"}]], "InlineCode",ExpressionUUID->
-  "776a1033-cc85-2c41-8bf1-d6ee32cdf9ba"],
+  "71c2fd24-3b74-6343-a3a4-1a82289c404c"],
  " ensures that the energy does not exceed the ",
  Cell[BoxData[
   StyleBox["maxEnergy",
    FontSlant->"Italic"]], "InlineCode",ExpressionUUID->
-  "681c7f22-bb66-3d45-b1e3-9b951ced23d3"]
+  "26fd48f5-7a05-a34a-999f-53d5f1ebbd0f"]
 }], "CodeText",
- CellChangeTimes->{{3.9866603578862877`*^9, 
-  3.9866603857281055`*^9}},ExpressionUUID->"f0edc91d-1c43-e045-a489-\
-7d79373f6072"],
+ CellChangeTimes->{{3.9866603578862877`*^9, 3.9866603857281055`*^9}, {
+  3.9886712408184166`*^9, 
+  3.9886712465809574`*^9}},ExpressionUUID->"f0edc91d-1c43-e045-a489-\
+7d79373f6072"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Agent Rules and Behavior", "Section",
+ CellChangeTimes->{{3.9886611466029205`*^9, 3.9886611588724213`*^9}},
+ CellTags->
+  "agentRulesandBehavior",ExpressionUUID->"0d6a2109-7b35-bb46-914d-\
+cd252ba5175d"],
 
 Cell[TextData[{
  "Excluding reproduction [at the moment, (we need to use the paper to see if \
@@ -1122,7 +1548,6 @@ Cell[BoxData[
       "agents"}], ";", "\n", "\t", "model2"}]}], "\n", "]"}]}]], "Code",
  CellChangeTimes->{3.9866608388680496`*^9},
  CellLabel->"In[58]:=",ExpressionUUID->"eca38961-40b7-7d4a-aa1b-b6045f3bcca4"]
-}, Open  ]]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -1494,24 +1919,12 @@ Cell[BoxData[
 44c3a38a25c9"]
 }, Open  ]],
 
-Cell["Reproductive Strategies", "Section",
- CellChangeTimes->{{3.9828693388389606`*^9, 3.9828693496746387`*^9}, {
-  3.9829495759864902`*^9, 3.9829495790467243`*^9}, {3.9861326995591106`*^9, 
-  3.9861326999080105`*^9}},ExpressionUUID->"92e704e2-29b3-4b4f-8558-\
-394ea02f37f2"],
-
-Cell["Parenting Strategies", "Section",
- CellChangeTimes->{{3.982869340814558*^9, 3.982869341385681*^9}, {
-  3.98294958119709*^9, 3.982949583683815*^9}, {3.986132700271326*^9, 
-  3.986132700624958*^9}, {3.986652936286829*^9, 
-  3.986652938297497*^9}},ExpressionUUID->"7ba12f3f-19c4-9545-ab9e-\
-4d5a7f97520b"],
-
 Cell[CellGroupData[{
 
 Cell["Model Initialization", "Section",
- CellChangeTimes->{{3.9866594107534523`*^9, 
-  3.986659413274023*^9}},ExpressionUUID->"b82d0072-7288-764d-9bc5-\
+ CellChangeTimes->{{3.9866594107534523`*^9, 3.986659413274023*^9}},
+ CellTags->
+  "modelInitialization",ExpressionUUID->"b82d0072-7288-764d-9bc5-\
 0e4a2ba20d41"],
 
 Cell[TextData[{
@@ -3179,11 +3592,20 @@ Cell[BoxData[
   "Part", "partd", 
    "\"Part specification \\!\\(\\*RowBox[{\\\"simulationGraphics\\\", \\\"\
 \[LeftDoubleBracket]\\\", \\\"101\\\", \\\"\[RightDoubleBracket]\\\"}]\\) is \
-longer than depth of object.\"", 2, 341, 79, 28023945957578826259, "Local"},
+longer than depth of object.\"", 2, 341, 80, 28023945957578826259, "Local"},
   "MessageTemplate",
   BaseStyle->"MSG"]], "Message",
- CellChangeTimes->{3.9886550471313496`*^9},
- CellLabel->"",ExpressionUUID->"a77d469e-750f-594b-9f9e-d18d94b1fdee"]
+ CellChangeTimes->{3.9886606332615547`*^9},
+ CellLabel->"",ExpressionUUID->"8a729fa2-05e8-4b46-b18a-80fcb2d9c256"],
+
+Cell["\<\
+Part::partd: Part specification simulationGraphics[[101]]
+     is longer than depth of object.\
+\>", "Message",
+ CellChangeTimes->{3.988668938605259*^9},
+ CellLabel->
+  "During evaluation of \
+In[1]:=",ExpressionUUID->"389c23b8-287c-ff43-ab41-375a6ad63e60"]
 }, Open  ]],
 
 Cell[BoxData["|"], "Input",
@@ -3192,11 +3614,761 @@ Cell[BoxData["|"], "Input",
 063e70c255eb"]
 }, Open  ]],
 
+Cell[CellGroupData[{
+
 Cell["Experimentation", "Section",
  CellChangeTimes->{{3.9861326068364487`*^9, 3.9861326263318176`*^9}, {
   3.986132701066065*^9, 
   3.9861327015585175`*^9}},ExpressionUUID->"85890944-c0ae-d141-a078-\
 34a7a7c126f1"],
+
+Cell[BoxData[
+ TagBox[GridBox[{
+    {
+     TemplateBox[{"\"Mean Age at First Reproduction: \"", 
+       TagBox[
+        InterpretationBox[
+         StyleBox["\"9.70\"", ShowStringCharacters -> False], 
+         9.696581196581194, AutoDelete -> True], NumberForm[#, {5, 2}]& ]},
+      "RowDefault"]},
+    {
+     TemplateBox[{"\"Median Age at First Reproduction: \"", 
+       TagBox[
+        InterpretationBox[
+         StyleBox["\"7.40\"", ShowStringCharacters -> False], 
+         7.39999999999999, AutoDelete -> True], NumberForm[#, {5, 2}]& ]},
+      "RowDefault"]},
+    {
+     TemplateBox[{"\"How Many Agents Reproduced: \"", "234"},
+      "RowDefault"]},
+    {
+     TemplateBox[{"\"Number of Timesteps: \"", "2000"},
+      "RowDefault"]},
+    {
+     GraphicsBox[{
+       {RGBColor[1., 0.79375, 0.25], EdgeForm[{GrayLevel[0], Opacity[0.504], 
+        Thickness[Small]}], {}, 
+        {RGBColor[1., 0.79375, 0.25], EdgeForm[{GrayLevel[0], Opacity[0.504], 
+         Thickness[Small]}], 
+         TagBox[
+          TooltipBox[
+           TagBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{4., 0}, {5., 0.24786324786324787`}, 
+                "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{81.33074319414783, 
+               92.98362006604982}, {-77.55272090386964, 96.56111425917717}}],
+             "DelayedMouseEffectStyle"],
+            StatusArea[#, 0.24786324786324787`]& ,
+            TagBoxNote->"0.24786324786324787"],
+           StyleBox["0.24786324786324787`", {}, StripOnInput -> False]],
+          Annotation[#, 
+           Style[0.24786324786324787`, {}], "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[
+           TagBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{5., 0}, {6., 0.10683760683760683`}, 
+                "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{92.48362006604982, 104.13649693795182`}, {
+               21.227564619932863`, 96.56111425917717}}],
+             "DelayedMouseEffectStyle"],
+            StatusArea[#, 0.10683760683760683`]& ,
+            TagBoxNote->"0.10683760683760683"],
+           StyleBox["0.10683760683760683`", {}, StripOnInput -> False]],
+          Annotation[#, 
+           Style[0.10683760683760683`, {}], "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[
+           TagBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{6., 0}, {7., 0.11965811965811966`}, 
+                "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{103.63649693795182`, 115.2893738098538}, {
+               12.247538663223537`, 96.56111425917717}}],
+             "DelayedMouseEffectStyle"],
+            StatusArea[#, 0.11965811965811966`]& ,
+            TagBoxNote->"0.11965811965811966"],
+           StyleBox["0.11965811965811966`", {}, StripOnInput -> False]],
+          Annotation[#, 
+           Style[0.11965811965811966`, {}], "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[
+           TagBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               RectangleBox[{7., 0}, {8., 0.08974358974358974}, 
+                "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{114.7893738098538, 126.44225068175578`}, {
+               33.200932562211946`, 96.56111425917717}}],
+             "DelayedMouseEffectStyle"],
+            StatusArea[#, 0.08974358974358974]& ,
+            TagBoxNote->"0.08974358974358974"],
+           StyleBox["0.08974358974358974`", {}, StripOnInput -> False]],
+          Annotation[#, 
+           Style[0.08974358974358974, {}], "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[
+           TagBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{8., 0}, {9., 0.06837606837606838}, 
+                "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{125.94225068175578`, 137.59512755365776`}, {
+               48.16764249006081, 96.56111425917717}}],
+             "DelayedMouseEffectStyle"],
+            StatusArea[#, 0.06837606837606838]& ,
+            TagBoxNote->"0.06837606837606838"],
+           StyleBox["0.06837606837606838`", {}, StripOnInput -> False]],
+          Annotation[#, 
+           Style[0.06837606837606838, {}], "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[
+           TagBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{9., 0}, {10., 0.07692307692307693}, 
+                "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{137.09512755365776`, 148.74800442555977`}, {
+               42.180958518921265`, 96.56111425917717}}],
+             "DelayedMouseEffectStyle"],
+            StatusArea[#, 0.07692307692307693]& ,
+            TagBoxNote->"0.07692307692307693"],
+           StyleBox["0.07692307692307693`", {}, StripOnInput -> False]],
+          Annotation[#, 
+           Style[0.07692307692307693, {}], "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[
+           TagBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{10., 0}, {11., 0.008547008547008548}, 
+                "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{148.24800442555977`, 159.90088129746175`}, {
+               90.07443028803763, 96.56111425917717}}],
+             "DelayedMouseEffectStyle"],
+            StatusArea[#, 0.008547008547008548]& ,
+            TagBoxNote->"0.008547008547008548"],
+           StyleBox["0.008547008547008548`", {}, StripOnInput -> False]],
+          Annotation[#, 
+           Style[0.008547008547008548, {}], "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[
+           TagBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{11., 0}, {12., 0.008547008547008548}, 
+                "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{159.40088129746175`, 171.05375816936373`}, {
+               90.07443028803763, 96.56111425917717}}],
+             "DelayedMouseEffectStyle"],
+            StatusArea[#, 0.008547008547008548]& ,
+            TagBoxNote->"0.008547008547008548"],
+           StyleBox["0.008547008547008548`", {}, StripOnInput -> False]],
+          Annotation[#, 
+           Style[0.008547008547008548, {}], "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[
+           TagBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{12., 0}, {13., 0.03418803418803419}, 
+                "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{170.55375816936373`, 182.2066350412657}, {
+               72.114378374619, 96.56111425917717}}],
+             "DelayedMouseEffectStyle"],
+            StatusArea[#, 0.03418803418803419]& ,
+            TagBoxNote->"0.03418803418803419"],
+           StyleBox["0.03418803418803419`", {}, StripOnInput -> False]],
+          Annotation[#, 
+           Style[0.03418803418803419, {}], "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[
+           TagBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{13., 0}, {14., 0.02564102564102564}, 
+                "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{181.7066350412657, 193.35951191316772`}, {
+               78.10106234575854, 96.56111425917717}}],
+             "DelayedMouseEffectStyle"],
+            StatusArea[#, 0.02564102564102564]& ,
+            TagBoxNote->"0.02564102564102564"],
+           StyleBox["0.02564102564102564`", {}, StripOnInput -> False]],
+          Annotation[#, 
+           Style[0.02564102564102564, {}], "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[
+           TagBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{14., 0}, {15., 0.02564102564102564}, 
+                "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{192.85951191316772`, 204.5123887850697}, {
+               78.10106234575854, 96.56111425917717}}],
+             "DelayedMouseEffectStyle"],
+            StatusArea[#, 0.02564102564102564]& ,
+            TagBoxNote->"0.02564102564102564"],
+           StyleBox["0.02564102564102564`", {}, StripOnInput -> False]],
+          Annotation[#, 
+           Style[0.02564102564102564, {}], "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[
+           TagBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{15., 0}, {16., 0.017094017094017096`}, 
+                "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{204.0123887850697, 215.66526565697168`}, {
+               84.08774631689808, 96.56111425917717}}],
+             "DelayedMouseEffectStyle"],
+            StatusArea[#, 0.017094017094017096`]& ,
+            TagBoxNote->"0.017094017094017096"],
+           StyleBox["0.017094017094017096`", {}, StripOnInput -> False]],
+          Annotation[#, 
+           Style[0.017094017094017096`, {}], "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[
+           TagBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{16., 0}, {17., 0.017094017094017096`}, 
+                "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{215.16526565697168`, 226.81814252887366`}, {
+               84.08774631689808, 96.56111425917717}}],
+             "DelayedMouseEffectStyle"],
+            StatusArea[#, 0.017094017094017096`]& ,
+            TagBoxNote->"0.017094017094017096"],
+           StyleBox["0.017094017094017096`", {}, StripOnInput -> False]],
+          Annotation[#, 
+           Style[0.017094017094017096`, {}], "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[
+           TagBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{17., 0}, {18., 0.02564102564102564}, 
+                "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{226.31814252887366`, 237.97101940077565`}, {
+               78.10106234575854, 96.56111425917717}}],
+             "DelayedMouseEffectStyle"],
+            StatusArea[#, 0.02564102564102564]& ,
+            TagBoxNote->"0.02564102564102564"],
+           StyleBox["0.02564102564102564`", {}, StripOnInput -> False]],
+          Annotation[#, 
+           Style[0.02564102564102564, {}], "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[
+           TagBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{18., 0}, {19., 0.01282051282051282}, 
+                "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{237.47101940077565`, 249.12389627267765`}, {
+               87.08108830246786, 96.56111425917717}}],
+             "DelayedMouseEffectStyle"],
+            StatusArea[#, 0.01282051282051282]& ,
+            TagBoxNote->"0.01282051282051282"],
+           StyleBox["0.01282051282051282`", {}, StripOnInput -> False]],
+          Annotation[#, 
+           Style[0.01282051282051282, {}], "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[
+           TagBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{19., 0}, {20., 0.01282051282051282}, 
+                "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{248.62389627267765`, 260.27677314457964`}, {
+               87.08108830246786, 96.56111425917717}}],
+             "DelayedMouseEffectStyle"],
+            StatusArea[#, 0.01282051282051282]& ,
+            TagBoxNote->"0.01282051282051282"],
+           StyleBox["0.01282051282051282`", {}, StripOnInput -> False]],
+          Annotation[#, 
+           Style[0.01282051282051282, {}], "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[
+           TagBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{20., 0}, {21., 0.017094017094017096`}, 
+                "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{259.77677314457964`, 271.4296500164816}, {
+               84.08774631689808, 96.56111425917717}}],
+             "DelayedMouseEffectStyle"],
+            StatusArea[#, 0.017094017094017096`]& ,
+            TagBoxNote->"0.017094017094017096"],
+           StyleBox["0.017094017094017096`", {}, StripOnInput -> False]],
+          Annotation[#, 
+           Style[0.017094017094017096`, {}], "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[
+           TagBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{21., 0}, {22., 0.017094017094017096`}, 
+                "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{270.9296500164816, 282.58252688838365`}, {
+               84.08774631689808, 96.56111425917717}}],
+             "DelayedMouseEffectStyle"],
+            StatusArea[#, 0.017094017094017096`]& ,
+            TagBoxNote->"0.017094017094017096"],
+           StyleBox["0.017094017094017096`", {}, StripOnInput -> False]],
+          Annotation[#, 
+           Style[0.017094017094017096`, {}], "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[
+           TagBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{22., 0}, {23., 0.01282051282051282}, 
+                "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{282.08252688838365`, 293.73540376028564`}, {
+               87.08108830246786, 96.56111425917717}}],
+             "DelayedMouseEffectStyle"],
+            StatusArea[#, 0.01282051282051282]& ,
+            TagBoxNote->"0.01282051282051282"],
+           StyleBox["0.01282051282051282`", {}, StripOnInput -> False]],
+          Annotation[#, 
+           Style[0.01282051282051282, {}], "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[
+           TagBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{23., 0}, {24., 0.01282051282051282}, 
+                "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{293.23540376028564`, 304.8882806321876}, {
+               87.08108830246786, 96.56111425917717}}],
+             "DelayedMouseEffectStyle"],
+            StatusArea[#, 0.01282051282051282]& ,
+            TagBoxNote->"0.01282051282051282"],
+           StyleBox["0.01282051282051282`", {}, StripOnInput -> False]],
+          Annotation[#, 
+           Style[0.01282051282051282, {}], "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[
+           TagBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{24., 0}, {25., 0.008547008547008548}, 
+                "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{304.3882806321876, 316.0411575040896}, {
+               90.07443028803763, 96.56111425917717}}],
+             "DelayedMouseEffectStyle"],
+            StatusArea[#, 0.008547008547008548]& ,
+            TagBoxNote->"0.008547008547008548"],
+           StyleBox["0.008547008547008548`", {}, StripOnInput -> False]],
+          Annotation[#, 
+           Style[0.008547008547008548, {}], "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[
+           TagBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{25., 0}, {26., 0.008547008547008548}, 
+                "RoundingRadius" -> 0]},
+              ImageSizeCache->{{315.5411575040896, 327.1940343759916}, {
+               90.07443028803763, 96.56111425917717}}],
+             "DelayedMouseEffectStyle"],
+            StatusArea[#, 0.008547008547008548]& ,
+            TagBoxNote->"0.008547008547008548"],
+           StyleBox["0.008547008547008548`", {}, StripOnInput -> False]],
+          Annotation[#, 
+           Style[0.008547008547008548, {}], "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[
+           TagBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{26., 0}, {27., 0.008547008547008548}, 
+                "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{326.6940343759916, 338.34691124789356`}, {
+               90.07443028803763, 96.56111425917717}}],
+             "DelayedMouseEffectStyle"],
+            StatusArea[#, 0.008547008547008548]& ,
+            TagBoxNote->"0.008547008547008548"],
+           StyleBox["0.008547008547008548`", {}, StripOnInput -> False]],
+          Annotation[#, 
+           Style[0.008547008547008548, {}], "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[
+           TagBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{27., 0}, {28., 0.008547008547008548}, 
+                "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{337.84691124789356`, 349.4997881197956}, {
+               90.07443028803763, 96.56111425917717}}],
+             "DelayedMouseEffectStyle"],
+            StatusArea[#, 0.008547008547008548]& ,
+            TagBoxNote->"0.008547008547008548"],
+           StyleBox["0.008547008547008548`", {}, StripOnInput -> False]],
+          Annotation[#, 
+           Style[0.008547008547008548, {}], "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[
+           TagBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{28., 0}, {29., 0.004273504273504274}, 
+                "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{348.9997881197956, 360.6526649916976}, {
+               93.0677722736074, 96.56111425917717}}],
+             "DelayedMouseEffectStyle"],
+            StatusArea[#, 0.004273504273504274]& ,
+            TagBoxNote->"0.004273504273504274"],
+           StyleBox["0.004273504273504274`", {}, StripOnInput -> False]],
+          Annotation[#, 
+           Style[0.004273504273504274, {}], "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[
+           TagBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{29., 0}, {30., 0.004273504273504274}, 
+                "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{360.1526649916976, 371.80554186359956`}, {
+               93.0677722736074, 96.56111425917717}}],
+             "DelayedMouseEffectStyle"],
+            StatusArea[#, 0.004273504273504274]& ,
+            TagBoxNote->"0.004273504273504274"],
+           StyleBox["0.004273504273504274`", {}, StripOnInput -> False]],
+          Annotation[#, 
+           Style[0.004273504273504274, {}], 
+           "Tooltip"]& ]}, {}, {}}, {{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, \
+{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}}},
+      AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+      Axes->{True, True},
+      AxesLabel->{
+        FormBox[
+         TagBox["\"First Age at Reproduction\"", HoldForm], TraditionalForm], 
+        FormBox[
+         TagBox["\"Fraction of Total Agent Population\"", HoldForm], 
+         TraditionalForm]},
+      AxesOrigin->{3.48, 0},
+      FrameLabel->{{None, None}, {None, None}},
+      FrameTicks->{{Automatic, Automatic}, {Automatic, Automatic}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      ImageSize->500,
+      Method->{CoordinatesToolOptions -> {"DisplayFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& )}, "AxisPadding" -> Scaled[0.02], 
+        "ChartDefaultStyle" -> {
+          Directive[
+           RGBColor[1., 0.725, 0], 
+           Opacity[0.6]], 
+          Directive[
+           RGBColor[0.24, 0.6, 0.8], 
+           Opacity[0.6]], 
+          Directive[
+           RGBColor[0.455, 0.7, 0.21], 
+           Opacity[0.6]], 
+          Directive[
+           RGBColor[0.922526, 0.385626, 0.209179], 
+           Opacity[0.6]], 
+          Directive[
+           RGBColor[0.578, 0.51, 0.85], 
+           Opacity[0.6]], 
+          Directive[
+           RGBColor[0.772079, 0.431554, 0.102387], 
+           Opacity[0.6]], 
+          Directive[
+           RGBColor[0.4, 0.64, 1.], 
+           Opacity[0.6]], 
+          Directive[
+           RGBColor[1., 0.75, 0.], 
+           Opacity[0.6]], 
+          Directive[
+           RGBColor[0.8, 0.4, 0.76], 
+           Opacity[0.6]], 
+          Directive[
+           RGBColor[0.637, 0.65, 0.], 
+           Opacity[0.6]], 
+          Directive[
+           RGBColor[0.915, 0.3325, 0.2125], 
+           Opacity[0.6]], 
+          Directive[
+           RGBColor[0.40082222609352647`, 0.5220066643438841, 0.85], 
+           Opacity[0.6]], 
+          Directive[
+           RGBColor[
+           0.9728288904374106, 0.621644452187053, 0.07336199581899142], 
+           Opacity[0.6]], 
+          Directive[
+           RGBColor[0.736782672705901, 0.358, 0.5030266573755369], 
+           Opacity[0.6]], 
+          Directive[
+           RGBColor[0.28026441037696703`, 0.715, 0.4292089322474965], 
+           Opacity[0.6]]}, "DefaultBoundaryStyle" -> Automatic, 
+        "DefaultChartBaseStyle" -> Directive[
+          RGBColor[1., 0.79375, 0.25], 
+          EdgeForm[{
+            GrayLevel[0]}]], 
+        "DefaultGraphicsInteraction" -> {
+         "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+          "Effects" -> {
+           "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+            "Droplines" -> {
+             "freeformCursorMode" -> True, 
+              "placement" -> {"x" -> "All", "y" -> "None"}}}}, 
+        "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+        "RangePadding" -> Scaled[0.05]},
+      PlotLabel->FormBox[
+       "\"Distribution of First Reproduction Ages\"", TraditionalForm],
+      PlotRange->{{4., 30.}, {All, All}},
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {
+         Scaled[0.02], 
+         Scaled[0.05]}},
+      Ticks->{Automatic, Automatic}]}
+   },
+   DefaultBaseStyle->"Column",
+   GridBoxAlignment->{"Columns" -> {{Left}}},
+   GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+  "Column"]], "Output",
+ CellChangeTimes->{
+  3.9886479591742096`*^9, 3.9886481397018185`*^9, {3.9886488373668327`*^9, 
+   3.9886489381786633`*^9}},
+ CellLabel->"Out[91]=",ExpressionUUID->"543ad1fc-99d8-ba48-bb43-f8b21d20b720"],
+
+Cell["\<\
+The distribution of first reproduction ages shows that most agents reproduce \
+almost immediately after reaching the minimum reproduction age, which, in \
+this experiment, was set to 4. Moreover, this suggests that the environment \
+is rich in resources and thus conducive to the population\[CloseCurlyQuote]s \
+growth, as agents can have sufficient energy and food to reproduce \
+immediately and find mates. Additionally, the median first reproduction age \
+of 7.40 furthers this pattern, indicating that at least half of the agents \
+reproduce early in their lifespans. Also, the distribution is right-skewed, \
+which explains the disparity between the mean and median age at first \
+reproduction (9.70 and 7.40, respectively). This gap shows that the \
+population does not behave uniformly, and its reproductive strategies emerge \
+from interactions within the environment.\
+\>", "Text",
+ CellChangeTimes->{{3.98865028780822*^9, 
+  3.988650310551819*^9}},ExpressionUUID->"2b953699-55e1-ab4c-8214-\
+c4a424f0e9f9"]
+}, Open  ]],
 
 Cell["Conclusion", "Section",
  CellChangeTimes->{{3.98219137470154*^9, 
@@ -3220,9 +4392,9 @@ Cell["References", "Section",
 }, Open  ]]
 },
 WindowSize->{1288.5, 1005},
-WindowMargins->{{-5.25, Automatic}, {Automatic, 0}},
+WindowMargins->{{Automatic, -5.25}, {Automatic, 0}},
 SpellingDictionaries->{"CorrectWords"->{"dt"}},
-Magnification:>0.8 Inherited,
+Magnification:>0.9 Inherited,
 FrontEndVersion->"14.3 for Microsoft Windows (64-bit) (July 8, 2025)",
 StyleDefinitions->"Default.nb",
 ExpressionUUID->"7f18c038-d181-6940-a649-d0ced56592b3"
@@ -3231,167 +4403,201 @@ ExpressionUUID->"7f18c038-d181-6940-a649-d0ced56592b3"
 
 (* Internal cache information *)
 (*CellTagsOutline
-CellTagsIndex->{}
+CellTagsIndex->{
+ "agentRulesandBehavior"->{
+  Cell[59145, 1456, 209, 4, 74, "Section",ExpressionUUID->"0d6a2109-7b35-bb46-914d-cd252ba5175d",
+   CellTags->"agentRulesandBehavior"]},
+ "createAgent[]"->{
+  Cell[31554, 775, 1548, 31, 136, "Text",ExpressionUUID->"10a084c6-a688-6540-a79c-10fafe41d5fb",
+   CellTags->"createAgent[]"]},
+ "modelInitialization"->{
+  Cell[79651, 1923, 201, 4, 74, "Section",ExpressionUUID->"b82d0072-7288-764d-9bc5-0e4a2ba20d41",
+   CellTags->"modelInitialization"]},
+ "modelParams"->{
+  Cell[15426, 374, 343, 5, 74, "Section",ExpressionUUID->"7dc9621c-5827-ef4a-8786-41ddeeebf367",
+   CellTags->"modelParams"]}
+ }
 *)
 (*CellTagsIndex
-CellTagsIndex->{}
+CellTagsIndex->{
+ {"agentRulesandBehavior", 178715, 4406},
+ {"createAgent[]", 178873, 4409},
+ {"modelInitialization", 179028, 4412},
+ {"modelParams", 179182, 4415}
+ }
 *)
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[576, 22, 332, 7, 217, "Title",ExpressionUUID->"fc779f64-94a4-1645-96da-b7c48e9320a8"],
-Cell[911, 31, 263, 7, 52, "Subtitle",ExpressionUUID->"ab04e9e9-c56d-444c-b979-31cb4e771eb0"],
+Cell[576, 22, 449, 8, 313, "Title",ExpressionUUID->"fc779f64-94a4-1645-96da-b7c48e9320a8"],
+Cell[1028, 32, 263, 7, 58, "Subtitle",ExpressionUUID->"ab04e9e9-c56d-444c-b979-31cb4e771eb0"],
 Cell[CellGroupData[{
-Cell[1199, 42, 254, 4, 66, "Section",ExpressionUUID->"b47a9adc-7996-504b-8c35-2c9e4daa3d69"],
-Cell[1456, 48, 218, 4, 33, "Text",ExpressionUUID->"badd546a-7765-9842-941a-3decf455c43d"]
+Cell[1316, 43, 254, 4, 74, "Section",ExpressionUUID->"b47a9adc-7996-504b-8c35-2c9e4daa3d69"],
+Cell[1573, 49, 1381, 21, 210, "Text",ExpressionUUID->"badd546a-7765-9842-941a-3decf455c43d"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[1711, 57, 158, 3, 66, "Section",ExpressionUUID->"5932021b-be45-1941-a625-9e2664160210"],
-Cell[1872, 62, 2341, 35, 296, "Text",ExpressionUUID->"78c80cea-78cf-0b4a-a189-9310aef30d0b"]
+Cell[2991, 75, 158, 3, 74, "Section",ExpressionUUID->"5932021b-be45-1941-a625-9e2664160210"],
+Cell[3152, 80, 3173, 45, 431, "Text",ExpressionUUID->"78c80cea-78cf-0b4a-a189-9310aef30d0b"],
+Cell[6328, 127, 582, 16, 45, "Text",ExpressionUUID->"780029f3-2d5c-794d-be82-4e148ec67383"],
+Cell[6913, 145, 2054, 51, 189, "Text",ExpressionUUID->"8d46ef41-0c09-f24e-8d51-b3fad24562d0"],
+Cell[8970, 198, 751, 24, 46, "Text",ExpressionUUID->"97567dfe-0700-ac46-94f3-0f3410304221"],
+Cell[9724, 224, 824, 20, 111, "Text",ExpressionUUID->"a1cd6812-7d12-3b4c-ae90-800f78fb099b"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[4250, 102, 382, 6, 66, "Section",ExpressionUUID->"70fc7f0d-3b96-5746-9f8b-a221eddd0345"],
-Cell[4635, 110, 518, 9, 79, "Subsection",ExpressionUUID->"52709ddd-8fbe-1146-9eef-4f32f232bc91"],
+Cell[10585, 249, 382, 6, 74, "Section",ExpressionUUID->"70fc7f0d-3b96-5746-9f8b-a221eddd0345"],
+Cell[10970, 257, 518, 9, 89, "Subsection",ExpressionUUID->"52709ddd-8fbe-1146-9eef-4f32f232bc91"],
 Cell[CellGroupData[{
-Cell[5178, 123, 593, 11, 63, "Subsection",ExpressionUUID->"015076e2-4beb-0741-a350-56a86a1d7b26"],
-Cell[5774, 136, 487, 9, 55, "Text",ExpressionUUID->"2f6dff15-ac40-5946-9765-dfadd688eaf0"]
+Cell[11513, 270, 593, 11, 70, "Subsection",ExpressionUUID->"015076e2-4beb-0741-a350-56a86a1d7b26"],
+Cell[12109, 283, 699, 12, 87, "Text",ExpressionUUID->"2f6dff15-ac40-5946-9765-dfadd688eaf0"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[6310, 151, 152, 3, 66, "Section",ExpressionUUID->"4c8fbf71-3deb-6f4f-a4a6-de5a6680d72a"],
-Cell[6465, 156, 320, 6, 36, "CodeText",ExpressionUUID->"eda4f4ec-f5bf-6c4b-98d1-075974761ba4"],
-Cell[6788, 164, 516, 10, 33, "Text",ExpressionUUID->"661b3e4c-86eb-b249-8df4-ca7d4aab18cf"],
-Cell[7307, 176, 545, 12, 33, "Text",ExpressionUUID->"d94d1240-cf10-f24d-be70-15dcab168e92"]
+Cell[12857, 301, 152, 3, 74, "Section",ExpressionUUID->"4c8fbf71-3deb-6f4f-a4a6-de5a6680d72a"],
+Cell[13012, 306, 261, 7, 38, "Text",ExpressionUUID->"8dae3ea2-bd77-374b-8091-0db84123d5d4"],
+Cell[13276, 315, 320, 6, 41, "CodeText",ExpressionUUID->"eda4f4ec-f5bf-6c4b-98d1-075974761ba4"],
+Cell[13599, 323, 516, 10, 38, "Text",ExpressionUUID->"661b3e4c-86eb-b249-8df4-ca7d4aab18cf"],
+Cell[14118, 335, 1271, 34, 38, "Text",ExpressionUUID->"d94d1240-cf10-f24d-be70-15dcab168e92"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[7889, 193, 319, 5, 66, "Section",ExpressionUUID->"7dc9621c-5827-ef4a-8786-41ddeeebf367"],
-Cell[8211, 200, 1194, 18, 99, "Text",ExpressionUUID->"8ff26a7a-b98b-fb49-a9f6-7615dc0ce169"],
-Cell[9408, 220, 10004, 205, 471, "Code",ExpressionUUID->"06295ec5-de7c-ea44-9f2c-5f0a02e1aa34"],
-Cell[19415, 427, 374, 8, 33, "Text",ExpressionUUID->"3d582856-5b52-ae42-8152-de2c453081cd"],
+Cell[15426, 374, 343, 5, 74, "Section",ExpressionUUID->"7dc9621c-5827-ef4a-8786-41ddeeebf367",
+ CellTags->"modelParams"],
+Cell[15772, 381, 1537, 31, 136, "Text",ExpressionUUID->"8ff26a7a-b98b-fb49-a9f6-7615dc0ce169"],
+Cell[17312, 414, 12890, 320, 609, "Code",ExpressionUUID->"e1a92281-b459-8a46-996e-764e2bffbb7f"],
+Cell[30205, 736, 374, 8, 62, "Text",ExpressionUUID->"3d582856-5b52-ae42-8152-de2c453081cd"],
 Cell[CellGroupData[{
-Cell[19814, 439, 217, 3, 28, "Input",ExpressionUUID->"2147d01a-ef11-604a-abda-f02ce7d6d8af"],
-Cell[20034, 444, 152, 2, 32, "Output",ExpressionUUID->"548c825a-f361-da4a-97cf-ff04cc095530"]
+Cell[30604, 748, 217, 3, 31, "Input",ExpressionUUID->"2147d01a-ef11-604a-abda-f02ce7d6d8af"],
+Cell[30824, 753, 152, 2, 36, "Output",ExpressionUUID->"548c825a-f361-da4a-97cf-ff04cc095530"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[20235, 452, 334, 5, 66, "Section",ExpressionUUID->"c5be0d16-ba53-2546-a6ff-79990cc6644d"],
+Cell[31025, 761, 334, 5, 74, "Section",ExpressionUUID->"c5be0d16-ba53-2546-a6ff-79990cc6644d"],
 Cell[CellGroupData[{
-Cell[20594, 461, 167, 3, 53, "Subsection",ExpressionUUID->"5037cdbf-fa39-404f-a28d-e7ae96a5edb6"],
-Cell[20764, 466, 1137, 19, 121, "Text",ExpressionUUID->"10a084c6-a688-6540-a79c-10fafe41d5fb"],
-Cell[21904, 487, 3093, 73, 190, "Code",ExpressionUUID->"142145c4-95bc-4c4d-b9f0-ab021346b21d"]
+Cell[31384, 770, 167, 3, 59, "Subsection",ExpressionUUID->"5037cdbf-fa39-404f-a28d-e7ae96a5edb6"],
+Cell[31554, 775, 1548, 31, 136, "Text",ExpressionUUID->"10a084c6-a688-6540-a79c-10fafe41d5fb",
+ CellTags->"createAgent[]"],
+Cell[33105, 808, 3591, 79, 234, "Code",ExpressionUUID->"142145c4-95bc-4c4d-b9f0-ab021346b21d"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[25034, 565, 163, 3, 53, "Subsection",ExpressionUUID->"eba76386-d2a1-ca45-b667-e9cf93b946a3"],
-Cell[25200, 570, 227, 5, 33, "Text",ExpressionUUID->"668d9dab-c40a-fe4c-af9b-84ddd727ec21"],
-Cell[25430, 577, 1052, 19, 55, "Text",ExpressionUUID->"43f7f145-fa31-224c-a685-bceff4b4876e"],
-Cell[26485, 598, 410, 10, 50, "Code",ExpressionUUID->"f149d8ae-5cdf-7148-be2a-169ee1c31973"],
-Cell[26898, 610, 951, 21, 36, "CodeText",ExpressionUUID->"7de17ded-2970-d14b-ba66-538e4eceb407"],
-Cell[27852, 633, 868, 18, 55, "Text",ExpressionUUID->"6c4fc9dc-af10-314e-8f11-3220d91f0c2b"],
-Cell[28723, 653, 2601, 65, 243, "Code",ExpressionUUID->"9b0353ea-2fcd-e94e-ac8f-ae6f1b0f96a2"],
-Cell[31327, 720, 584, 10, 56, "CodeText",ExpressionUUID->"59887e7b-4161-cb4b-8ec4-ed0b0cc93345"],
-Cell[31914, 732, 691, 16, 33, "Text",ExpressionUUID->"89540473-02b0-2a40-a141-d55c082daf0c"],
-Cell[32608, 750, 573, 14, 50, "Code",ExpressionUUID->"8327f009-68e5-7d40-82c1-d38081b5b327"],
-Cell[33184, 766, 872, 20, 55, "Text",ExpressionUUID->"42b7b78c-0cea-2148-9274-24f62c0d8a1f"],
-Cell[34059, 788, 1216, 29, 190, "Code",ExpressionUUID->"fe82a479-5b2e-cf4e-94dc-56936b503ac1"],
-Cell[35278, 819, 581, 15, 36, "CodeText",ExpressionUUID->"3a200fe4-e467-2447-87a1-f2fc971c2b61"],
-Cell[35862, 836, 798, 14, 77, "Text",ExpressionUUID->"cae9aa88-1b00-fa4f-b037-c556e6d8088e"],
-Cell[36663, 852, 1220, 30, 137, "Code",ExpressionUUID->"2d2f1246-f031-9b44-9473-ef6457a1fe3e"],
-Cell[37886, 884, 379, 8, 33, "Text",ExpressionUUID->"518f1f10-c2df-4c45-837c-e2fea5fdd8e8"],
-Cell[38268, 894, 1078, 27, 137, "Code",ExpressionUUID->"0ff1e7bd-ec35-f246-a77a-484b3c84cae8"],
-Cell[39349, 923, 466, 13, 33, "Text",ExpressionUUID->"4cf886e9-e753-b54e-81a7-ec23aee80a2a"],
-Cell[39818, 938, 1058, 27, 137, "Code",ExpressionUUID->"3b84131d-3e5b-334b-a411-0b23e9990342"],
-Cell[40879, 967, 193, 3, 33, "Text",ExpressionUUID->"825ae4ac-38c3-8b46-8157-9a769de85987"],
-Cell[41075, 972, 750, 16, 55, "Text",ExpressionUUID->"a94ed3d5-78c9-4a4d-9d85-c0e13657ff40"],
-Cell[41828, 990, 1039, 25, 137, "Code",ExpressionUUID->"1d8de386-2365-ee41-894d-4da0592f83ac"],
-Cell[42870, 1017, 620, 17, 36, "CodeText",ExpressionUUID->"f0edc91d-1c43-e045-a489-7d79373f6072"],
-Cell[43493, 1036, 1385, 28, 99, "Text",ExpressionUUID->"9293eeb3-3218-c245-bcb9-65462f03cf8e"],
-Cell[44881, 1066, 2497, 57, 313, "Code",ExpressionUUID->"eca38961-40b7-7d4a-aa1b-b6045f3bcca4"]
+Cell[36733, 892, 163, 3, 59, "Subsection",ExpressionUUID->"eba76386-d2a1-ca45-b667-e9cf93b946a3"],
+Cell[36899, 897, 227, 5, 38, "Text",ExpressionUUID->"668d9dab-c40a-fe4c-af9b-84ddd727ec21"],
+Cell[37129, 904, 1075, 20, 62, "Text",ExpressionUUID->"43f7f145-fa31-224c-a685-bceff4b4876e"],
+Cell[38207, 926, 410, 10, 56, "Code",ExpressionUUID->"f149d8ae-5cdf-7148-be2a-169ee1c31973"],
+Cell[38620, 938, 1024, 22, 41, "CodeText",ExpressionUUID->"7de17ded-2970-d14b-ba66-538e4eceb407"],
+Cell[39647, 962, 884, 19, 62, "Text",ExpressionUUID->"6c4fc9dc-af10-314e-8f11-3220d91f0c2b"],
+Cell[40534, 983, 2730, 69, 273, "Code",ExpressionUUID->"9b0353ea-2fcd-e94e-ac8f-ae6f1b0f96a2"],
+Cell[43267, 1054, 637, 10, 86, "CodeText",ExpressionUUID->"59887e7b-4161-cb4b-8ec4-ed0b0cc93345"],
+Cell[43907, 1066, 974, 20, 62, "Text",ExpressionUUID->"89540473-02b0-2a40-a141-d55c082daf0c"],
+Cell[44884, 1088, 704, 18, 56, "Code",ExpressionUUID->"8327f009-68e5-7d40-82c1-d38081b5b327"],
+Cell[45591, 1108, 973, 21, 62, "Text",ExpressionUUID->"42b7b78c-0cea-2148-9274-24f62c0d8a1f"],
+Cell[46567, 1131, 1215, 29, 214, "Code",ExpressionUUID->"fe82a479-5b2e-cf4e-94dc-56936b503ac1"],
+Cell[47785, 1162, 777, 18, 63, "CodeText",ExpressionUUID->"3a200fe4-e467-2447-87a1-f2fc971c2b61"],
+Cell[48565, 1182, 798, 14, 111, "Text",ExpressionUUID->"cae9aa88-1b00-fa4f-b037-c556e6d8088e"],
+Cell[49366, 1198, 1220, 30, 155, "Code",ExpressionUUID->"2d2f1246-f031-9b44-9473-ef6457a1fe3e"],
+Cell[50589, 1230, 379, 8, 38, "Text",ExpressionUUID->"518f1f10-c2df-4c45-837c-e2fea5fdd8e8"],
+Cell[50971, 1240, 1078, 27, 155, "Code",ExpressionUUID->"0ff1e7bd-ec35-f246-a77a-484b3c84cae8"],
+Cell[52052, 1269, 466, 13, 38, "Text",ExpressionUUID->"4cf886e9-e753-b54e-81a7-ec23aee80a2a"],
+Cell[52521, 1284, 1058, 27, 155, "Code",ExpressionUUID->"3b84131d-3e5b-334b-a411-0b23e9990342"],
+Cell[53582, 1313, 977, 21, 62, "Text",ExpressionUUID->"825ae4ac-38c3-8b46-8157-9a769de85987"],
+Cell[54562, 1336, 1949, 47, 174, "Code",ExpressionUUID->"7edebfa1-10d4-af4e-ab5e-ed089515946e"],
+Cell[56514, 1385, 847, 18, 62, "Text",ExpressionUUID->"a94ed3d5-78c9-4a4d-9d85-c0e13657ff40"],
+Cell[57364, 1405, 1039, 25, 155, "Code",ExpressionUUID->"1d8de386-2365-ee41-894d-4da0592f83ac"],
+Cell[58406, 1432, 690, 18, 41, "CodeText",ExpressionUUID->"f0edc91d-1c43-e045-a489-7d79373f6072"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[47427, 1129, 361, 6, 66, "Section",ExpressionUUID->"a671984d-8b17-ce47-8fa1-7e377fdc9c60"],
-Cell[47791, 1137, 843, 14, 121, "Text",ExpressionUUID->"157b7664-173a-8649-8bf9-90eeaba52789"],
-Cell[48637, 1153, 1153, 26, 172, "Code",ExpressionUUID->"b38ba1c6-0d0b-8b49-ab30-d32b7202fe7a"],
-Cell[49793, 1181, 568, 13, 51, "Text",ExpressionUUID->"f42d0a1a-adae-af44-85d9-de91315bc30f"],
-Cell[50364, 1196, 840, 14, 99, "Text",ExpressionUUID->"2d7a60d4-6db9-e14e-9f0c-cc61579a438d"],
-Cell[51207, 1212, 1175, 32, 120, "Input",ExpressionUUID->"ecfaae33-326b-6c46-bff6-ada4fb1f2f05",
+Cell[59145, 1456, 209, 4, 74, "Section",ExpressionUUID->"0d6a2109-7b35-bb46-914d-cd252ba5175d",
+ CellTags->"agentRulesandBehavior"],
+Cell[59357, 1462, 1385, 28, 136, "Text",ExpressionUUID->"9293eeb3-3218-c245-bcb9-65462f03cf8e"],
+Cell[60745, 1492, 2497, 57, 352, "Code",ExpressionUUID->"eca38961-40b7-7d4a-aa1b-b6045f3bcca4"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[63279, 1554, 361, 6, 74, "Section",ExpressionUUID->"a671984d-8b17-ce47-8fa1-7e377fdc9c60"],
+Cell[63643, 1562, 843, 14, 161, "Text",ExpressionUUID->"157b7664-173a-8649-8bf9-90eeaba52789"],
+Cell[64489, 1578, 1153, 26, 194, "Code",ExpressionUUID->"b38ba1c6-0d0b-8b49-ab30-d32b7202fe7a"],
+Cell[65645, 1606, 568, 13, 57, "Text",ExpressionUUID->"f42d0a1a-adae-af44-85d9-de91315bc30f"],
+Cell[66216, 1621, 840, 14, 111, "Text",ExpressionUUID->"2d7a60d4-6db9-e14e-9f0c-cc61579a438d"],
+Cell[67059, 1637, 1175, 32, 135, "Input",ExpressionUUID->"ecfaae33-326b-6c46-bff6-ada4fb1f2f05",
  InitializationCell->True],
-Cell[52385, 1246, 1244, 19, 143, "Text",ExpressionUUID->"a8559f96-207b-174d-ba19-f7355ad39b1b"],
-Cell[53632, 1267, 8123, 179, 928, "Code",ExpressionUUID->"44e73ec1-4d1c-2241-9850-d892222763bf"],
-Cell[61758, 1448, 865, 14, 99, "Text",ExpressionUUID->"bc46c2dc-47d2-a344-b903-051d83815ba2"],
-Cell[62626, 1464, 1136, 29, 137, "Code",ExpressionUUID->"511eeec0-82fb-c346-bffd-44c3a38a25c9"]
-}, Open  ]],
-Cell[63777, 1496, 275, 4, 66, "Section",ExpressionUUID->"92e704e2-29b3-4b4f-8558-394ea02f37f2"],
-Cell[64055, 1502, 308, 5, 52, "Section",ExpressionUUID->"7ba12f3f-19c4-9545-ab9e-4d5a7f97520b"],
-Cell[CellGroupData[{
-Cell[64388, 1511, 167, 3, 52, "Section",ExpressionUUID->"b82d0072-7288-764d-9bc5-0e4a2ba20d41"],
-Cell[64558, 1516, 578, 12, 55, "Text",ExpressionUUID->"9b006328-d5c7-7443-8349-8e06d4e74ae8"],
-Cell[65139, 1530, 3270, 76, 454, "Code",ExpressionUUID->"a619ae0a-10c1-f34d-8a31-d34f470115a2"],
-Cell[68412, 1608, 516, 14, 36, "CodeText",ExpressionUUID->"e6de19c0-d810-bd4c-a628-cd7dcf3cb3fa"]
+Cell[68237, 1671, 1244, 19, 161, "Text",ExpressionUUID->"a8559f96-207b-174d-ba19-f7355ad39b1b"],
+Cell[69484, 1692, 8123, 179, 1044, "Code",ExpressionUUID->"44e73ec1-4d1c-2241-9850-d892222763bf"],
+Cell[77610, 1873, 865, 14, 111, "Text",ExpressionUUID->"bc46c2dc-47d2-a344-b903-051d83815ba2"],
+Cell[78478, 1889, 1136, 29, 155, "Code",ExpressionUUID->"511eeec0-82fb-c346-bffd-44c3a38a25c9"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[68965, 1627, 265, 4, 66, "Section",ExpressionUUID->"da42a107-5a94-c44b-88f7-cc5b76916bdb"],
-Cell[69233, 1633, 824, 15, 77, "Text",ExpressionUUID->"4e7e6690-c989-5f45-b5d6-389356334b1a"],
-Cell[70060, 1650, 2137, 46, 225, "Code",ExpressionUUID->"a3547cd4-b0d8-4743-8d84-3a1332c06cbe"],
-Cell[72200, 1698, 554, 11, 55, "Text",ExpressionUUID->"93a67f07-9618-2348-b20e-5fb56b717616"],
-Cell[72757, 1711, 836, 22, 50, "Code",ExpressionUUID->"0682c969-ad9b-6d4c-baf3-ecbb16dba00c"],
-Cell[73596, 1735, 278, 6, 33, "Text",ExpressionUUID->"40108999-01c4-bb42-8eec-be348df6bb88"],
-Cell[73877, 1743, 144, 3, 33, "Text",ExpressionUUID->"75afe5aa-961e-284d-85b5-7732f350da1b"]
+Cell[79651, 1923, 201, 4, 74, "Section",ExpressionUUID->"b82d0072-7288-764d-9bc5-0e4a2ba20d41",
+ CellTags->"modelInitialization"],
+Cell[79855, 1929, 578, 12, 62, "Text",ExpressionUUID->"9b006328-d5c7-7443-8349-8e06d4e74ae8"],
+Cell[80436, 1943, 3270, 76, 510, "Code",ExpressionUUID->"a619ae0a-10c1-f34d-8a31-d34f470115a2"],
+Cell[83709, 2021, 516, 14, 41, "CodeText",ExpressionUUID->"e6de19c0-d810-bd4c-a628-cd7dcf3cb3fa"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[74058, 1751, 263, 4, 66, "Section",ExpressionUUID->"adf5e6db-afa9-bd4e-9bfa-226c9171a445"],
-Cell[74324, 1757, 184, 3, 33, "Text",ExpressionUUID->"0c769ac5-fd39-954a-af93-3ce8e73e5e3b"],
-Cell[74511, 1762, 824, 19, 77, "Text",ExpressionUUID->"c9240b80-893a-4048-841b-557bdebd6e22"],
-Cell[75338, 1783, 632, 12, 102, "Code",ExpressionUUID->"cc7f88a3-9110-f948-809c-40e1dd2e9bb9"],
-Cell[75973, 1797, 827, 15, 55, "Text",ExpressionUUID->"06ce39a2-5a12-e24b-9dcc-9a94c95b3922"],
-Cell[76803, 1814, 787, 20, 85, "Code",ExpressionUUID->"e2f15b16-b3ab-b241-bf99-6c91cc225e71"],
-Cell[77593, 1836, 389, 9, 55, "Text",ExpressionUUID->"ed6b40f6-bc3e-0d44-83ca-cd47ebdf9274"],
-Cell[77985, 1847, 245, 6, 50, "Code",ExpressionUUID->"3415eada-f603-2e44-8ac2-466a8f0b778f"],
-Cell[78233, 1855, 446, 9, 55, "Text",ExpressionUUID->"b3e0cf58-9734-ac4c-aa60-c97948927014"],
-Cell[78682, 1866, 962, 28, 172, "Code",ExpressionUUID->"a2b937c3-51a3-c245-aca8-e92c994e10e0"],
-Cell[79647, 1896, 444, 8, 55, "Text",ExpressionUUID->"17fa9aac-b373-2e4a-88fb-3c9557eacc57"],
-Cell[80094, 1906, 231, 6, 50, "Code",ExpressionUUID->"86080276-a46c-444e-b37e-a1b363b704d9"],
-Cell[80328, 1914, 637, 10, 55, "Text",ExpressionUUID->"99fffb7e-9639-014b-8229-f5362dcb763d"],
-Cell[80968, 1926, 859, 25, 102, "Code",ExpressionUUID->"cbd9fdd0-b10d-6848-8e8e-2619affb1637"],
-Cell[81830, 1953, 289, 6, 33, "Text",ExpressionUUID->"50143954-f01d-f446-87d0-61ade4003f2e"],
-Cell[82122, 1961, 433, 12, 50, "Code",ExpressionUUID->"fe3ca620-fc4b-624d-8d09-679ae88514f1"],
-Cell[82558, 1975, 348, 7, 55, "Text",ExpressionUUID->"2d47821d-62e6-b448-8f86-3d9f81dd7097"],
-Cell[82909, 1984, 568, 16, 102, "Code",ExpressionUUID->"55bfe0a9-de1b-4e40-a780-3bfd66336338"],
-Cell[83480, 2002, 727, 12, 77, "Text",ExpressionUUID->"4dd04c5b-987e-b344-bb2e-c57ecff71511"],
-Cell[84210, 2016, 7149, 176, 295, "Code",ExpressionUUID->"78041323-e436-724f-8446-c536bd7f942e"],
-Cell[91362, 2194, 430, 8, 33, "Text",ExpressionUUID->"91206454-e921-0e4c-a94b-c8b9bc38c9a3"],
-Cell[91795, 2204, 743, 16, 85, "Code",ExpressionUUID->"bfe1b53e-52ed-7441-9033-cd116b559004"],
-Cell[92541, 2222, 437, 11, 55, "Text",ExpressionUUID->"044cf5b0-e917-794b-b8ae-10876e038705"],
-Cell[92981, 2235, 566, 16, 67, "Code",ExpressionUUID->"2f8d7a8c-7201-d147-9b93-af77a5a544d5"],
-Cell[93550, 2253, 299, 6, 33, "Text",ExpressionUUID->"50cda4ab-dd0b-5d49-8f9d-708d3946bb1b"],
-Cell[93852, 2261, 460, 10, 67, "Code",ExpressionUUID->"3b16fdfa-7a5e-8b4b-b775-b08865c71ab4"],
-Cell[94315, 2273, 439, 8, 55, "Text",ExpressionUUID->"e7e5605a-9b15-8344-a9b5-0946ed64605e"],
-Cell[94757, 2283, 3828, 94, 155, "Code",ExpressionUUID->"c1fd6f2b-fe3f-6b43-bf45-ee9c305d6479"],
-Cell[98588, 2379, 230, 5, 33, "Text",ExpressionUUID->"5ffab2b8-a381-6241-8694-f2a526afbc55"],
+Cell[84262, 2040, 265, 4, 74, "Section",ExpressionUUID->"da42a107-5a94-c44b-88f7-cc5b76916bdb"],
+Cell[84530, 2046, 824, 15, 87, "Text",ExpressionUUID->"4e7e6690-c989-5f45-b5d6-389356334b1a"],
+Cell[85357, 2063, 2137, 46, 253, "Code",ExpressionUUID->"a3547cd4-b0d8-4743-8d84-3a1332c06cbe"],
+Cell[87497, 2111, 554, 11, 62, "Text",ExpressionUUID->"93a67f07-9618-2348-b20e-5fb56b717616"],
+Cell[88054, 2124, 836, 22, 56, "Code",ExpressionUUID->"0682c969-ad9b-6d4c-baf3-ecbb16dba00c"],
+Cell[88893, 2148, 278, 6, 38, "Text",ExpressionUUID->"40108999-01c4-bb42-8eec-be348df6bb88"],
+Cell[89174, 2156, 144, 3, 38, "Text",ExpressionUUID->"75afe5aa-961e-284d-85b5-7732f350da1b"]
+}, Open  ]],
 Cell[CellGroupData[{
-Cell[98843, 2388, 445, 13, 50, "Code",ExpressionUUID->"581126bd-223c-724a-b673-2f3fbb998421"],
-Cell[99291, 2403, 550, 13, 26, "Message",ExpressionUUID->"e573fb7d-1ffd-b84f-82b2-d9f2cf4964b0"],
-Cell[99844, 2418, 545, 13, 26, "Message",ExpressionUUID->"98cc7adb-69a1-fd43-b899-e4aec2d0d4a1"]
-}, Open  ]],
-Cell[100404, 2434, 632, 12, 55, "Text",ExpressionUUID->"82f0f6ed-c7ef-e749-91f9-6ddfb1967a36"],
-Cell[101039, 2448, 6941, 171, 278, "Code",ExpressionUUID->"2bff44bd-920d-034b-bce4-666fa3ce3ab4"],
-Cell[107983, 2621, 272, 6, 33, "Text",ExpressionUUID->"ecb7e4cb-0e94-b941-9065-957c7a6707e8"],
+Cell[89355, 2164, 263, 4, 74, "Section",ExpressionUUID->"adf5e6db-afa9-bd4e-9bfa-226c9171a445"],
+Cell[89621, 2170, 184, 3, 38, "Text",ExpressionUUID->"0c769ac5-fd39-954a-af93-3ce8e73e5e3b"],
+Cell[89808, 2175, 824, 19, 87, "Text",ExpressionUUID->"c9240b80-893a-4048-841b-557bdebd6e22"],
+Cell[90635, 2196, 632, 12, 115, "Code",ExpressionUUID->"cc7f88a3-9110-f948-809c-40e1dd2e9bb9"],
+Cell[91270, 2210, 827, 15, 62, "Text",ExpressionUUID->"06ce39a2-5a12-e24b-9dcc-9a94c95b3922"],
+Cell[92100, 2227, 787, 20, 95, "Code",ExpressionUUID->"e2f15b16-b3ab-b241-bf99-6c91cc225e71"],
+Cell[92890, 2249, 389, 9, 62, "Text",ExpressionUUID->"ed6b40f6-bc3e-0d44-83ca-cd47ebdf9274"],
+Cell[93282, 2260, 245, 6, 56, "Code",ExpressionUUID->"3415eada-f603-2e44-8ac2-466a8f0b778f"],
+Cell[93530, 2268, 446, 9, 62, "Text",ExpressionUUID->"b3e0cf58-9734-ac4c-aa60-c97948927014"],
+Cell[93979, 2279, 962, 28, 194, "Code",ExpressionUUID->"a2b937c3-51a3-c245-aca8-e92c994e10e0"],
+Cell[94944, 2309, 444, 8, 62, "Text",ExpressionUUID->"17fa9aac-b373-2e4a-88fb-3c9557eacc57"],
+Cell[95391, 2319, 231, 6, 56, "Code",ExpressionUUID->"86080276-a46c-444e-b37e-a1b363b704d9"],
+Cell[95625, 2327, 637, 10, 62, "Text",ExpressionUUID->"99fffb7e-9639-014b-8229-f5362dcb763d"],
+Cell[96265, 2339, 859, 25, 115, "Code",ExpressionUUID->"cbd9fdd0-b10d-6848-8e8e-2619affb1637"],
+Cell[97127, 2366, 289, 6, 38, "Text",ExpressionUUID->"50143954-f01d-f446-87d0-61ade4003f2e"],
+Cell[97419, 2374, 433, 12, 56, "Code",ExpressionUUID->"fe3ca620-fc4b-624d-8d09-679ae88514f1"],
+Cell[97855, 2388, 348, 7, 62, "Text",ExpressionUUID->"2d47821d-62e6-b448-8f86-3d9f81dd7097"],
+Cell[98206, 2397, 568, 16, 115, "Code",ExpressionUUID->"55bfe0a9-de1b-4e40-a780-3bfd66336338"],
+Cell[98777, 2415, 727, 12, 87, "Text",ExpressionUUID->"4dd04c5b-987e-b344-bb2e-c57ecff71511"],
+Cell[99507, 2429, 7149, 176, 332, "Code",ExpressionUUID->"78041323-e436-724f-8446-c536bd7f942e"],
+Cell[106659, 2607, 430, 8, 38, "Text",ExpressionUUID->"91206454-e921-0e4c-a94b-c8b9bc38c9a3"],
+Cell[107092, 2617, 743, 16, 95, "Code",ExpressionUUID->"bfe1b53e-52ed-7441-9033-cd116b559004"],
+Cell[107838, 2635, 437, 11, 62, "Text",ExpressionUUID->"044cf5b0-e917-794b-b8ae-10876e038705"],
+Cell[108278, 2648, 566, 16, 76, "Code",ExpressionUUID->"2f8d7a8c-7201-d147-9b93-af77a5a544d5"],
+Cell[108847, 2666, 299, 6, 38, "Text",ExpressionUUID->"50cda4ab-dd0b-5d49-8f9d-708d3946bb1b"],
+Cell[109149, 2674, 460, 10, 76, "Code",ExpressionUUID->"3b16fdfa-7a5e-8b4b-b775-b08865c71ab4"],
+Cell[109612, 2686, 439, 8, 62, "Text",ExpressionUUID->"e7e5605a-9b15-8344-a9b5-0946ed64605e"],
+Cell[110054, 2696, 3828, 94, 174, "Code",ExpressionUUID->"c1fd6f2b-fe3f-6b43-bf45-ee9c305d6479"],
+Cell[113885, 2792, 230, 5, 38, "Text",ExpressionUUID->"5ffab2b8-a381-6241-8694-f2a526afbc55"],
 Cell[CellGroupData[{
-Cell[108280, 2631, 1059, 26, 155, "Code",ExpressionUUID->"18f90581-64e1-ae40-829f-2895fc932be8"],
-Cell[109342, 2659, 2008, 40, 117, "Output",ExpressionUUID->"505647fc-bf49-a841-93f5-5441750fd3ce"],
-Cell[111353, 2701, 19834, 446, 343, "Output",ExpressionUUID->"97511d5b-9fb7-2b42-a9e4-22ff3a262a70"],
-Cell[131190, 3149, 267, 7, 33, "Message",ExpressionUUID->"18f89220-c45d-4247-bbe0-f9c4c00972e8"],
-Cell[131460, 3158, 269, 7, 33, "Message",ExpressionUUID->"fed710a8-6559-8e42-9f36-f9f22f239c02"],
-Cell[131732, 3167, 269, 7, 33, "Message",ExpressionUUID->"58b62258-ee77-3548-afb8-ee698bc0e9c9"],
-Cell[132004, 3176, 449, 9, 26, "Message",ExpressionUUID->"a77d469e-750f-594b-9f9e-d18d94b1fdee"]
+Cell[114140, 2801, 445, 13, 56, "Code",ExpressionUUID->"581126bd-223c-724a-b673-2f3fbb998421"],
+Cell[114588, 2816, 550, 13, 29, "Message",ExpressionUUID->"e573fb7d-1ffd-b84f-82b2-d9f2cf4964b0"],
+Cell[115141, 2831, 545, 13, 29, "Message",ExpressionUUID->"98cc7adb-69a1-fd43-b899-e4aec2d0d4a1"]
 }, Open  ]],
-Cell[132468, 3188, 131, 3, 28, "Input",ExpressionUUID->"adc33ac7-ca45-d642-9741-063e70c255eb"]
+Cell[115701, 2847, 632, 12, 62, "Text",ExpressionUUID->"82f0f6ed-c7ef-e749-91f9-6ddfb1967a36"],
+Cell[116336, 2861, 6941, 171, 313, "Code",ExpressionUUID->"2bff44bd-920d-034b-bce4-666fa3ce3ab4"],
+Cell[123280, 3034, 272, 6, 38, "Text",ExpressionUUID->"ecb7e4cb-0e94-b941-9065-957c7a6707e8"],
+Cell[CellGroupData[{
+Cell[123577, 3044, 1059, 26, 174, "Code",ExpressionUUID->"18f90581-64e1-ae40-829f-2895fc932be8"],
+Cell[124639, 3072, 2008, 40, 132, "Output",ExpressionUUID->"505647fc-bf49-a841-93f5-5441750fd3ce"],
+Cell[126650, 3114, 19834, 446, 386, "Output",ExpressionUUID->"97511d5b-9fb7-2b42-a9e4-22ff3a262a70"],
+Cell[146487, 3562, 267, 7, 37, "Message",ExpressionUUID->"18f89220-c45d-4247-bbe0-f9c4c00972e8"],
+Cell[146757, 3571, 269, 7, 37, "Message",ExpressionUUID->"fed710a8-6559-8e42-9f36-f9f22f239c02"],
+Cell[147029, 3580, 269, 7, 37, "Message",ExpressionUUID->"58b62258-ee77-3548-afb8-ee698bc0e9c9"],
+Cell[147301, 3589, 449, 9, 29, "Message",ExpressionUUID->"8a729fa2-05e8-4b46-b18a-80fcb2d9c256"],
+Cell[147753, 3600, 267, 7, 37, "Message",ExpressionUUID->"389c23b8-287c-ff43-ab41-375a6ad63e60"]
 }, Open  ]],
-Cell[132614, 3194, 215, 4, 66, "Section",ExpressionUUID->"85890944-c0ae-d141-a078-34a7a7c126f1"],
-Cell[132832, 3200, 156, 3, 52, "Section",ExpressionUUID->"502af867-c6d5-d84e-8f7d-1cd186dc4c4b"],
-Cell[132991, 3205, 163, 3, 52, "Section",ExpressionUUID->"609ece5c-277b-cb4b-a3b8-6522555d4bd8"],
-Cell[133157, 3210, 162, 3, 52, "Section",ExpressionUUID->"009219fc-2ca1-1d47-b85b-dbf8e504a5c8"],
-Cell[133322, 3215, 159, 3, 52, "Section",ExpressionUUID->"8942154c-fa48-8448-a760-5836c24f18f0"]
+Cell[148035, 3610, 131, 3, 31, "Input",ExpressionUUID->"adc33ac7-ca45-d642-9741-063e70c255eb"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[148203, 3618, 215, 4, 74, "Section",ExpressionUUID->"85890944-c0ae-d141-a078-34a7a7c126f1"],
+Cell[148421, 3624, 28142, 727, 352, "Output",ExpressionUUID->"543ad1fc-99d8-ba48-bb43-f8b21d20b720"],
+Cell[176566, 4353, 1025, 16, 136, "Text",ExpressionUUID->"2b953699-55e1-ab4c-8214-c4a424f0e9f9"]
+}, Open  ]],
+Cell[177606, 4372, 156, 3, 74, "Section",ExpressionUUID->"502af867-c6d5-d84e-8f7d-1cd186dc4c4b"],
+Cell[177765, 4377, 163, 3, 58, "Section",ExpressionUUID->"609ece5c-277b-cb4b-a3b8-6522555d4bd8"],
+Cell[177931, 4382, 162, 3, 58, "Section",ExpressionUUID->"009219fc-2ca1-1d47-b85b-dbf8e504a5c8"],
+Cell[178096, 4387, 159, 3, 58, "Section",ExpressionUUID->"8942154c-fa48-8448-a760-5836c24f18f0"]
 }, Open  ]]
 }
 ]

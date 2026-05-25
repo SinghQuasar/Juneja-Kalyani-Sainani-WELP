@@ -41,8 +41,12 @@ Simulation = ImportSim["sim1"];
 plotPopulationStats[Simulation]
 
 
-simVisualize[Simulation, parameters, 1, 100]
+simVisualize[Simulation, parameters, 400, 600]
 
 
 showLogistic[Simulation]
 logisticStats[Simulation]
+
+
+histogramSim = ImportSim["histogram", "C:\\Users\\Shrer\Downloads\\"];
+plotPopulationStats[histogramSim]
