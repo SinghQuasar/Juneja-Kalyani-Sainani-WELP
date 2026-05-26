@@ -166,6 +166,19 @@ Show[
 	Plot[fit[x], {x, metabolismKSeries[[1]][[1]], metabolismKSeries[[-1]][[1]]}]
 ]
 
+fit = NonlinearModelFit[
+  metabolismKSeries,
+  a*(x)^(-b)+c,
+  {{a, 1}, {b, 1}, {c, 0}},
+  x
+];
+
+fit["RSquared"]
+Show[
+	graphRKPipeline["metabolism", "Metabolism (E/T)", impDir][[1]][[1]],
+	Plot[fit[x], {x, metabolismKSeries[[1]][[1]], metabolismKSeries[[-1]][[1]]}]
+]
+
 nFoodSpawnKSeries = ImportSim["nFoodSpawnKSeries", impDir][[2;;]]
 fit = LinearModelFit[nFoodSpawnKSeries, x, x]
 fit["RSquared"]
@@ -222,6 +235,4 @@ Show[
 	rKIVPlot[metabolismKLnSeries, "Metabolism (E/T)", "ln(Carrying Capacity)", "Metabolism (E/T)" <> " vs ln(Carrying Capacity)"],
 	Plot[fit[x], {x, metabolismKLnSeries[[1]][[1]], metabolismKLnSeries[[-1]][[1]]}]
 ]
-
-
 

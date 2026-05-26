@@ -105,84 +105,15 @@ agentEat[agent_, params_] := Module[
 	agent2
 ]
 
-agentSetFoodDir[agent_, foodPos_, params_] := Module[
-	{agent2 = agent, dirV},
-	dirV = foodPos - agent["pos"]; (*- operator threadwise*)
-	agent2["currentDirection"] = (1/(Norm[dirV]+params["epsilon"])) * dirV;
-	agent2["currentDirection"] = Round[agent2["currentDirection"], params["rnd"]];
-	agent2
+areRelated[ai_, aj_] := Or[
+    MemberQ[ai["parents"], aj["id"]],   
+    MemberQ[aj["parents"], ai["id"]], 
+    (ai["parents"] =!= {-1, -1} && Sort[ai["parents"]] === Sort[aj["parents"]])  (* siblings: same parent pair *)
 ]
 
-agentSetMateDir[agent_, matePos_, params_] := Module[
-	{agent2 = agent, dirV},
-	dirV = matePos - agent["pos"]; (*- operator threadwise*)
-	agent2["currentDirection"] = (1/(Norm[dirV] + params["epsilon"])) * dirV;
-	agent2["currentDirection"] = Round[agent2["currentDirection"], params["rnd"]];
-	agent2
-]
-
-(*Without wall avoidance logic.*)
-(*
-agentSetExploreDir[agent_, params_] := Module[
-	{agent2 = agent, randomTheta},
-	agent2["currentDirection"] = 
-	If[RandomReal[] < params["dirChangeProb"],
-		randomTheta = RandomReal[{0, 2 Pi}]; {Cos[randomTheta], Sin[randomTheta]}, 
-		agent2["currentDirection"]
-	];
-	agent2
-]
-*)
-
-(*Wall avoidance logic.*)
-(*Having proxRad be << stepLength ensures no repeated direction flipping.*)
-agentSetExploreDir[agent_, params_] := Module[
-	{agent2 = agent, ax, ay, sqmin, sqmax, proxRad, randomTheta},
-	{ax, ay} = agent["pos"];
-	{sqmin, sqmax} = params["squareBounds"];
-	proxRad = params["stepLength"]/2;
-	agent2["currentDirection"] = 
-	Which[
-		RandomReal[] < params["dirChangeProb"] || (ax < sqmin + proxRad || ax > sqmax - proxRad || ay < sqmin + proxRad || ay > sqmax - proxRad),
-		randomTheta = RandomReal[{0, 2 Pi}]; Round[{Cos[randomTheta], Sin[randomTheta]}, params["rnd"]], 
-		
-		True,
-		agent2["currentDirection"]
-	];
-	agent2
-]
-
-(*I believe agents will never have more than max energy due to metabolism sending it to max-1 metabolism*)
-agentActions[model_, params_] :=  Module[
-    {model2 = model, agents = model["agents"], agentsSnapshot, foods = model["foods"], agent, 
-    nearFoodDist, nearFoodI, nearFoodPos, nearMateDist, nearMateI, nearMatePos},
-    agentsSnapshot = agents;
-	agents = Table[
-		agent = agents[[i]];
-		{nearFoodDist, nearFoodI, nearFoodPos} = findNearestSensableFoodInfo[agent, foods, params];
-		{nearMateDist, nearMateI, nearMatePos} = findNearestSensableMateInfo[i, agentsSnapshot, params];
-		Which[
-			And[
-				agent["age"] > params["minReproductionAge"],
-				agent["reproductionCooldown"] == 0,
-				agent["energy"] > params["minReproductionEnergy"],
-				nearMateI>=1
-			],
-			agent = agentSetMateDir[agent, nearMatePos, params]; agent = explorationOrIntentionalWalk[agent, params]; agent,
-			
-            nearFoodI>=1 && nearFoodDist < params["proximityRadius"], 
-			foods = Delete[foods, nearFoodI]; agentEat[agent, params], 
-			
-			nearFoodI>=1,
-			agent = agentSetFoodDir[agent, nearFoodPos, params]; agent = explorationOrIntentionalWalk[agent, params]; agent, 
-			(*don't know if we want to use up a timestep as a change of direction cost...*)
-			
-			True,
-			agent = agentSetExploreDir[agent, params]; agent = explorationOrIntentionalWalk[agent, params]; agent
-        ],
-	    {i, Length@agents}
-    ];
-	model2["foods"] = foods;
+decrementReproductionCooldowns[model_, params_] := Module[
+    {agents = model["agents"], model2 = model},
+	agents = MapAt[Max[# - params["dt"], 0]&, agents, {All, "reproductionCooldown"}];
 	model2["agents"] = agents;
 	model2
 ]
@@ -196,41 +127,6 @@ findClosestAgentI[agentI_Integer, agents_List] := Module[
         {i, Length[agents]}
     ];
     First@Ordering[dists, 1]
-]
-
-findClosestMateI[agentI_Integer, agents_List] := Module[
-    {pos, dists, agent},
-    If[Length[agents] < 2, Return[-1]];
-    pos = agents[[agentI]]["pos"];
-    agent = agents[[agentI]];
-    dists = Table[
-        If[i == agentI || areRelated[agent, agents[[i]]], Infinity, EuclideanDistance[pos, agents[[i]]["pos"]]],
-        {i, Length[agents]}
-    ];
-    First@Ordering[dists, 1]
-]
-
-findNearestSensableMateInfo[agentI_Integer, agents_List, params_] := Module[
-	{agent, nearAgentI, nearAgent, nearAgentPos, nearAgentDist},
-	agent = agents[[agentI]];
-	nearAgentI = findClosestMateI[agentI, agents];
-	nearAgent = agents[[nearAgentI]];
-	nearAgentPos = nearAgent["pos"];
-	nearAgentDist = EuclideanDistance[agent["pos"], nearAgentPos];
-	If[nearAgentDist < params["sensingDistance"], {nearAgentDist, nearAgentI, nearAgentPos}, {-1, -1, -1}]
-]
-
-areRelated[ai_, aj_] := Or[
-    MemberQ[ai["parents"], aj["id"]],   
-    MemberQ[aj["parents"], ai["id"]], 
-    (ai["parents"] =!= {-1, -1} && Sort[ai["parents"]] === Sort[aj["parents"]])  (* siblings: same parent pair *)
-]
-
-decrementReproductionCooldowns[model_, params_] := Module[
-    {agents = model["agents"], model2 = model},
-	agents = MapAt[Max[# - params["dt"], 0]&, agents, {All, "reproductionCooldown"}];
-	model2["agents"] = agents;
-	model2
 ]
 
 reproduceAgents[model_, params_] := Module[
@@ -283,6 +179,96 @@ reproduceAgents[model_, params_] := Module[
   model2["agents"] = Join[agents, newAgents];
   model2["nextAgentID"] = nextID;
   model2
+]
+
+findClosestMateI[agentI_Integer, agents_List] := Module[
+    {pos, dists, agent},
+    If[Length[agents] < 2, Return[-1]];
+    pos = agents[[agentI]]["pos"];
+    agent = agents[[agentI]];
+    dists = Table[
+        If[i == agentI || areRelated[agent, agents[[i]]], Infinity, EuclideanDistance[pos, agents[[i]]["pos"]]],
+        {i, Length[agents]}
+    ];
+    First@Ordering[dists, 1]
+]
+
+findNearestSensableMateInfo[agentI_Integer, agents_List, params_] := Module[
+	{agent, nearAgentI, nearAgent, nearAgentPos, nearAgentDist},
+	agent = agents[[agentI]];
+	nearAgentI = findClosestMateI[agentI, agents];
+	nearAgent = agents[[nearAgentI]];
+	nearAgentPos = nearAgent["pos"];
+	nearAgentDist = EuclideanDistance[agent["pos"], nearAgentPos];
+	If[nearAgentDist < params["sensingDistance"], {nearAgentDist, nearAgentI, nearAgentPos}, {-1, -1, -1}]
+]
+
+agentSetFoodDir[agent_, foodPos_, params_] := Module[
+	{agent2 = agent, dirV},
+	dirV = foodPos - agent["pos"]; (*- operator threadwise*)
+	agent2["currentDirection"] = (1/(Norm[dirV]+params["epsilon"])) * dirV;
+	agent2["currentDirection"] = Round[agent2["currentDirection"], params["rnd"]];
+	agent2
+]
+
+agentSetMateDir[agent_, matePos_, params_] := Module[
+	{agent2 = agent, dirV},
+	dirV = matePos - agent["pos"]; (*- operator threadwise*)
+	agent2["currentDirection"] = (1/(Norm[dirV] + params["epsilon"])) * dirV;
+	agent2["currentDirection"] = Round[agent2["currentDirection"], params["rnd"]];
+	agent2
+]
+
+(*Having proxRad be << stepLength ensures no repeated direction flipping.*)
+agentSetExploreDir[agent_, params_] := Module[
+	{agent2 = agent, ax, ay, sqmin, sqmax, proxRad, randomTheta},
+	{ax, ay} = agent["pos"];
+	{sqmin, sqmax} = params["squareBounds"];
+	proxRad = params["stepLength"]/2;
+	agent2["currentDirection"] = 
+	Which[
+		RandomReal[] < params["dirChangeProb"] || (ax < sqmin + proxRad || ax > sqmax - proxRad || ay < sqmin + proxRad || ay > sqmax - proxRad),
+		randomTheta = RandomReal[{0, 2 Pi}]; Round[{Cos[randomTheta], Sin[randomTheta]}, params["rnd"]], 
+		
+		True,
+		agent2["currentDirection"]
+	];
+	agent2
+]
+
+(*I believe agents will never have more than max energy due to metabolism sending it to max-1 metabolism*)
+agentActions[model_, params_] :=  Module[
+    {model2 = model, agents = model["agents"], agentsSnapshot, foods = model["foods"], agent, 
+    nearFoodDist, nearFoodI, nearFoodPos, nearMateDist, nearMateI, nearMatePos},
+    agentsSnapshot = agents;
+	agents = Table[
+		agent = agents[[i]];
+		{nearFoodDist, nearFoodI, nearFoodPos} = findNearestSensableFoodInfo[agent, foods, params];
+		{nearMateDist, nearMateI, nearMatePos} = findNearestSensableMateInfo[i, agentsSnapshot, params];
+		Which[
+			And[
+				agent["age"] > params["minReproductionAge"],
+				agent["reproductionCooldown"] == 0,
+				agent["energy"] > params["minReproductionEnergy"],
+				nearMateI>=1
+			],
+			agent = agentSetMateDir[agent, nearMatePos, params]; agent = explorationOrIntentionalWalk[agent, params]; agent,
+			
+            nearFoodI>=1 && nearFoodDist < params["proximityRadius"], 
+			foods = Delete[foods, nearFoodI]; agentEat[agent, params], 
+			
+			nearFoodI>=1,
+			agent = agentSetFoodDir[agent, nearFoodPos, params]; agent = explorationOrIntentionalWalk[agent, params]; agent, 
+			(*don't know if we want to use up a timestep as a change of direction cost...*)
+			
+			True,
+			agent = agentSetExploreDir[agent, params]; agent = explorationOrIntentionalWalk[agent, params]; agent
+        ],
+	    {i, Length@agents}
+    ];
+	model2["foods"] = foods;
+	model2["agents"] = agents;
+	model2
 ]
 
 (*Previously in model.wl*)
