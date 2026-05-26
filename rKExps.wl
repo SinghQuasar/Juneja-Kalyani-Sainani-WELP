@@ -225,6 +225,29 @@ Show[
   ]
 ]
 
+fit = NonlinearModelFit[
+  metabolismKSeries,
+  a*(x)^(-b) + c,
+  {{a, 1}, {b, 1}, {c, 0}},
+  x
+];
+rSq = fit["RSquared"];
+params = fit["BestFitParameters"];
+{aV, bV, cV} = {a, b, c} /. params;
+xMin = metabolismKSeries[[1]][[1]];
+xMax = metabolismKSeries[[-1]][[1]];
+Show[
+  graphRKPipeline["metabolism", "Metabolism (E/T)", impDir][[1]][[1]],
+  Plot[fit[x], {x, xMin, xMax}, PlotStyle -> Red],
+  Epilog -> Inset[
+    Column[{
+      Row[{"y = ", ScientificForm[aV, 3], " x^(-", ScientificForm[bV, 3], ") + ", ScientificForm[cV, 3]}],
+      Row[{"Valid for x \[Element] {", xMin, ", ", xMax, "}"}],
+      Row[{"R^2 = ", NumberForm[rSq, {4, 3}]}]
+    }],
+    Scaled[{0.97, 0.97}], Scaled[{1, 1}]
+  ]
+]
 
 
 metabolismKSeries = ImportSim["metabolismKSeries", impDir];
@@ -235,4 +258,3 @@ Show[
 	rKIVPlot[metabolismKLnSeries, "Metabolism (E/T)", "ln(Carrying Capacity)", "Metabolism (E/T)" <> " vs ln(Carrying Capacity)"],
 	Plot[fit[x], {x, metabolismKLnSeries[[1]][[1]], metabolismKLnSeries[[-1]][[1]]}]
 ]
-
