@@ -1,0 +1,1217 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 14.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[     53085,       1209]
+NotebookOptionsPosition[     47320,       1109]
+NotebookOutlinePosition[     48709,       1148]
+CellTagsIndexPosition[     48487,       1139]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Investigating Ecological Energy and Colony Population \
+Dynamics with Agent-Based Modeling Systems",
+ Background->RGBColor[0, 0.74, 0.74, 0.33]]], "Title",
+ CellChangeTimes->{{3.9821898656762505`*^9, 3.9821898716910725`*^9}, {
+   3.9821909533992023`*^9, 3.9821909930457573`*^9}, {3.9886678056455383`*^9, 
+   3.988667806978819*^9}, 3.9899605608574295`*^9, {3.989962184225155*^9, 
+   3.989962189706373*^9}},ExpressionUUID->"02689de0-ed57-420c-a5cc-\
+cd98dfbd8a90"],
+
+Cell[TextData[{
+ StyleBox["Yash",
+  IgnoreSpellCheck->True],
+ " Juneja, Om Kalyani, and Shreraj Sainani - WELP 2025-26"
+}], "Subtitle",
+ CellChangeTimes->{{3.986656627200224*^9, 
+  3.9866566778538074`*^9}},ExpressionUUID->"b41e6759-2aea-4b66-b4b9-\
+c3d6b5be7683"],
+
+Cell[CellGroupData[{
+
+Cell["Abstract", "Section",
+ CellChangeTimes->{{3.9821910469212837`*^9, 3.9821910577482967`*^9}, {
+  3.982191106682844*^9, 3.982191126018154*^9}, {3.982191398995737*^9, 
+  3.9821914059070625`*^9}},ExpressionUUID->"d842eb1f-5335-4633-84b0-\
+b9af8d4cf1c9"],
+
+Cell[TextData[{
+ "\tIn this work, we present a custom bioenergetics-informed ecological \
+Agent-Based Modeling (ABM) toolbox for colonies of artificial organisms in \
+the Wolfram Language.",
+ StyleBox[" We investigated ",
+  Background->RGBColor[0, 0.74, 0.74, 0.33]],
+ " energy and population dynamics with connections to real-world biology \
+using this toolbox. Unlike previous Agent-Based Modeling projects done in the \
+Wolfram Language, ",
+ StyleBox["our",
+  Background->RGBColor[0, 0.74, 0.74, 0.33]],
+ " interactive toolbox provides the user with the ability to change and \
+visualize the effects of ",
+ StyleBox["the ",
+  Background->RGBColor[0, 0.74, 0.74, 0.33]],
+ "parameters ",
+ StyleBox["used by the",
+  Background->RGBColor[0, 0.74, 0.74, 0.33]],
+ " artificial colonies such as resolution of simulation time-discretization, \
+sensing and interaction abilities of organisms, metabolic rates, lifespans, \
+exploration/foraging behaviors, reproductive frequencies, and bioenergetics \
+like digestion and reproduction energies.",
+ StyleBox[" ",
+  FontVariations->{"StrikeThrough"->True}],
+ StyleBox["Our tests ",
+  Background->RGBColor[0, 0.74, 0.74, 0.33]],
+ "show that ecological models produced by the toolbox mimic population \
+dynamics on a macro-level ",
+ StyleBox["as ",
+  Background->RGBColor[0, 0.74, 0.74, 0.33]],
+ "seen in real-world ecology through experimentation on metabolic rates, \
+primary production rates, caloric densities and reproductive frequencies with \
+a logistic analysis of population growth and collection of other demographic \
+data."
+}], "Text",
+ CellChangeTimes->{{3.9821914125019894`*^9, 3.9821914624889736`*^9}, {
+  3.9886678201103325`*^9, 3.9886678217355022`*^9}, {3.989440320680421*^9, 
+  3.989440393967486*^9}, {3.989440600540518*^9, 3.98944060090436*^9}, {
+  3.989440643266303*^9, 3.989440643844903*^9}, {3.9894406750947866`*^9, 
+  3.98944071306076*^9}, {3.989440765961154*^9, 3.98944079422965*^9}, {
+  3.989960592538004*^9, 
+  3.9899606378792057`*^9}},ExpressionUUID->"e65a0956-bc5e-432a-9650-\
+22d3560cd59f"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Introduction", "Section",
+ CellChangeTimes->{{3.98219114556913*^9, 
+  3.9821911516783543`*^9}},ExpressionUUID->"d7283059-85df-42bb-8047-\
+b2ad951a8a1d"],
+
+Cell["\<\
+\tWe developed an agent-based modeling toolbox to study how simple \
+bioenergetic rules shape population-level dynamics. In the model, individual \
+agents move through an environment bounded by a square, sense food, interact \
+with other agents, consume energy, reproduce, age, and die. Each agent \
+follows relatively simple rules, and the population as a whole can show \
+certain emergent behaviors that will be discussed in this study, such as \
+logistic growth, carrying capacity, variation in reproduction timing, and \
+differences in mortality. With this \[OpenCurlyQuote]toolbox,\
+\[CloseCurlyQuote] we test how environmental and biological parameters affect \
+population outcomes. Specifically, we vary factors such as food availability, \
+metabolism, reproduction energy cost, and reproduction age, then record their \
+effects on population size, carrying capacity, growth rate, first \
+reproduction age, and lifespan. Since our model has limited space that \
+introduces competition between agents (if two agents attempt to eat the same \
+food it is determined randomly which eats it) and a constrained amount of \
+food that is spawned (simulating primary production in an ecosystem), the \
+environment has a limited potential for growth, and the populations of our \
+colonies naturally trend towards logistic growth. Logistic growth is governed \
+by the following differential equation:\
+\>", "Text",
+ CellChangeTimes->{{3.9861323120985794`*^9, 3.9861323179159927`*^9}, 
+   3.9861323561213703`*^9, {3.9861327597572536`*^9, 3.9861328696856537`*^9}, {
+   3.986132940158207*^9, 3.9861329886130104`*^9}, {3.986133114661625*^9, 
+   3.986133161320118*^9}, {3.9861334921382465`*^9, 3.9861335766738815`*^9}, {
+   3.986133761947159*^9, 3.986133790376301*^9}, {3.988667841027857*^9, 
+   3.9886679197390842`*^9}, {3.988667974136898*^9, 3.9886679784752083`*^9}, {
+   3.9886680190840263`*^9, 3.9886680195578976`*^9}, {3.9887490806700535`*^9, 
+   3.988749088959692*^9}, {3.989961295641487*^9, 3.989961463365324*^9}, {
+   3.989961573173828*^9, 
+   3.9899615904358597`*^9}},ExpressionUUID->"3587290d-bece-46c5-8242-\
+9f95891e125e"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  FormBox[
+   StyleBox[
+    RowBox[{
+     FractionBox["dP", "dt"], "=", " ", 
+     RowBox[{"rP", "(", 
+      RowBox[{"1", "-", 
+       FractionBox["P", "K"]}], ")"}]}],
+    FontSize->18], TraditionalForm]],
+  FontSlant->"Italic",ExpressionUUID->
+  "4eee1864-7805-4d28-92bf-63b31dd2259d"],
+ "\t\t(1)"
+}], "Text",
+ CellChangeTimes->{{3.988667983903784*^9, 3.9886679854296*^9}, {
+  3.9886680432898235`*^9, 3.988668062317316*^9}, {3.988668577821993*^9, 
+  3.988668583097761*^9}},
+ TextAlignment->Center,ExpressionUUID->"350250c6-ff3a-42a4-82c3-88feae1c5cba"],
+
+Cell["\<\
+Separating and integrating this differential equation gives the form that we \
+use among other curves to fit to our population data among other data for \
+analysis\
+\>", "Text",
+ CellChangeTimes->{{3.9886680218284607`*^9, 3.9886680339560013`*^9}, {
+   3.9886680871550217`*^9, 3.9886684035609074`*^9}, {3.9886684564480705`*^9, 
+   3.9886684692912884`*^9}, 3.9886687350280476`*^9, {3.98874911295286*^9, 
+   3.988749115919861*^9}, 3.9899617638005257`*^9, 
+   3.9899618077258244`*^9},ExpressionUUID->"8ad7c49c-4f9d-4a4e-afb9-\
+51feb8ad011c"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{"P", "(", "t", ")"}], "=", " ", 
+    FractionBox["K", 
+     RowBox[{"1", 
+      StyleBox[" ",
+       FontSlant->"Italic"], "+", 
+      StyleBox[" ",
+       FontSlant->"Italic"], 
+      StyleBox[
+       SuperscriptBox["Ae", 
+        RowBox[{
+         RowBox[{"-", "r"}], " ", "t"}]],
+       FontSlant->"Italic"]}]]}], TraditionalForm]],
+  FontSize->18,ExpressionUUID->"6cb4674f-ad40-42f2-868e-d5c6b9cc36e0"],
+ StyleBox["\t\t",
+  FontSize->18],
+ StyleBox["(2)",
+  FontSize->15]
+}], "Text",
+ CellChangeTimes->{{3.9886685755629025`*^9, 3.988668600000784*^9}, {
+  3.988668638795864*^9, 3.9886686964579735`*^9}},
+ TextAlignment->Center,ExpressionUUID->"5bfa2977-ddeb-4f67-861a-3f9c1f26506d"],
+
+Cell["\<\
+Where K represents carrying capacity, r represents intrinsic growth rate, and \
+A represents the relationship between the initial population and carrying \
+capacity. These variables allow us to compare how different parameter values \
+affect population-level behavior as a whole.
+
+\tOverall, through these experiments, we show how simple rules can influence \
+a population\[CloseCurlyQuote]s dynamics and characteristics, and how our \
+Agent-Based Modeling toolbox can be used as a flexible foundation for \
+studying further ecological systems and emergent population-level and \
+agent-level behaviors not only because it exhibits such behavior like \
+logistic growth, but also because of its flexibility from the infinite \
+possibilities its large number of customizable parameters provides.\
+\>", "Text",
+ CellChangeTimes->{{3.988668728888998*^9, 3.9886687455668926`*^9}, {
+  3.988668869889372*^9, 3.988668895236967*^9}, {3.988748980369911*^9, 
+  3.988749056459652*^9}, {3.9899618187267056`*^9, 
+  3.989961884717642*^9}},ExpressionUUID->"f00b6345-0ecf-4722-9f63-\
+e9cfa79e35c5"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["High-Level Model Development", "Section",
+ CellChangeTimes->{{3.9821913146818466`*^9, 3.9821913242147045`*^9}, {
+  3.982192215691025*^9, 3.9821922192738476`*^9}, {3.9861321372110233`*^9, 
+  3.9861321384283543`*^9}, {3.9861323673518295`*^9, 3.9861323738913193`*^9}, {
+  3.986132689062084*^9, 3.9861326893698616`*^9}, {3.9887637607497063`*^9, 
+  3.988763762634386*^9}},ExpressionUUID->"3a97bde2-f526-4f1a-accf-\
+e10617412bfa"],
+
+Cell["\<\
+\tWe designed our Agent-Based model from the ground up to be customizable for \
+the user, making it easy to run experiments and test hypotheses. The \
+simulation is complete with visuals and animations, showing what\
+\[CloseCurlyQuote]s going on behind the raw data. All behavior, except for \
+random movement when needed, is deterministic and always based on the \
+starting parameters. It is important to note that agents do not \
+\[OpenCurlyDoubleQuote]feel\[CloseCurlyDoubleQuote] or are not provided \
+\[OpenCurlyDoubleQuote]rewards\[CloseCurlyDoubleQuote] by the simulation. \
+Rather, natural selection drives some agents to do better than others, \
+causing other agents to die out, showing how certain parameters support life \
+better or worse.
+\tAgents are organisms with age and energy, must consume resources to \
+survive, move, reproduce, and optionally invest energy in offspring. When \
+deciding on what action an agent takes every time step, we took inspiration \
+from a British Ecological Society paper outlining the general order of \
+importance:\
+\>", "Text",
+ CellChangeTimes->{{3.988763766086323*^9, 
+  3.9887637744105415`*^9}},ExpressionUUID->"45ee0957-f92f-4d3e-9ded-\
+58a2e5807609"],
+
+Cell["\<\
+ \[OpenCurlyDoubleQuote]If there is sufficient energy intake, an animal \
+allocates the energy obtained in the order: maintenance, growth, \
+reproduction, energy storage, until its energy stores reach an optimal level. \
+If there is a shortfall, the priorities for maintenance and \
+growth/reproduction remain the same until reserves fall to a critical \
+threshold below which all are allocated to maintenance.\
+\[CloseCurlyDoubleQuote] - (Cite the paper)\
+\>", "Text",
+ CellChangeTimes->{{3.9887637804169273`*^9, 3.988763815032461*^9}, {
+  3.989441162764399*^9, 3.989441164918106*^9}, {3.9894411957588987`*^9, 
+  3.989441202513359*^9}},
+ TextAlignment->Center,ExpressionUUID->"efc87982-82f9-43d3-8059-5f6070ba0542"],
+
+Cell["\<\
+\tIn our model, agents unavoidably lose energy every time step through \
+\[OpenCurlyDoubleQuote]metabolism.\[CloseCurlyDoubleQuote] When deciding to \
+take an action, in the agentActions function, we first look at if the agent \
+meets all the criteria to reproduce. This includes having enough energy, \
+having another non-related agent in the sensing radius, not being on a \
+reproduction cooldown, and having existed for long enough. Agents need a \
+minimum amount of energy before looking to reproduce because \
+growth/sustenance is of a higher priority than reproduction. If there is no \
+suitable mate, the agent then looks for food in proximity. If it is close \
+enough, it eats it. If not, the agent moves towards the food. And finally, if \
+the agent doesn\[CloseCurlyQuote]t see anything in its radius, it picks a \
+random exploration direction and walks. The agent has a random chance to \
+change directions every time step when exploring, so it is able to more \
+effectively explore a single direction before looking elsewhere. If an agent \
+tries to leave the bounds, its position is clipped to the bounds, and if it \
+is half a step away from the bounds, the direction it is moving in changes. \
+The environment supplies food containing energy every timestep to simulate \
+primary production (usually plants producing organic matter from sunlight) in \
+the ecosystem. Because of this, the organisms we simulate are primary \
+consumers.\
+\>", "Text",
+ CellChangeTimes->{{3.9887637903073177`*^9, 
+  3.988763793208187*^9}},ExpressionUUID->"59279a94-cda3-408e-bf7c-\
+aec9600ab399"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Model Parameters", "Section",
+ CellChangeTimes->{{3.9861346944682255`*^9, 3.986134699014679*^9}, {
+  3.9861347846181145`*^9, 3.9861347951362133`*^9}, {3.9861366439729843`*^9, 
+  3.9861366489353695`*^9}, {3.9866530520267925`*^9, 3.9866530526883984`*^9}},
+ CellTags->
+  "modelParams",ExpressionUUID->"6992b3f8-7c11-46d9-9224-bf8117b8a057"],
+
+Cell[TextData[{
+ "These are model parameters stored as an association that set the rules for \
+a simulation, and a user may freely tweak them to model certain environmental \
+scenarios or use these as independent variables to run empirical experiments. \
+Most functions of the model take in this parameters ",
+ StyleBox["association",
+  FontWeight->"Bold"],
+ " to understand how they should work and to what extent their functions \
+should affect model/agent state. Comments following each parameter outlines \
+its purpose. Parameters, and thus the model, is defined in ",
+ StyleBox["nondimensionalized",
+  FontWeight->"Bold"],
+ " arbitrary units: arbitrary distance units denoted (",
+ StyleBox["D",
+  FontWeight->"Bold"],
+ "), arbitrary time units denoted (",
+ StyleBox["T",
+  FontWeight->"Bold"],
+ "), and arbitrary energy units denoted (",
+ StyleBox["E",
+  FontWeight->"Bold"],
+ ") throughout."
+}], "Text",
+ CellChangeTimes->{
+  3.986134702431364*^9, {3.9861349670242786`*^9, 3.9861350151841335`*^9}, {
+   3.9866530586789455`*^9, 3.9866530630536213`*^9}, {3.9866539617015514`*^9, 
+   3.9866539901637287`*^9}, {3.9866542471128273`*^9, 3.986654249513815*^9}, {
+   3.9866543327970047`*^9, 3.986654545327215*^9}, {3.986654578512396*^9, 
+   3.986654579597225*^9}, {3.9866546113092575`*^9, 3.9866546690151215`*^9}, {
+   3.9866547079760723`*^9, 3.9866547221788425`*^9}, {3.986654994727091*^9, 
+   3.986655051410116*^9}, {3.988668795851225*^9, 3.9886688178396187`*^9}, {
+   3.9886690538873158`*^9, 3.988669055448925*^9}, 
+   3.988753620866991*^9},ExpressionUUID->"5c49e8ae-721e-485a-870a-\
+a5f60fd94da8"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"parameters", " ", "=", " ", 
+   RowBox[{"<|", "\n", "   ", 
+    RowBox[{
+     RowBox[{"\"\<proximityRadius\>\"", " ", "->", " ", "0.5"}], ",", " ", 
+     RowBox[{"(*", 
+      RowBox[{"How", " ", "close", " ", "two", " ", "things", " ", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"agent", "/", "food"}], ",", " ", 
+         RowBox[{"agent", "/", "agent"}]}], ")"}], " ", "need", " ", "to", " ",
+        "be", " ", "to", " ", "interact", " ", 
+       RowBox[{"(", 
+        RowBox[{"eat", ",", " ", "reproduce", ",", " ", 
+         RowBox[{"etc", "."}]}], ")"}]}], "*)"}], "\n", "   ", 
+     RowBox[{"\"\<sensingDistance\>\"", " ", "->", " ", "4"}], ",", " ", 
+     RowBox[{"(*", 
+      RowBox[{
+      "How", " ", "far", " ", "agents", " ", "can", " ", "sense", " ", 
+       "items"}], "*)"}], "\n", "   ", 
+     RowBox[{"\"\<metabolism\>\"", " ", "->", " ", "0.05"}], ",", "\n", "   ", 
+     RowBox[{"\"\<dt\>\"", " ", "->", " ", "0.1"}], ",", " ", 
+     RowBox[{"(*", "timestep", "*)"}], "\n", "   ", "\n", "   ", 
+     RowBox[{"(*", " ", 
+      RowBox[{"Food", "/", "environment"}], " ", "*)"}], "\n", "   ", 
+     RowBox[{"\"\<foodEnergy\>\"", " ", "->", " ", "5.0"}], ",", "\n", "   ", 
+     
+     RowBox[{"\"\<foodSpawnCooldown\>\"", " ", "->", " ", "1"}], ",", "\n", 
+     "   ", 
+     RowBox[{"\"\<nFoodSpawn\>\"", " ", "->", " ", "5"}], ",", "\n", "   ", 
+     RowBox[{"\"\<nStartingFood\>\"", " ", "->", " ", "4"}], ",", "\n", "   ",
+      "\n", "   ", 
+     RowBox[{"(*", " ", 
+      RowBox[{"Initial", " ", "population", " ", "and", " ", "movement"}], 
+      " ", "*)"}], "\n", "   ", 
+     RowBox[{"\"\<nStartingAgents\>\"", " ", "->", " ", "4"}], ",", "\n", 
+     "   ", 
+     RowBox[{"\"\<squareBounds\>\"", " ", "->", " ", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", " ", "20"}], "}"}]}], ",", "\n", "   ", 
+     RowBox[{"\"\<startingEnergy\>\"", " ", "->", " ", "10"}], ",", "\n", 
+     "   ", 
+     RowBox[{"\"\<stepLength\>\"", " ", "->", " ", "0.4"}], ",", "\n", "   ", 
+     
+     RowBox[{"\"\<dirChangeProb\>\"", " ", "->", " ", "0.025"}], ",", "\n", 
+     "   ", 
+     RowBox[{"\"\<lifespan\>\"", " ", "->", " ", "30"}], ",", "\n", "   ", 
+     RowBox[{"\"\<maxEnergy\>\"", " ", "->", " ", "10"}], ",", "\n", "   ", 
+     "\n", "   ", 
+     RowBox[{"(*", " ", "Visualization", " ", "*)"}], "\n", "   ", 
+     RowBox[{"\"\<imageSize\>\"", " ", "->", " ", "500"}], ",", "\n", "   ", 
+     RowBox[{"\"\<agentSize\>\"", " ", "->", " ", "0.01"}], ",", "\n", "   ", 
+     
+     RowBox[{"\"\<foodSize\>\"", " ", "->", " ", "0.0075"}], ",", "\n", "   ",
+      "\n", "   ", 
+     RowBox[{"(*", " ", "Reproduction", " ", "*)"}], "\n", "   ", 
+     RowBox[{"\"\<reproductionRadius\>\"", " ", "->", " ", "1.0"}], ",", "\n",
+      "   ", 
+     RowBox[{"\"\<minReproductionEnergy\>\"", " ", "->", " ", "5.0"}], ",", 
+     "\n", "   ", 
+     RowBox[{"\"\<minReproductionAge\>\"", " ", "->", " ", "4.0"}], ",", "\n",
+      "   ", 
+     RowBox[{"\"\<reproductionEnergyCost\>\"", " ", "->", " ", "2.0"}], ",", 
+     "\n", "   ", 
+     RowBox[{"\"\<reproductionCooldown\>\"", " ", "->", " ", "2"}], ",", "\n",
+      "   ", "\n", "   ", 
+     RowBox[{"(*", " ", 
+      RowBox[{"Variables", " ", "for", " ", "numerical", " ", "stability"}], 
+      " ", "*)"}], "\n", "   ", 
+     RowBox[{"\"\<epsilon\>\"", " ", "->", " ", "0.001"}], ",", "\n", "   ", 
+     RowBox[{"\"\<rnd\>\"", " ", "->", " ", 
+      RowBox[{
+       RowBox[{"N", "@", "10"}], "^", 
+       RowBox[{"-", "3"}]}]}]}], "\n", "|>"}]}], ";"}]], "Code",
+ CellChangeTimes->{{3.988669338505251*^9, 3.98866935028273*^9}, {
+  3.9886693832936554`*^9, 3.9886698815775986`*^9}, {3.989960950097336*^9, 
+  3.9899610309414425`*^9}},ExpressionUUID->"802583c9-de11-4ddc-b18e-\
+ef69d04d1c9f"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Core Model", "Section",
+ CellChangeTimes->{{3.982192226940838*^9, 3.9821922324859447`*^9}, 
+   3.9861321619595966`*^9, {3.9861326905155754`*^9, 3.9861326908331604`*^9}, {
+   3.986133615271534*^9, 3.9861336192688503`*^9}, {3.986133808198393*^9, 
+   3.986133808398634*^9}},ExpressionUUID->"7c4b70fb-34bb-4b36-bd16-\
+b82ed893b8cf"],
+
+Cell[CellGroupData[{
+
+Cell["Data Structures", "Subsection",
+ CellChangeTimes->{{3.9866593264565487`*^9, 3.9866593293098545`*^9}},
+ CellTags->
+  "dataStructures",ExpressionUUID->"bf229551-0eb7-4325-8c7f-06d634284428"],
+
+Cell[TextData[{
+ "First, we built how the agents moved and consumed food. The food in a model \
+at any time is represented by a ",
+ StyleBox["list",
+  FontWeight->"Bold"],
+ " of positions of pieces of food. For the data structure of the model as a \
+whole, see ",
+ StyleBox[ButtonBox["Model Initialization",
+  BaseStyle->"Hyperlink",
+  ButtonData->"modelInitialization"],
+  FontColor->RGBColor[
+   0.792156862745098, 0.3176470588235294, 0.09803921568627451]],
+ ".\n\n",
+ Cell[BoxData[
+  RowBox[{"createAgent", "[", "]"}]], "InlineCode",ExpressionUUID->
+  "16a71078-ec16-4c4b-886d-ba1a23ea9eb3"],
+ "is used to initialize agent associations, ",
+ StyleBox["and ",
+  Background->RGBColor[0, 0.74, 0.74, 0.33]],
+ "their states can be accessed through keys. Each agent attribute is \
+commented with a description of its nature"
+}], "Text",
+ CellChangeTimes->{
+  3.986656472112711*^9, {3.9866568045186176`*^9, 3.98665681395512*^9}, {
+   3.986657530107088*^9, 3.9866575455782146`*^9}, {3.9866590179394264`*^9, 
+   3.98665902418865*^9}, {3.9866591163259716`*^9, 3.9866591324223576`*^9}, {
+   3.9866593123730545`*^9, 3.9866593166233063`*^9}, {3.986659369824898*^9, 
+   3.9866593993556957`*^9}, {3.988669909998169*^9, 3.9886699729959183`*^9}, {
+   3.988670009865801*^9, 3.9886700902819977`*^9}, {3.9886701323339214`*^9, 
+   3.9886701398959846`*^9}, 3.9887509212400036`*^9, {3.989442830446835*^9, 
+   3.989442847829033*^9}, {3.989443146175806*^9, 3.989443146413004*^9}, {
+   3.9899610535574837`*^9, 3.9899610964958057`*^9}},
+ CellTags->
+  "createAgent[]",ExpressionUUID->"663181b5-69e7-4edf-9a14-79ba7a9a17bc"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"createAgent", "[", 
+   RowBox[{
+   "pos_", ",", " ", "energy_", ",", " ", "age_", ",", " ", "id_", ",", " ", 
+    "currentDirection_", ",", " ", 
+    RowBox[{"parents_", ":", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "1"}], ",", " ", 
+       RowBox[{"-", "1"}]}], "}"}]}], ",", " ", "reproductionCooldown_"}], 
+   "]"}], " ", ":=", " ", 
+  RowBox[{"<|", "\n", "    ", 
+   RowBox[{
+    RowBox[{"\"\<pos\>\"", " ", "->", " ", "pos"}], ",", " ", 
+    RowBox[{"(*", 
+     RowBox[{
+      RowBox[{
+      "The", " ", "current", " ", "position", " ", "of", " ", "an", " ", 
+       "agent", " ", "in", " ", "the", " ", "environment"}], ",", " ", 
+      RowBox[{"length", " ", "2", " ", "array"}]}], "*)"}], "\n", "    ", 
+    RowBox[{"\"\<energy\>\"", " ", "->", " ", "energy"}], ",", " ", 
+    RowBox[{"(*", 
+     RowBox[{
+     "The", " ", "current", " ", "energy", " ", "of", " ", "an", " ", 
+      "agent"}], "*)"}], "\n", "    ", 
+    RowBox[{"\"\<age\>\"", " ", "->", " ", "age"}], ",", " ", 
+    RowBox[{"(*", 
+     RowBox[{
+     "The", " ", "current", " ", "age", " ", "of", " ", "an", " ", "agent"}], 
+     "*)"}], "\n", "\t", 
+    RowBox[{"\"\<id\>\"", " ", "->", " ", "id"}], ",", " ", 
+    RowBox[{"(*", 
+     RowBox[{
+     "A", " ", "unique", " ", "identifer", " ", "given", " ", "to", " ", 
+      "each", " ", "agent", " ", "created", " ", "throughout", " ", "the", " ",
+       "history", " ", "of", " ", "the", " ", "simulation", " ", "instance"}],
+      "*)"}], "\n", "\t", 
+    RowBox[{"\"\<currentDirection\>\"", " ", "->", " ", "currentDirection"}], 
+    ",", " ", 
+    RowBox[{"(*", 
+     RowBox[{
+      RowBox[{
+       RowBox[{
+       "The", " ", "current", " ", "direction", " ", "the", " ", "agent", " ",
+         "is", " ", "exploring", " ", "in", " ", "or", " ", "seeking", " ", 
+        RowBox[{"food", "/", "mates"}], " ", "in"}], ";", " ", 
+       RowBox[{"value", " ", 
+        RowBox[{"from", " ", "[", 
+         RowBox[{"0", ",", " ", 
+          RowBox[{"2", "pi"}]}]}]}]}], ")"}], "*)"}], "\n", "\t", 
+    RowBox[{"\"\<parents\>\"", " ", "->", " ", "parents"}], ",", " ", 
+    RowBox[{"(*", 
+     RowBox[{
+      RowBox[{"The", " ", "ids", " ", "of", " ", "the", " ", 
+       RowBox[{"agent", "'"}], "s", " ", "parents", " ", "in", " ", "a", " ", 
+       "length", " ", "2", " ", 
+       RowBox[{"array", ".", " ", "If"}], " ", "the", " ", "agent", " ", "is",
+        " ", "one", " ", "of", " ", "the", " ", "primordial", " ", "starting",
+        " ", "agents"}], ",", " ", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", "1"}], ",", " ", 
+         RowBox[{"-", "1"}]}], "}"}], " ", "is", " ", "given", " ", "to", " ",
+        "this", " ", 
+       RowBox[{"value", ".", "\n", "\t", "used"}], " ", "to", " ", 
+       "determine", " ", "familial", " ", "relations", " ", "for", " ", "the",
+        " ", "purpose", " ", "of", " ", "incest", " ", 
+       RowBox[{"prevention", "--"}], "a", " ", "parent", " ", "will", " ", 
+       "naturally", " ", "not", " ", "reproduce", " ", "with", " ", "their", " ",
+        "child", " ", "throughout", " ", "almost", " ", "all", " ", 
+       "species"}]}], "*)"}], "\n", "    ", 
+    RowBox[{"\"\<reproductionCooldown\>\"", " ", "->", " ", 
+     "reproductionCooldown"}]}], "\n", "|>"}]}]], "Code",
+ CellChangeTimes->{
+  3.986656699328575*^9, {3.9866568535934486`*^9, 3.9866569508927803`*^9}, {
+   3.9866570394348106`*^9, 3.9866570581597443`*^9}, {3.9886701758241463`*^9, 
+   3.9886702754201374`*^9}},
+ CellLabel->"In[2]:=",ExpressionUUID->"995b9b76-6c4a-4823-88e3-088aa37ccc49"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Core Functions", "Subsection",
+ CellChangeTimes->{{3.98665934884626*^9, 3.9866593542909927`*^9}},
+ CellTags->
+  "coreFunctions",ExpressionUUID->"b9a81d34-7958-4c58-a24a-a2406ccbeceb"],
+
+Cell[TextData[{
+ "For any interactions to occur, an object must be within another\
+\[CloseCurlyQuote]s ",
+ Cell[BoxData[
+  StyleBox["proximityRadius",
+   FontSlant->"Italic"]], "InlineCode",ExpressionUUID->
+  "88637967-e44e-4b49-892b-1c35502cec75"],
+ ".  This goes for an agent and a piece of food, an agent and another agent \
+for reproduction."
+}], "Text",
+ CellChangeTimes->{{3.986133935459646*^9, 3.986134001026058*^9}, {
+   3.986134128371048*^9, 3.9861341682006283`*^9}, {3.9861342216344566`*^9, 
+   3.986134225347433*^9}, {3.9861354205280743`*^9, 3.986135502323677*^9}, {
+   3.9861355479464245`*^9, 3.9861355974950294`*^9}, {3.9866530312050304`*^9, 
+   3.9866530321828423`*^9}, {3.986653282381628*^9, 3.9866532827050743`*^9}, {
+   3.9866533505385036`*^9, 3.986653351202915*^9}, {3.986654009608753*^9, 
+   3.986654026521841*^9}, {3.9866562304426804`*^9, 3.9866562592874737`*^9}, {
+   3.9866564609462414`*^9, 3.9866564678113003`*^9}, 3.9866565595560265`*^9, {
+   3.988670288114067*^9, 
+   3.9886702882436695`*^9}},ExpressionUUID->"6028e72c-5f33-4eda-9ac1-\
+2180b6ffa677"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"checkWithinRadius", "[", 
+    RowBox[{"p1_", ",", " ", "p2_", ",", " ", "r_"}], "]"}], " ", ":=", " ", 
+   RowBox[{
+    RowBox[{"EuclideanDistance", "[", 
+     RowBox[{"p1", ",", " ", "p2"}], "]"}], " ", "<=", " ", "r"}]}], 
+  ";"}]], "Code",
+ CellChangeTimes->{3.986135602936306*^9},
+ CellLabel->"In[3]:=",ExpressionUUID->"0d15e094-8deb-47d1-bb8a-de562ad09c86"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"EuclidianDistance", "[", "]"}]], "InlineCode",ExpressionUUID->
+  "7f0c7da3-9420-4a12-8d2c-50d4e237a097"],
+ " is used in the ",
+ Cell[BoxData[
+  RowBox[{"checkWithinRadius", "[", "]"}]], "InlineCode",ExpressionUUID->
+  "a88e577b-5f40-440a-b821-a33bb937da94"],
+ " function to verify the interaction condition of ",
+ Cell[BoxData[
+  StyleBox["proximityRadius",
+   FontSlant->"Italic"]], "InlineCode",ExpressionUUID->
+  "d8e1cef3-577c-44e1-aa96-a07b2521feff"],
+ " throughout simulation."
+}], "CodeText",
+ CellChangeTimes->{{3.9866533764217987`*^9, 3.986653378633711*^9}, {
+  3.986653458920767*^9, 3.986653458991089*^9}, {3.9866540988145695`*^9, 
+  3.986654101054394*^9}, {3.986656200421219*^9, 3.9866562061620903`*^9}, {
+  3.9866565670399513`*^9, 3.9866565803603783`*^9}, {3.9866567216833496`*^9, 
+  3.9866567386902485`*^9}, {3.9866591896920757`*^9, 3.9866591931780586`*^9}, {
+  3.9886702943350105`*^9, 
+  3.988670296926489*^9}},ExpressionUUID->"d16a4bd1-8676-43ef-b0ce-\
+b8c5a2897974"],
+
+Cell[TextData[{
+ "A function called ",
+ Cell[BoxData[
+  RowBox[{"findNearestSensableFoodInfo", "[", "]"}]], "InlineCode",
+  ExpressionUUID->"86d734f4-3968-4b4a-98b1-3ed64411a051"],
+ " is used to find the nearest sensable (within ",
+ Cell[BoxData[
+  StyleBox["sensingDistance",
+   FontSlant->"Italic"]], "InlineCode",ExpressionUUID->
+  "8df372f9-b02e-4b36-9311-3922d435daf9"],
+ ") food to an agent so agents can seek and eat food. It returns this nearest \
+sensable food\[CloseCurlyQuote]s distance, index in the food list, and \
+position."
+}], "Text",
+ CellChangeTimes->{{3.986656981652298*^9, 3.9866569925472775`*^9}, {
+  3.9866570832146893`*^9, 3.9866571921746902`*^9}, {3.9866609992974873`*^9, 
+  3.986661000226021*^9}, {3.9866660723018055`*^9, 3.9866661001094913`*^9}, {
+  3.9886703093240376`*^9, 
+  3.988670365683964*^9}},ExpressionUUID->"4001dd66-f675-4b40-8379-\
+07f22eede675"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"findNearestSensableFoodInfo", "[", 
+   RowBox[{"agent_", ",", " ", "foodPositions_List", ",", " ", "params_"}], 
+   "]"}], " ", ":=", " ", 
+  RowBox[{"Module", "[", "\n", "    ", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+     "agentPos", ",", " ", "foodPosAndI", ",", " ", 
+      "foodsWithinRadiusPosAndI", ",", " ", "dists"}], "}"}], ",", "\n", 
+    "    ", 
+    RowBox[{
+     RowBox[{"agentPos", " ", "=", " ", 
+      RowBox[{"agent", "[", "\"\<pos\>\"", "]"}]}], ";", "\n", "    ", 
+     RowBox[{"foodPosAndI", " ", "=", " ", 
+      RowBox[{"Table", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"foodPositions", "[", 
+           RowBox[{"[", "i", "]"}], "]"}], ",", " ", "i"}], "}"}], ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"i", ",", " ", 
+          RowBox[{"Length", "[", "foodPositions", "]"}]}], "}"}]}], "]"}]}], ";",
+      "\n", "    ", 
+     RowBox[{"foodsWithinRadiusPosAndI", " ", "=", " ", 
+      RowBox[{"Select", "[", 
+       RowBox[{"foodPosAndI", ",", " ", 
+        RowBox[{
+         RowBox[{"checkWithinRadius", "[", 
+          RowBox[{"agentPos", ",", " ", 
+           RowBox[{"#", "[", 
+            RowBox[{"[", "1", "]"}], "]"}], ",", " ", 
+           RowBox[{"params", "[", "\"\<sensingDistance\>\"", "]"}]}], "]"}], 
+         "&"}]}], "]"}]}], ";", "\n", "    ", 
+     RowBox[{"If", "[", "\n", "        ", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Length", "[", "foodsWithinRadiusPosAndI", "]"}], " ", "==", 
+        " ", "0"}], ",", "\n", "        ", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", "1"}], ",", " ", 
+         RowBox[{"-", "1"}], ",", " ", 
+         RowBox[{"-", "1"}]}], "}"}], ",", " ", 
+       RowBox[{"(*", 
+        RowBox[{"no", " ", "food"}], "*)"}], "\n", "        ", 
+       RowBox[{
+        RowBox[{"dists", " ", "=", " ", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"EuclideanDistance", "[", 
+              RowBox[{"agentPos", ",", " ", 
+               RowBox[{"#", "[", 
+                RowBox[{"[", "1", "]"}], "]"}]}], "]"}], ",", " ", 
+             RowBox[{"#", "[", 
+              RowBox[{"[", "2", "]"}], "]"}], ",", " ", 
+             RowBox[{"#", "[", 
+              RowBox[{"[", "1", "]"}], "]"}]}], "}"}], "&"}], " ", "/@", " ", 
+          "foodsWithinRadiusPosAndI"}]}], ";", "\n", "        ", 
+        RowBox[{"First", "@", 
+         RowBox[{"MinimalBy", "[", 
+          RowBox[{"dists", ",", " ", "First"}], "]"}]}]}]}], "\n", "    ", 
+      "]"}]}]}], "\n", "]"}]}]], "Code",
+ CellChangeTimes->{3.9866572058419514`*^9, 3.988670306133047*^9},
+ CellTags->"findNearestSensableFoodInfo",
+ CellLabel->"In[4]:=",ExpressionUUID->"8e217a95-2b84-4d7c-9acf-4afcca6cb7e8"],
+
+Cell["\<\
+The function first compiles the food positions and indexes, and then isolates \
+the ones that are within sensing distance of the agent. If no pieces of food \
+make it into that isolation, then there are none within sensing distance and \
+{-1, -1, -1} is returned. Else, the closest food\[CloseCurlyQuote]s \
+{distance, index in the food list, position in the environment} is returned.\
+\>", "CodeText",
+ CellChangeTimes->{{3.986657227761652*^9, 3.9866573235387726`*^9}, {
+   3.986658968132265*^9, 3.986658969049103*^9}, {3.988670374549324*^9, 
+   3.9886704044954014`*^9}, 
+   3.988749489049614*^9},ExpressionUUID->"6e860de1-852c-44ce-8427-\
+13425cb81795"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"spawnFoods", "[", "]"}]], "InlineCode",ExpressionUUID->
+  "04846336-e6f4-48b8-815d-366812619aba"],
+ "takes in a food list and adds new foods with the amount corresponding to \
+the ",
+ Cell[BoxData[
+  StyleBox["nFoodSpawn",
+   FontSlant->"Italic"]], "InlineCode",ExpressionUUID->
+  "9e00f54b-6a70-486d-bc30-2766ac173a1e"],
+ " parameter. Rounding is used to prevent excess precision which increases \
+the memory needed to save a simulation to a file."
+}], "Text",
+ CellChangeTimes->{{3.986657355570282*^9, 3.9866573918809643`*^9}, {
+   3.986657471074499*^9, 3.986657524449877*^9}, {3.986658977664772*^9, 
+   3.986658996021229*^9}, {3.9866591637581673`*^9, 3.9866591714669056`*^9}, 
+   3.986660102583685*^9, {3.9886706233143883`*^9, 3.9886706358847504`*^9}, {
+   3.9886713478899517`*^9, 3.988671348707386*^9}, {3.9899611166263657`*^9, 
+   3.9899611187740097`*^9}},ExpressionUUID->"07aa7d75-afb5-48f6-bc77-\
+c9a7a43932b7"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"spawnFoods", "[", 
+   RowBox[{"foods_", ",", " ", "params_"}], "]"}], " ", ":=", " ", 
+  RowBox[{"Join", "[", 
+   RowBox[{"foods", ",", " ", 
+    RowBox[{"Round", "[", 
+     RowBox[{
+      RowBox[{"RandomReal", "[", 
+       RowBox[{
+        RowBox[{"params", "[", "\"\<squareBounds\>\"", "]"}], ",", " ", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"params", "[", "\"\<nFoodSpawn\>\"", "]"}], ",", " ", "2"}],
+          "}"}]}], "]"}], ",", " ", 
+      RowBox[{"params", "[", "\"\<rnd\>\"", "]"}]}], "]"}]}], "]"}]}]], "Code",\
+
+ CellChangeTimes->{3.9866592357492294`*^9, 3.9886704170456715`*^9},
+ CellLabel->"In[5]:=",ExpressionUUID->"2338b04c-fad4-45f0-8ab0-b0c032b38617"],
+
+Cell[TextData[{
+ "To spawn food at the appropriate time, ",
+ Cell[BoxData[
+  RowBox[{"spawnFoodCheck", "[", "]"}]], "InlineCode",ExpressionUUID->
+  "92aa5f2e-011e-4766-aaa6-9eafdecd6063"],
+ " updates the model\[CloseCurlyQuote]s food list with a ",
+ Cell[BoxData[
+  RowBox[{"spawnFoods", "[", "]"}]], "InlineCode",ExpressionUUID->
+  "50c14c48-6338-46ed-9f61-d6d208923a6b"],
+ "operation when appropriate according to the ",
+ Cell[BoxData[
+  StyleBox["foodSpawnCooldown",
+   FontSlant->"Italic"]], "InlineCode",ExpressionUUID->
+  "a797ef1a-215b-4cbb-97c2-bb31cf20d6b7"],
+ " parameter. "
+}], "Text",
+ CellChangeTimes->{{3.986659291647358*^9, 3.9866593004645767`*^9}, {
+  3.986659464851038*^9, 3.9866594941026287`*^9}, {3.986659527640812*^9, 
+  3.9866595341682415`*^9}, {3.986659564969391*^9, 3.986659583143572*^9}, {
+  3.9886704355120163`*^9, 3.9886704457369537`*^9}, {3.9886705306597958`*^9, 
+  3.988670621603668*^9}},ExpressionUUID->"a1383de7-ce48-4923-b497-\
+c1f078034844"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"spawnFoodCheck", "[", 
+   RowBox[{"model_", ",", " ", "params_"}], "]"}], " ", ":=", " ", 
+  RowBox[{"Module", "[", "\n", "    ", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"model2", " ", "=", " ", "model"}], "}"}], ",", "\n", "\t", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"model2", "[", "\"\<foods\>\"", "]"}], " ", "=", " ", 
+      RowBox[{"If", "[", "\n", "        ", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"Mod", "[", 
+          RowBox[{
+           RowBox[{"model", "[", "\"\<time\>\"", "]"}], ",", " ", 
+           RowBox[{"params", "[", "\"\<foodSpawnCooldown\>\"", "]"}]}], "]"}],
+          " ", "<", " ", 
+         RowBox[{"10", "^", 
+          RowBox[{"(", 
+           RowBox[{"-", "1"}], ")"}]}]}], ",", "\n", "        ", 
+        RowBox[{"spawnFoods", "[", 
+         RowBox[{
+          RowBox[{"model", "[", "\"\<foods\>\"", "]"}], ",", " ", "params"}], 
+         "]"}], ",", "\n", "        ", 
+        RowBox[{"model", "[", "\"\<foods\>\"", "]"}]}], "\n", "    ", "]"}]}],
+      ";", "\n", "\t", "model2"}]}], "\n", "]"}]}]], "Code",
+ CellChangeTimes->{3.986659605352833*^9, 3.9886706460345*^9},
+ CellLabel->"In[6]:=",ExpressionUUID->"96a31d9d-2c92-4d43-b86a-09ec1ee71ba7"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"<", " ", 
+   RowBox[{"10", "^", 
+    RowBox[{"(", 
+     RowBox[{"-", "1"}], ")"}]}]}]], "InlineCode",ExpressionUUID->
+  "636cfecd-7d06-47ab-8b6b-029caa444637"],
+ " is used instead of  ",
+ Cell[BoxData[
+  RowBox[{"==", " ", "0"}]], "InlineCode",ExpressionUUID->
+  "412e65e9-ef2f-4795-9737-a4ec22391847"],
+ " to not have to worry about integer vs. float mismatch issues.",
+ StyleBox["\n\n",
+  FontVariations->{"StrikeThrough"->True},
+  Background->RGBColor[0, 0.74, 0.74, 0.33]],
+ StyleBox["^^ If you want to comment about the float v integer, I would add \
+this into your future directions section since Mod[5, 3] has head Integer \
+while Mod[5., 3] has head Real",
+  Background->RGBColor[0, 0.74, 0.74, 0.33]]
+}], "CodeText",
+ CellChangeTimes->{{3.9866596208732586`*^9, 3.9866596853484936`*^9}, 
+   3.9866600985061626`*^9, {3.9886706518130455`*^9, 3.988670701880499*^9}, {
+   3.989488609425572*^9, 3.9894886121386223`*^9}, {3.989488663365987*^9, 
+   3.9894887320099497`*^9}, {3.989961163427847*^9, 
+   3.9899611661745186`*^9}},ExpressionUUID->"8484e326-a3aa-4e2f-a4fa-\
+62605f19c7d6"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"randomizeAndKill", "[", "]"}]], "InlineCode",ExpressionUUID->
+  "6bae0f15-fd5c-4acc-9c78-c0d430e2697b"],
+ " is a simulation management function that kills agents if they\
+\[CloseCurlyQuote]ve reached any death conditions and randomizes their order ",
+ StyleBox["within",
+  Background->RGBColor[0, 0.74, 0.74, 0.33]],
+ " the agent list. ",
+ StyleBox["This function is called at every timestep to ensure no agents are \
+consistently prioritized as our food consumption and reproduction helper \
+functions choose the first agent in the list.",
+  Background->RGBColor[0, 0.74, 0.74, 0.33]]
+}], "Text",
+ CellChangeTimes->{{3.986659691210705*^9, 3.9866598164837513`*^9}, {
+  3.989489025494103*^9, 3.989489105738356*^9}, {3.989961178391758*^9, 
+  3.989961189692276*^9}},ExpressionUUID->"128b8c17-a32a-4f3d-a7a0-\
+2137b384a360"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"randomizeAndKill", "[", 
+   RowBox[{"model_", ",", " ", "params_"}], "]"}], " ", ":=", " ", 
+  RowBox[{"Module", "[", "\n", "    ", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"agents", " ", "=", " ", 
+       RowBox[{"model", "[", "\"\<agents\>\"", "]"}]}], ",", " ", 
+      RowBox[{"model2", "=", "model"}]}], "}"}], ",", "\t", "\n", "\t", 
+    RowBox[{
+     RowBox[{"agents", " ", "=", " ", 
+      RowBox[{"RandomSample", "[", "agents", "]"}]}], ";", "\n", "\t", 
+     RowBox[{
+      RowBox[{"model2", "[", "\"\<agents\>\"", "]"}], " ", "=", " ", 
+      RowBox[{"Select", "[", 
+       RowBox[{"agents", ",", " ", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"#", "[", "\"\<age\>\"", "]"}], " ", "<", " ", 
+            RowBox[{"params", "[", "\"\<lifespan\>\"", "]"}]}], " ", "&&", 
+           " ", 
+           RowBox[{
+            RowBox[{"#", "[", "\"\<energy\>\"", "]"}], " ", ">", " ", "0"}]}],
+           ")"}], "&"}]}], "]"}]}], ";", "\n", "\t", "model2"}]}], "\n", 
+   "]"}]}]], "Code",
+ CellChangeTimes->{3.986659840460924*^9},
+ CellLabel->"In[7]:=",ExpressionUUID->"000be472-da3d-4cdd-897a-c037cc2953f0"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"metabolizeAgents", "[", "]"}]], "InlineCode",ExpressionUUID->
+  "da6e5ca0-4f85-463a-925d-8ef8f7bb835f"],
+ "applies the metabolism operation to all agents for a timestep."
+}], "Text",
+ CellChangeTimes->{{3.9866599745356274`*^9, 3.9866600084836063`*^9}, 
+   3.9866600958456745`*^9},ExpressionUUID->"210999b6-cf65-4a80-bd76-\
+d0b8a7c79ce5"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"metabolizeAgents", "[", 
+   RowBox[{"model_", ",", " ", "params_"}], "]"}], " ", ":=", " ", 
+  RowBox[{"Module", "[", "\n", "    ", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"agents", " ", "=", " ", 
+       RowBox[{"model", "[", "\"\<agents\>\"", "]"}]}], ",", " ", 
+      RowBox[{"model2", "=", "model"}]}], "}"}], ",", "\n", "\t", 
+    RowBox[{
+     RowBox[{"agents", " ", "=", " ", 
+      RowBox[{"MapAt", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"#", " ", "-", " ", 
+           RowBox[{"params", "[", "\"\<metabolism\>\"", "]"}]}], ")"}], "&"}],
+         ",", " ", "agents", ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"All", ",", " ", "\"\<energy\>\""}], "}"}]}], "]"}]}], ";", 
+     "\n", "\t", 
+     RowBox[{
+      RowBox[{"model2", "[", "\"\<agents\>\"", "]"}], " ", "=", " ", 
+      "agents"}], ";", "\n", "\t", "model2"}]}], "\n", "]"}]}]], "Code",
+ CellChangeTimes->{3.9866600228204327`*^9},
+ CellLabel->"In[8]:=",ExpressionUUID->"05fe9d7c-0cb2-40bf-871c-3a6eb836202b"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"ageAgents", "[", "]"}]], "InlineCode",ExpressionUUID->
+  "74dd1d4b-1baa-4341-aa1a-d846d357a45e"],
+ "ages agents by one timestep ",
+ Cell[BoxData[
+  StyleBox["dt",
+   FontSlant->"Italic"]], "InlineCode",ExpressionUUID->
+  "ec0a2221-3de5-406f-94b6-bbd09bb95b36"],
+ " during a timestep."
+}], "Text",
+ CellChangeTimes->{{3.986660071177496*^9, 
+  3.9866600914102154`*^9}},ExpressionUUID->"05b2dfcd-fd83-4f5f-aa37-\
+7b083a304009"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"ageAgents", "[", 
+   RowBox[{"model_", ",", " ", "params_"}], "]"}], " ", ":=", " ", 
+  RowBox[{"Module", "[", "\n", "    ", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"agents", " ", "=", " ", 
+       RowBox[{"model", "[", "\"\<agents\>\"", "]"}]}], ",", " ", 
+      RowBox[{"model2", "=", "model"}]}], "}"}], ",", "\n", "\t", 
+    RowBox[{
+     RowBox[{"agents", " ", "=", " ", 
+      RowBox[{"MapAt", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"#", " ", "+", " ", 
+           RowBox[{"params", "[", "\"\<dt\>\"", "]"}]}], ")"}], "&"}], ",", 
+        " ", "agents", ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"All", ",", " ", "\"\<age\>\""}], "}"}]}], "]"}]}], ";", 
+     "\n", "\t", 
+     RowBox[{
+      RowBox[{"model2", "[", "\"\<agents\>\"", "]"}], " ", "=", " ", 
+      "agents"}], ";", "\n", "\t", "model2"}]}], "\n", "]"}]}]], "Code",
+ CellChangeTimes->{3.986660122873667*^9},
+ CellLabel->"In[9]:=",ExpressionUUID->"bf325c32-e30b-49d6-a32b-3916cff97c60"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"explorationOrIntentionalWalk", "[", "]"}]], "InlineCode",
+  ExpressionUUID->"7c6112ba-e3c5-4f96-8491-275e1f210f93"],
+ " is the function that makes an agent walk in the current direction it\
+\[CloseCurlyQuote]s moving in. This current direction depends on the sensory \
+input an agent receives from its environment, and this heading is determined \
+in the ",
+ Cell[BoxData[
+  ButtonBox[
+   RowBox[{"agentActions", "[", "]"}],
+   BaseStyle->"Hyperlink",
+   ButtonData->"agentActions[]"]], "InlineCode",ExpressionUUID->
+  "b18e9a3d-8b02-4ab2-abc4-373e439d60c7"],
+ "function in ",
+ StyleBox[ButtonBox["Agent Rules and Behavior",
+  BaseStyle->"Hyperlink",
+  ButtonData->"agentRulesandBehavior"],
+  FontColor->RGBColor[
+   0.792156862745098, 0.3176470588235294, 0.09803921568627451]],
+ "."
+}], "Text",
+ CellChangeTimes->{{3.9866601406207695`*^9, 3.986660196467783*^9}, {
+  3.9886714391601086`*^9, 3.9886715175715218`*^9}, {3.9886716441806107`*^9, 
+  3.9886717247194557`*^9}, {3.9887486294007587`*^9, 3.988748634939972*^9}, {
+  3.98874868358395*^9, 
+  3.98874868358395*^9}},ExpressionUUID->"bb6e7353-760f-4f01-8171-\
+7e50856f29eb"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"explorationOrIntentionalWalk", "[", 
+   RowBox[{"agent_", ",", " ", "params_"}], "]"}], " ", ":=", " ", 
+  RowBox[{"Module", "[", " ", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{"direction", " ", "is", " ", "set", " ", "in", " ", 
+      RowBox[{"agentActions", "[", "]"}]}], ",", " ", 
+     RowBox[{
+     "depending", " ", "on", " ", "exploration", " ", "or", " ", 
+      "intentional"}]}], "*)"}], "\n", "\t", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"agent2", " ", "=", " ", "agent"}], ",", " ", 
+      RowBox[{"currentDir", " ", "=", " ", 
+       RowBox[{"agent", "[", "\"\<currentDirection\>\"", "]"}]}], ",", " ", 
+      "newPos", ",", " ", "min", ",", " ", "max"}], "}"}], ",", "\n", "\t", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"min", ",", " ", "max"}], "}"}], " ", "=", " ", 
+      RowBox[{"params", "[", "\"\<squareBounds\>\"", "]"}]}], ";", "\n", "\t", 
+     RowBox[{"newPos", " ", "=", " ", 
+      RowBox[{
+       RowBox[{"agent2", "[", "\"\<pos\>\"", "]"}], " ", "+", " ", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"params", "[", "\"\<stepLength\>\"", "]"}], " ", "*", " ", 
+          RowBox[{"currentDir", "[", 
+           RowBox[{"[", "1", "]"}], "]"}]}], ",", " ", 
+         RowBox[{
+          RowBox[{"params", "[", "\"\<stepLength\>\"", "]"}], " ", "*", " ", 
+          RowBox[{"currentDir", "[", 
+           RowBox[{"[", "2", "]"}], "]"}]}]}], "}"}]}]}], ";", "\n", "\t", 
+     RowBox[{
+      RowBox[{"agent2", "[", "\"\<pos\>\"", "]"}], " ", "=", " ", 
+      RowBox[{"Clip", "[", 
+       RowBox[{"newPos", ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"min", ",", " ", "max"}], "}"}]}], "]"}]}], ";", "\n", "\t", 
+     "agent2"}]}], "\n", "]"}]}]], "Code",
+ CellChangeTimes->{
+  3.9886713400564175`*^9, {3.9886714283229294`*^9, 3.9886714284477577`*^9}},
+ CellLabel->"In[10]:=",ExpressionUUID->"99106bdf-7a63-419e-9b4d-1edea7e6a81d"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"agentEat", "[", "]"}]], "InlineCode",ExpressionUUID->
+  "1ddca60e-47cb-4ce1-b2f7-d95b8c6e9d04"],
+ "is used to update agents\[CloseCurlyQuote] energy when they eat a piece of \
+food according to the ",
+ Cell[BoxData[
+  StyleBox["foodEnergy",
+   FontSlant->"Italic"]], "InlineCode",ExpressionUUID->
+  "ac2b25b6-a2a1-4dff-ba2c-6d44ed398a5d"],
+ " parameter. The specific food that is being eaten is removed concurrently \
+when this function is called from the model\[CloseCurlyQuote]s food list in \
+the ",
+ Cell[BoxData[
+  ButtonBox[
+   RowBox[{"agentActions", "[", "]"}],
+   BaseStyle->"Hyperlink",
+   ButtonData->"agentActions[]"]], "InlineCode",ExpressionUUID->
+  "1fab90f5-8359-4ae3-8ce4-aad425278527"],
+ "function in ",
+ StyleBox[ButtonBox["Agent Rules and Behavior",
+  BaseStyle->"Hyperlink",
+  ButtonData->"agentRulesandBehavior"],
+  FontColor->RGBColor[
+   0.792156862745098, 0.3176470588235294, 0.09803921568627451]],
+ "."
+}], "Text",
+ CellChangeTimes->{{3.986660208063463*^9, 3.9866602236412525`*^9}, {
+  3.9866602835315895`*^9, 3.9866603097685356`*^9}, {3.986660574870407*^9, 
+  3.98666058938035*^9}, {3.9886712596500454`*^9, 3.988671294020706*^9}, {
+  3.9887487335044136`*^9, 
+  3.9887487476299515`*^9}},ExpressionUUID->"24b4cddc-d64c-455c-b5d3-\
+be7afa64efaf"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"agentEat", "[", 
+   RowBox[{"agent_", ",", " ", "params_"}], "]"}], " ", ":=", " ", 
+  RowBox[{"Module", "[", "\n", "    ", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"agent2", " ", "=", " ", "agent"}], ",", " ", "newE"}], "}"}], ",",
+     "\n", "\t", 
+    RowBox[{
+     RowBox[{"newE", " ", "=", " ", 
+      RowBox[{
+       RowBox[{"agent2", "[", "\"\<energy\>\"", "]"}], " ", "+", " ", 
+       RowBox[{"params", "[", "\"\<foodEnergy\>\"", "]"}]}]}], ";", "\n", 
+     "\t", 
+     RowBox[{
+      RowBox[{"agent2", "[", "\"\<energy\>\"", "]"}], " ", "=", " ", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"newE", " ", ">", " ", 
+         RowBox[{"params", "[", "\"\<maxEnergy\>\"", "]"}]}], ",", " ", 
+        RowBox[{"params", "[", "\"\<maxEnergy\>\"", "]"}], ",", " ", "newE"}],
+        "]"}]}], ";", "\n", "\t", "agent2"}]}], "\n", "]"}]}]], "Code",
+ CellChangeTimes->{3.9866603267786865`*^9},
+ CellLabel->"In[11]:=",ExpressionUUID->"957f4b20-02ab-4e41-b678-b2f6a011ce25"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{1288.5, 1005},
+WindowMargins->{{Automatic, -5.25}, {Automatic, 0}},
+Magnification:>0.7 Inherited,
+FrontEndVersion->"14.3 for Microsoft Windows (64-bit) (July 8, 2025)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"3880b41b-a6fc-544a-b3f0-422ee125b22d"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{
+ "coreFunctions"->{
+  Cell[24619, 544, 189, 3, 46, "Subsection",ExpressionUUID->"b9a81d34-7958-4c58-a24a-a2406ccbeceb",
+   CellTags->"coreFunctions"]},
+ "createAgent[]"->{
+  Cell[19369, 425, 1598, 33, 86, "Text",ExpressionUUID->"663181b5-69e7-4edf-9a14-79ba7a9a17bc",
+   CellTags->"createAgent[]"]},
+ "dataStructures"->{
+  Cell[19172, 420, 194, 3, 46, "Subsection",ExpressionUUID->"bf229551-0eb7-4325-8c7f-06d634284428",
+   CellTags->"dataStructures"]},
+ "findNearestSensableFoodInfo"->{
+  Cell[28215, 628, 2790, 69, 212, "Code",ExpressionUUID->"8e217a95-2b84-4d7c-9acf-4afcca6cb7e8",
+   CellTags->"findNearestSensableFoodInfo"]},
+ "modelParams"->{
+  Cell[13037, 286, 343, 5, 57, "Section",ExpressionUUID->"6992b3f8-7c11-46d9-9224-bf8117b8a057",
+   CellTags->"modelParams"]}
+ }
+*)
+(*CellTagsIndex
+CellTagsIndex->{
+ {"coreFunctions", 47708, 1121},
+ {"createAgent[]", 47860, 1124},
+ {"dataStructures", 48009, 1127},
+ {"findNearestSensableFoodInfo", 48176, 1130},
+ {"modelParams", 48337, 1133}
+ }
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[576, 22, 486, 7, 137, "Title",ExpressionUUID->"02689de0-ed57-420c-a5cc-cd98dfbd8a90"],
+Cell[1065, 31, 263, 7, 45, "Subtitle",ExpressionUUID->"b41e6759-2aea-4b66-b4b9-c3d6b5be7683"],
+Cell[CellGroupData[{
+Cell[1353, 42, 254, 4, 57, "Section",ExpressionUUID->"d842eb1f-5335-4633-84b0-b9af8d4cf1c9"],
+Cell[1610, 48, 2057, 42, 125, "Text",ExpressionUUID->"e65a0956-bc5e-432a-9650-22d3560cd59f"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[3704, 95, 158, 3, 57, "Section",ExpressionUUID->"d7283059-85df-42bb-8047-b2ad951a8a1d"],
+Cell[3865, 100, 2135, 31, 144, "Text",ExpressionUUID->"3587290d-bece-46c5-8242-9f95891e125e"],
+Cell[6003, 133, 585, 17, 35, "Text",ExpressionUUID->"350250c6-ff3a-42a4-82c3-88feae1c5cba"],
+Cell[6591, 152, 547, 10, 29, "Text",ExpressionUUID->"8ad7c49c-4f9d-4a4e-afb9-51feb8ad011c"],
+Cell[7141, 164, 751, 24, 36, "Text",ExpressionUUID->"5bfa2977-ddeb-4f67-861a-3f9c1f26506d"],
+Cell[7895, 190, 1090, 18, 125, "Text",ExpressionUUID->"f00b6345-0ecf-4722-9f63-e9cfa79e35c5"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[9022, 213, 430, 6, 57, "Section",ExpressionUUID->"3a97bde2-f526-4f1a-accf-e10617412bfa"],
+Cell[9455, 221, 1213, 20, 106, "Text",ExpressionUUID->"45ee0957-f92f-4d3e-9ded-58a2e5807609"],
+Cell[10671, 243, 726, 12, 48, "Text",ExpressionUUID->"efc87982-82f9-43d3-8059-5f6070ba0542"],
+Cell[11400, 257, 1600, 24, 144, "Text",ExpressionUUID->"59279a94-cda3-408e-bf7c-aec9600ab399"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[13037, 286, 343, 5, 57, "Section",ExpressionUUID->"6992b3f8-7c11-46d9-9224-bf8117b8a057",
+ CellTags->"modelParams"],
+Cell[13383, 293, 1599, 33, 86, "Text",ExpressionUUID->"5c49e8ae-721e-485a-870a-a5f60fd94da8"],
+Cell[14985, 328, 3791, 78, 597, "Code",ExpressionUUID->"802583c9-de11-4ddc-b18e-ef69d04d1c9f"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[18813, 411, 334, 5, 57, "Section",ExpressionUUID->"7c4b70fb-34bb-4b36-bd16-b82ed893b8cf"],
+Cell[CellGroupData[{
+Cell[19172, 420, 194, 3, 46, "Subsection",ExpressionUUID->"bf229551-0eb7-4325-8c7f-06d634284428",
+ CellTags->"dataStructures"],
+Cell[19369, 425, 1598, 33, 86, "Text",ExpressionUUID->"663181b5-69e7-4edf-9a14-79ba7a9a17bc",
+ CellTags->"createAgent[]"],
+Cell[20970, 460, 3612, 79, 182, "Code",ExpressionUUID->"995b9b76-6c4a-4823-88e3-088aa37ccc49"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[24619, 544, 189, 3, 46, "Subsection",ExpressionUUID->"b9a81d34-7958-4c58-a24a-a2406ccbeceb",
+ CellTags->"coreFunctions"],
+Cell[24811, 549, 1075, 20, 29, "Text",ExpressionUUID->"6028e72c-5f33-4eda-9ac1-2180b6ffa677"],
+Cell[25889, 571, 409, 10, 43, "Code",ExpressionUUID->"0d15e094-8deb-47d1-bb8a-de562ad09c86"],
+Cell[26301, 583, 1024, 22, 32, "CodeText",ExpressionUUID->"d16a4bd1-8676-43ef-b0ce-b8c5a2897974"],
+Cell[27328, 607, 884, 19, 48, "Text",ExpressionUUID->"4001dd66-f675-4b40-8379-07f22eede675"],
+Cell[28215, 628, 2790, 69, 212, "Code",ExpressionUUID->"8e217a95-2b84-4d7c-9acf-4afcca6cb7e8",
+ CellTags->"findNearestSensableFoodInfo"],
+Cell[31008, 699, 665, 11, 49, "CodeText",ExpressionUUID->"6e860de1-852c-44ce-8427-13425cb81795"],
+Cell[31676, 712, 960, 19, 48, "Text",ExpressionUUID->"07aa7d75-afb5-48f6-bc77-c9a7a43932b7"],
+Cell[32639, 733, 724, 18, 43, "Code",ExpressionUUID->"2338b04c-fad4-45f0-8ab0-b0c032b38617"],
+Cell[33366, 753, 973, 21, 29, "Text",ExpressionUUID->"a1383de7-ce48-4923-b497-c1f078034844"],
+Cell[34342, 776, 1235, 29, 166, "Code",ExpressionUUID->"96a31d9d-2c92-4d43-b86a-09ec1ee71ba7"],
+Cell[35580, 807, 1126, 25, 66, "CodeText",ExpressionUUID->"8484e326-a3aa-4e2f-a4fa-62605f19c7d6"],
+Cell[36709, 834, 862, 17, 48, "Text",ExpressionUUID->"128b8c17-a32a-4f3d-a7a0-2137b384a360"],
+Cell[37574, 853, 1219, 30, 120, "Code",ExpressionUUID->"000be472-da3d-4cdd-897a-c037cc2953f0"],
+Cell[38796, 885, 379, 8, 29, "Text",ExpressionUUID->"210999b6-cf65-4a80-bd76-d0b8a7c79ce5"],
+Cell[39178, 895, 1077, 27, 120, "Code",ExpressionUUID->"05fe9d7c-0cb2-40bf-871c-3a6eb836202b"],
+Cell[40258, 924, 466, 13, 29, "Text",ExpressionUUID->"05b2dfcd-fd83-4f5f-aa37-7b083a304009"],
+Cell[40727, 939, 1057, 27, 120, "Code",ExpressionUUID->"bf325c32-e30b-49d6-a32b-3916cff97c60"],
+Cell[41787, 968, 1166, 27, 48, "Text",ExpressionUUID->"bb6e7353-760f-4f01-8171-7e50856f29eb"],
+Cell[42956, 997, 1967, 46, 136, "Code",ExpressionUUID->"99106bdf-7a63-419e-9b4d-1edea7e6a81d"],
+Cell[44926, 1045, 1312, 32, 48, "Text",ExpressionUUID->"24b4cddc-d64c-455c-b5d3-be7afa64efaf"],
+Cell[46241, 1079, 1039, 25, 120, "Code",ExpressionUUID->"957f4b20-02ab-4e41-b678-b2f6a011ce25"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
