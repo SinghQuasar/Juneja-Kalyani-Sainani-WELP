@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       154,          7]
-NotebookDataLength[     53085,       1209]
-NotebookOptionsPosition[     47320,       1109]
-NotebookOutlinePosition[     48709,       1148]
-CellTagsIndexPosition[     48487,       1139]
+NotebookDataLength[     54906,       1246]
+NotebookOptionsPosition[     49036,       1145]
+NotebookOutlinePosition[     50426,       1184]
+CellTagsIndexPosition[     50204,       1175]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -67,9 +67,7 @@ visualize the effects of ",
  " artificial colonies such as resolution of simulation time-discretization, \
 sensing and interaction abilities of organisms, metabolic rates, lifespans, \
 exploration/foraging behaviors, reproductive frequencies, and bioenergetics \
-like digestion and reproduction energies.",
- StyleBox[" ",
-  FontVariations->{"StrikeThrough"->True}],
+like digestion and reproduction energies. ",
  StyleBox["Our tests ",
   Background->RGBColor[0, 0.74, 0.74, 0.33]],
  "show that ecological models produced by the toolbox mimic population \
@@ -86,8 +84,8 @@ data."
   3.989440393967486*^9}, {3.989440600540518*^9, 3.98944060090436*^9}, {
   3.989440643266303*^9, 3.989440643844903*^9}, {3.9894406750947866`*^9, 
   3.98944071306076*^9}, {3.989440765961154*^9, 3.98944079422965*^9}, {
-  3.989960592538004*^9, 
-  3.9899606378792057`*^9}},ExpressionUUID->"e65a0956-bc5e-432a-9650-\
+  3.989960592538004*^9, 3.9899606378792057`*^9}, {3.9900500753101196`*^9, 
+  3.990050081001421*^9}},ExpressionUUID->"e65a0956-bc5e-432a-9650-\
 22d3560cd59f"]
 }, Open  ]],
 
@@ -98,27 +96,44 @@ Cell["Introduction", "Section",
   3.9821911516783543`*^9}},ExpressionUUID->"d7283059-85df-42bb-8047-\
 b2ad951a8a1d"],
 
-Cell["\<\
-\tWe developed an agent-based modeling toolbox to study how simple \
+Cell[TextData[{
+ "\tWe developed an agent-based modeling toolbox to study how simple \
 bioenergetic rules shape population-level dynamics. In the model, individual \
 agents move through an environment bounded by a square, sense food, interact \
 with other agents, consume energy, reproduce, age, and die. Each agent \
 follows relatively simple rules, and the population as a whole can show \
 certain emergent behaviors that will be discussed in this study, such as \
 logistic growth, carrying capacity, variation in reproduction timing, and \
-differences in mortality. With this \[OpenCurlyQuote]toolbox,\
-\[CloseCurlyQuote] we test how environmental and biological parameters affect \
-population outcomes. Specifically, we vary factors such as food availability, \
-metabolism, reproduction energy cost, and reproduction age, then record their \
-effects on population size, carrying capacity, growth rate, first \
-reproduction age, and lifespan. Since our model has limited space that \
-introduces competition between agents (if two agents attempt to eat the same \
-food it is determined randomly which eats it) and a constrained amount of \
-food that is spawned (simulating primary production in an ecosystem), the \
-environment has a limited potential for growth, and the populations of our \
-colonies naturally trend towards logistic growth. Logistic growth is governed \
-by the following differential equation:\
-\>", "Text",
+differences in mortality. The toolbox\[CloseCurlyQuote]s simulation logic \
+incorporates movement, organisms dynamically sensing their environment and \
+adjusting foraging and mating decisions, energy consumption, reproduction, \
+and aging, as well as a visualization that maps each timestep to show how \
+agents undergo all of these behaviors, which are informed through \
+bioenergetics. Bioenergetics is the study of how organisms acquire, \
+transform, store, and expend energy, and how those energy flows determine \
+biological outcomes like growth, reproduction, movement, and survival  [RN1]. \
+With this \[OpenCurlyQuote]toolbox,\[CloseCurlyQuote] we test how \
+environmental and biological parameters affect population outcomes. \
+Specifically, we vary factors such as food availability, metabolism, \
+reproduction energy cost, and reproduction age, then record their effects on \
+population size, carrying capacity, growth rate, first reproduction age, and \
+lifespan. Since our model has limited space that introduces competition \
+between agents (if two agents attempt to eat the same food it is determined \
+randomly which eats it) and a constrained amount of food that is spawned \
+(simulating primary production in an ecosystem), the environment has a \
+limited potential for growth, and the populations of colonies were \
+accordingly found to naturally trend towards logistic growth. Logistic growth \
+is governed by the following differential equation, which embeds the \
+constrained nature of the population growth into its structure with the ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"(", 
+    RowBox[{"1", "-", 
+     FractionBox["P", "K"]}], ")"}], TraditionalForm]],
+  FontSlant->"Italic",ExpressionUUID->
+  "24991ab8-9ec3-0b4b-927a-d37e7d39fe0b"],
+ " factor [NG1]:"
+}], "Text",
  CellChangeTimes->{{3.9861323120985794`*^9, 3.9861323179159927`*^9}, 
    3.9861323561213703`*^9, {3.9861327597572536`*^9, 3.9861328696856537`*^9}, {
    3.986132940158207*^9, 3.9861329886130104`*^9}, {3.986133114661625*^9, 
@@ -127,8 +142,9 @@ by the following differential equation:\
    3.9886679197390842`*^9}, {3.988667974136898*^9, 3.9886679784752083`*^9}, {
    3.9886680190840263`*^9, 3.9886680195578976`*^9}, {3.9887490806700535`*^9, 
    3.988749088959692*^9}, {3.989961295641487*^9, 3.989961463365324*^9}, {
-   3.989961573173828*^9, 
-   3.9899615904358597`*^9}},ExpressionUUID->"3587290d-bece-46c5-8242-\
+   3.989961573173828*^9, 3.9899615904358597`*^9}, {3.990050569987694*^9, 
+   3.9900506101259956`*^9}, {3.990050654249031*^9, 
+   3.9900506601908894`*^9}},ExpressionUUID->"3587290d-bece-46c5-8242-\
 9f95891e125e"],
 
 Cell[TextData[{
@@ -248,11 +264,11 @@ reproduction, energy storage, until its energy stores reach an optimal level. \
 If there is a shortfall, the priorities for maintenance and \
 growth/reproduction remain the same until reserves fall to a critical \
 threshold below which all are allocated to maintenance.\
-\[CloseCurlyDoubleQuote] - (Cite the paper)\
+\[CloseCurlyDoubleQuote] - [RS1]\
 \>", "Text",
  CellChangeTimes->{{3.9887637804169273`*^9, 3.988763815032461*^9}, {
-  3.989441162764399*^9, 3.989441164918106*^9}, {3.9894411957588987`*^9, 
-  3.989441202513359*^9}},
+   3.989441162764399*^9, 3.989441164918106*^9}, {3.9894411957588987`*^9, 
+   3.989441202513359*^9}, 3.9900506937331486`*^9},
  TextAlignment->Center,ExpressionUUID->"efc87982-82f9-43d3-8059-5f6070ba0542"],
 
 Cell["\<\
@@ -1102,14 +1118,34 @@ Cell[BoxData[
         RowBox[{"params", "[", "\"\<maxEnergy\>\"", "]"}], ",", " ", "newE"}],
         "]"}]}], ";", "\n", "\t", "agent2"}]}], "\n", "]"}]}]], "Code",
  CellChangeTimes->{3.9866603267786865`*^9},
- CellLabel->"In[11]:=",ExpressionUUID->"957f4b20-02ab-4e41-b678-b2f6a011ce25"]
+ CellLabel->"In[11]:=",ExpressionUUID->"957f4b20-02ab-4e41-b678-b2f6a011ce25"],
+
+Cell[TextData[{
+ "Through the ",
+ Cell[BoxData[
+  RowBox[{"If", "[", "]"}]], "InlineCode",ExpressionUUID->
+  "3a13a750-3d29-4244-a386-f15aca6bd0c2"],
+ "statement in the function, ",
+ Cell[BoxData[
+  RowBox[{"agentEat", "[", "]"}]], "InlineCode",ExpressionUUID->
+  "af5ea871-a26a-4a45-8400-8a2ba2e0a21f"],
+ " ensures that the energy does not exceed the ",
+ Cell[BoxData[
+  StyleBox["maxEnergy",
+   FontSlant->"Italic"]], "InlineCode",ExpressionUUID->
+  "b3465496-ef91-8d48-af92-c3a8fc804888"]
+}], "CodeText",
+ CellChangeTimes->{{3.9866603578862877`*^9, 3.9866603857281055`*^9}, {
+  3.9886712408184166`*^9, 
+  3.9886712465809574`*^9}},ExpressionUUID->"51cd52c2-6fa6-e14d-900e-\
+8cbf8b49b7cd"]
 }, Open  ]]
 }, Open  ]]
 }, Open  ]]
 },
 WindowSize->{1288.5, 1005},
 WindowMargins->{{Automatic, -5.25}, {Automatic, 0}},
-Magnification:>0.7 Inherited,
+Magnification:>0.9 Inherited,
 FrontEndVersion->"14.3 for Microsoft Windows (64-bit) (July 8, 2025)",
 StyleDefinitions->"Default.nb",
 ExpressionUUID->"3880b41b-a6fc-544a-b3f0-422ee125b22d"
@@ -1120,94 +1156,95 @@ ExpressionUUID->"3880b41b-a6fc-544a-b3f0-422ee125b22d"
 (*CellTagsOutline
 CellTagsIndex->{
  "coreFunctions"->{
-  Cell[24619, 544, 189, 3, 46, "Subsection",ExpressionUUID->"b9a81d34-7958-4c58-a24a-a2406ccbeceb",
+  Cell[25642, 560, 189, 3, 59, "Subsection",ExpressionUUID->"b9a81d34-7958-4c58-a24a-a2406ccbeceb",
    CellTags->"coreFunctions"]},
  "createAgent[]"->{
-  Cell[19369, 425, 1598, 33, 86, "Text",ExpressionUUID->"663181b5-69e7-4edf-9a14-79ba7a9a17bc",
+  Cell[20392, 441, 1598, 33, 136, "Text",ExpressionUUID->"663181b5-69e7-4edf-9a14-79ba7a9a17bc",
    CellTags->"createAgent[]"]},
  "dataStructures"->{
-  Cell[19172, 420, 194, 3, 46, "Subsection",ExpressionUUID->"bf229551-0eb7-4325-8c7f-06d634284428",
+  Cell[20195, 436, 194, 3, 59, "Subsection",ExpressionUUID->"bf229551-0eb7-4325-8c7f-06d634284428",
    CellTags->"dataStructures"]},
  "findNearestSensableFoodInfo"->{
-  Cell[28215, 628, 2790, 69, 212, "Code",ExpressionUUID->"8e217a95-2b84-4d7c-9acf-4afcca6cb7e8",
+  Cell[29238, 644, 2790, 69, 273, "Code",ExpressionUUID->"8e217a95-2b84-4d7c-9acf-4afcca6cb7e8",
    CellTags->"findNearestSensableFoodInfo"]},
  "modelParams"->{
-  Cell[13037, 286, 343, 5, 57, "Section",ExpressionUUID->"6992b3f8-7c11-46d9-9224-bf8117b8a057",
+  Cell[14060, 302, 343, 5, 74, "Section",ExpressionUUID->"6992b3f8-7c11-46d9-9224-bf8117b8a057",
    CellTags->"modelParams"]}
  }
 *)
 (*CellTagsIndex
 CellTagsIndex->{
- {"coreFunctions", 47708, 1121},
- {"createAgent[]", 47860, 1124},
- {"dataStructures", 48009, 1127},
- {"findNearestSensableFoodInfo", 48176, 1130},
- {"modelParams", 48337, 1133}
+ {"coreFunctions", 49424, 1157},
+ {"createAgent[]", 49576, 1160},
+ {"dataStructures", 49726, 1163},
+ {"findNearestSensableFoodInfo", 49893, 1166},
+ {"modelParams", 50054, 1169}
  }
 *)
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[576, 22, 486, 7, 137, "Title",ExpressionUUID->"02689de0-ed57-420c-a5cc-cd98dfbd8a90"],
-Cell[1065, 31, 263, 7, 45, "Subtitle",ExpressionUUID->"b41e6759-2aea-4b66-b4b9-c3d6b5be7683"],
+Cell[576, 22, 486, 7, 176, "Title",ExpressionUUID->"02689de0-ed57-420c-a5cc-cd98dfbd8a90"],
+Cell[1065, 31, 263, 7, 58, "Subtitle",ExpressionUUID->"b41e6759-2aea-4b66-b4b9-c3d6b5be7683"],
 Cell[CellGroupData[{
-Cell[1353, 42, 254, 4, 57, "Section",ExpressionUUID->"d842eb1f-5335-4633-84b0-b9af8d4cf1c9"],
-Cell[1610, 48, 2057, 42, 125, "Text",ExpressionUUID->"e65a0956-bc5e-432a-9650-22d3560cd59f"]
+Cell[1353, 42, 254, 4, 74, "Section",ExpressionUUID->"d842eb1f-5335-4633-84b0-b9af8d4cf1c9"],
+Cell[1610, 48, 2047, 40, 185, "Text",ExpressionUUID->"e65a0956-bc5e-432a-9650-22d3560cd59f"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[3704, 95, 158, 3, 57, "Section",ExpressionUUID->"d7283059-85df-42bb-8047-b2ad951a8a1d"],
-Cell[3865, 100, 2135, 31, 144, "Text",ExpressionUUID->"3587290d-bece-46c5-8242-9f95891e125e"],
-Cell[6003, 133, 585, 17, 35, "Text",ExpressionUUID->"350250c6-ff3a-42a4-82c3-88feae1c5cba"],
-Cell[6591, 152, 547, 10, 29, "Text",ExpressionUUID->"8ad7c49c-4f9d-4a4e-afb9-51feb8ad011c"],
-Cell[7141, 164, 751, 24, 36, "Text",ExpressionUUID->"5bfa2977-ddeb-4f67-861a-3f9c1f26506d"],
-Cell[7895, 190, 1090, 18, 125, "Text",ExpressionUUID->"f00b6345-0ecf-4722-9f63-e9cfa79e35c5"]
+Cell[3694, 93, 158, 3, 74, "Section",ExpressionUUID->"d7283059-85df-42bb-8047-b2ad951a8a1d"],
+Cell[3855, 98, 3153, 49, 336, "Text",ExpressionUUID->"3587290d-bece-46c5-8242-9f95891e125e"],
+Cell[7011, 149, 585, 17, 45, "Text",ExpressionUUID->"350250c6-ff3a-42a4-82c3-88feae1c5cba"],
+Cell[7599, 168, 547, 10, 38, "Text",ExpressionUUID->"8ad7c49c-4f9d-4a4e-afb9-51feb8ad011c"],
+Cell[8149, 180, 751, 24, 46, "Text",ExpressionUUID->"5bfa2977-ddeb-4f67-861a-3f9c1f26506d"],
+Cell[8903, 206, 1090, 18, 161, "Text",ExpressionUUID->"f00b6345-0ecf-4722-9f63-e9cfa79e35c5"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[9022, 213, 430, 6, 57, "Section",ExpressionUUID->"3a97bde2-f526-4f1a-accf-e10617412bfa"],
-Cell[9455, 221, 1213, 20, 106, "Text",ExpressionUUID->"45ee0957-f92f-4d3e-9ded-58a2e5807609"],
-Cell[10671, 243, 726, 12, 48, "Text",ExpressionUUID->"efc87982-82f9-43d3-8059-5f6070ba0542"],
-Cell[11400, 257, 1600, 24, 144, "Text",ExpressionUUID->"59279a94-cda3-408e-bf7c-aec9600ab399"]
+Cell[10030, 229, 430, 6, 74, "Section",ExpressionUUID->"3a97bde2-f526-4f1a-accf-e10617412bfa"],
+Cell[10463, 237, 1213, 20, 161, "Text",ExpressionUUID->"45ee0957-f92f-4d3e-9ded-58a2e5807609"],
+Cell[11679, 259, 741, 12, 87, "Text",ExpressionUUID->"efc87982-82f9-43d3-8059-5f6070ba0542"],
+Cell[12423, 273, 1600, 24, 234, "Text",ExpressionUUID->"59279a94-cda3-408e-bf7c-aec9600ab399"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[13037, 286, 343, 5, 57, "Section",ExpressionUUID->"6992b3f8-7c11-46d9-9224-bf8117b8a057",
+Cell[14060, 302, 343, 5, 74, "Section",ExpressionUUID->"6992b3f8-7c11-46d9-9224-bf8117b8a057",
  CellTags->"modelParams"],
-Cell[13383, 293, 1599, 33, 86, "Text",ExpressionUUID->"5c49e8ae-721e-485a-870a-a5f60fd94da8"],
-Cell[14985, 328, 3791, 78, 597, "Code",ExpressionUUID->"802583c9-de11-4ddc-b18e-ef69d04d1c9f"]
+Cell[14406, 309, 1599, 33, 136, "Text",ExpressionUUID->"5c49e8ae-721e-485a-870a-a5f60fd94da8"],
+Cell[16008, 344, 3791, 78, 767, "Code",ExpressionUUID->"802583c9-de11-4ddc-b18e-ef69d04d1c9f"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[18813, 411, 334, 5, 57, "Section",ExpressionUUID->"7c4b70fb-34bb-4b36-bd16-b82ed893b8cf"],
+Cell[19836, 427, 334, 5, 74, "Section",ExpressionUUID->"7c4b70fb-34bb-4b36-bd16-b82ed893b8cf"],
 Cell[CellGroupData[{
-Cell[19172, 420, 194, 3, 46, "Subsection",ExpressionUUID->"bf229551-0eb7-4325-8c7f-06d634284428",
+Cell[20195, 436, 194, 3, 59, "Subsection",ExpressionUUID->"bf229551-0eb7-4325-8c7f-06d634284428",
  CellTags->"dataStructures"],
-Cell[19369, 425, 1598, 33, 86, "Text",ExpressionUUID->"663181b5-69e7-4edf-9a14-79ba7a9a17bc",
+Cell[20392, 441, 1598, 33, 136, "Text",ExpressionUUID->"663181b5-69e7-4edf-9a14-79ba7a9a17bc",
  CellTags->"createAgent[]"],
-Cell[20970, 460, 3612, 79, 182, "Code",ExpressionUUID->"995b9b76-6c4a-4823-88e3-088aa37ccc49"]
+Cell[21993, 476, 3612, 79, 234, "Code",ExpressionUUID->"995b9b76-6c4a-4823-88e3-088aa37ccc49"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[24619, 544, 189, 3, 46, "Subsection",ExpressionUUID->"b9a81d34-7958-4c58-a24a-a2406ccbeceb",
+Cell[25642, 560, 189, 3, 59, "Subsection",ExpressionUUID->"b9a81d34-7958-4c58-a24a-a2406ccbeceb",
  CellTags->"coreFunctions"],
-Cell[24811, 549, 1075, 20, 29, "Text",ExpressionUUID->"6028e72c-5f33-4eda-9ac1-2180b6ffa677"],
-Cell[25889, 571, 409, 10, 43, "Code",ExpressionUUID->"0d15e094-8deb-47d1-bb8a-de562ad09c86"],
-Cell[26301, 583, 1024, 22, 32, "CodeText",ExpressionUUID->"d16a4bd1-8676-43ef-b0ce-b8c5a2897974"],
-Cell[27328, 607, 884, 19, 48, "Text",ExpressionUUID->"4001dd66-f675-4b40-8379-07f22eede675"],
-Cell[28215, 628, 2790, 69, 212, "Code",ExpressionUUID->"8e217a95-2b84-4d7c-9acf-4afcca6cb7e8",
+Cell[25834, 565, 1075, 20, 62, "Text",ExpressionUUID->"6028e72c-5f33-4eda-9ac1-2180b6ffa677"],
+Cell[26912, 587, 409, 10, 56, "Code",ExpressionUUID->"0d15e094-8deb-47d1-bb8a-de562ad09c86"],
+Cell[27324, 599, 1024, 22, 41, "CodeText",ExpressionUUID->"d16a4bd1-8676-43ef-b0ce-b8c5a2897974"],
+Cell[28351, 623, 884, 19, 62, "Text",ExpressionUUID->"4001dd66-f675-4b40-8379-07f22eede675"],
+Cell[29238, 644, 2790, 69, 273, "Code",ExpressionUUID->"8e217a95-2b84-4d7c-9acf-4afcca6cb7e8",
  CellTags->"findNearestSensableFoodInfo"],
-Cell[31008, 699, 665, 11, 49, "CodeText",ExpressionUUID->"6e860de1-852c-44ce-8427-13425cb81795"],
-Cell[31676, 712, 960, 19, 48, "Text",ExpressionUUID->"07aa7d75-afb5-48f6-bc77-c9a7a43932b7"],
-Cell[32639, 733, 724, 18, 43, "Code",ExpressionUUID->"2338b04c-fad4-45f0-8ab0-b0c032b38617"],
-Cell[33366, 753, 973, 21, 29, "Text",ExpressionUUID->"a1383de7-ce48-4923-b497-c1f078034844"],
-Cell[34342, 776, 1235, 29, 166, "Code",ExpressionUUID->"96a31d9d-2c92-4d43-b86a-09ec1ee71ba7"],
-Cell[35580, 807, 1126, 25, 66, "CodeText",ExpressionUUID->"8484e326-a3aa-4e2f-a4fa-62605f19c7d6"],
-Cell[36709, 834, 862, 17, 48, "Text",ExpressionUUID->"128b8c17-a32a-4f3d-a7a0-2137b384a360"],
-Cell[37574, 853, 1219, 30, 120, "Code",ExpressionUUID->"000be472-da3d-4cdd-897a-c037cc2953f0"],
-Cell[38796, 885, 379, 8, 29, "Text",ExpressionUUID->"210999b6-cf65-4a80-bd76-d0b8a7c79ce5"],
-Cell[39178, 895, 1077, 27, 120, "Code",ExpressionUUID->"05fe9d7c-0cb2-40bf-871c-3a6eb836202b"],
-Cell[40258, 924, 466, 13, 29, "Text",ExpressionUUID->"05b2dfcd-fd83-4f5f-aa37-7b083a304009"],
-Cell[40727, 939, 1057, 27, 120, "Code",ExpressionUUID->"bf325c32-e30b-49d6-a32b-3916cff97c60"],
-Cell[41787, 968, 1166, 27, 48, "Text",ExpressionUUID->"bb6e7353-760f-4f01-8171-7e50856f29eb"],
-Cell[42956, 997, 1967, 46, 136, "Code",ExpressionUUID->"99106bdf-7a63-419e-9b4d-1edea7e6a81d"],
-Cell[44926, 1045, 1312, 32, 48, "Text",ExpressionUUID->"24b4cddc-d64c-455c-b5d3-be7afa64efaf"],
-Cell[46241, 1079, 1039, 25, 120, "Code",ExpressionUUID->"957f4b20-02ab-4e41-b678-b2f6a011ce25"]
+Cell[32031, 715, 665, 11, 86, "CodeText",ExpressionUUID->"6e860de1-852c-44ce-8427-13425cb81795"],
+Cell[32699, 728, 960, 19, 62, "Text",ExpressionUUID->"07aa7d75-afb5-48f6-bc77-c9a7a43932b7"],
+Cell[33662, 749, 724, 18, 56, "Code",ExpressionUUID->"2338b04c-fad4-45f0-8ab0-b0c032b38617"],
+Cell[34389, 769, 973, 21, 62, "Text",ExpressionUUID->"a1383de7-ce48-4923-b497-c1f078034844"],
+Cell[35365, 792, 1235, 29, 214, "Code",ExpressionUUID->"96a31d9d-2c92-4d43-b86a-09ec1ee71ba7"],
+Cell[36603, 823, 1126, 25, 108, "CodeText",ExpressionUUID->"8484e326-a3aa-4e2f-a4fa-62605f19c7d6"],
+Cell[37732, 850, 862, 17, 87, "Text",ExpressionUUID->"128b8c17-a32a-4f3d-a7a0-2137b384a360"],
+Cell[38597, 869, 1219, 30, 155, "Code",ExpressionUUID->"000be472-da3d-4cdd-897a-c037cc2953f0"],
+Cell[39819, 901, 379, 8, 38, "Text",ExpressionUUID->"210999b6-cf65-4a80-bd76-d0b8a7c79ce5"],
+Cell[40201, 911, 1077, 27, 155, "Code",ExpressionUUID->"05fe9d7c-0cb2-40bf-871c-3a6eb836202b"],
+Cell[41281, 940, 466, 13, 38, "Text",ExpressionUUID->"05b2dfcd-fd83-4f5f-aa37-7b083a304009"],
+Cell[41750, 955, 1057, 27, 155, "Code",ExpressionUUID->"bf325c32-e30b-49d6-a32b-3916cff97c60"],
+Cell[42810, 984, 1166, 27, 62, "Text",ExpressionUUID->"bb6e7353-760f-4f01-8171-7e50856f29eb"],
+Cell[43979, 1013, 1967, 46, 174, "Code",ExpressionUUID->"99106bdf-7a63-419e-9b4d-1edea7e6a81d"],
+Cell[45949, 1061, 1312, 32, 62, "Text",ExpressionUUID->"24b4cddc-d64c-455c-b5d3-be7afa64efaf"],
+Cell[47264, 1095, 1039, 25, 155, "Code",ExpressionUUID->"957f4b20-02ab-4e41-b678-b2f6a011ce25"],
+Cell[48306, 1122, 690, 18, 41, "CodeText",ExpressionUUID->"51cd52c2-6fa6-e14d-900e-8cbf8b49b7cd"]
 }, Open  ]]
 }, Open  ]]
 }, Open  ]]
