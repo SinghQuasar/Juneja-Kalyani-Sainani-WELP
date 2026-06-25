@@ -228878,74 +228878,74 @@ ExpressionUUID->"7f18c038-d181-6940-a649-d0ced56592b3"
 (* Internal cache information *)
 (*CellTagsOutline
 CellTagsIndex->{
- "modelParams"->{
-  Cell[29810, 584, 343, 5, 74, "Section",ExpressionUUID->"00bd4a50-34f4-524e-9d3f-b8f78576f651",
-   CellTags->"modelParams"]},
- "dataStructures"->{
-  Cell[35996, 715, 194, 3, 59, "Subsection",ExpressionUUID->"5037cdbf-fa39-404f-a28d-e7ae96a5edb6",
-   CellTags->"dataStructures"]},
- "createAgent[]"->{
-  Cell[36193, 720, 1566, 32, 136, "Text",ExpressionUUID->"10a084c6-a688-6540-a79c-10fafe41d5fb",
-   CellTags->"createAgent[]"]},
- "coreFunctions"->{
-  Cell[41411, 838, 189, 3, 59, "Subsection",ExpressionUUID->"eba76386-d2a1-ca45-b667-e9cf93b946a3",
-   CellTags->"coreFunctions"]},
- "findNearestSensableFoodInfo"->{
-  Cell[45237, 929, 2790, 69, 273, "Code",ExpressionUUID->"9b0353ea-2fcd-e94e-ac8f-ae6f1b0f96a2",
-   CellTags->"findNearestSensableFoodInfo"]},
- "Reproduction"->{
-  Cell[64961, 1431, 485, 7, 74, "Section",ExpressionUUID->"a671984d-8b17-ce47-8fa1-7e377fdc9c60",
-   CellTags->"Reproduction"]},
- "nextAgentIDDescription"->{
-  Cell[66984, 1473, 1238, 31, 107, "Text",ExpressionUUID->"f42d0a1a-adae-af44-85d9-de91315bc30f",
-   CellTags->"nextAgentIDDescription"]},
- "findClosestAgentI"->{
-  Cell[75484, 1687, 1682, 43, 234, "Code",ExpressionUUID->"5196b543-4750-fc4c-b936-28020ede4538",
-   CellTags->"findClosestAgentI"]},
- "mainReproductionFunction"->{
-  Cell[77942, 1757, 215, 4, 59, "Subsection",ExpressionUUID->"0e37b13f-f8d6-3f40-8a74-e47d70ee5bdd",
-   CellTags->"mainReproductionFunction"]},
- "agentRulesandBehavior"->{
-  Cell[88339, 1988, 209, 4, 74, "Section",ExpressionUUID->"0d6a2109-7b35-bb46-914d-cd252ba5175d",
-   CellTags->"agentRulesandBehavior"]},
- "mainAgentDecisionLogic"->{
-  Cell[105073, 2401, 309, 6, 59, "Subsection",ExpressionUUID->"714b542f-a673-1146-bb6e-7e462a3e4d0c",
-   CellTags->"mainAgentDecisionLogic"]},
  "agentActions[]"->{
   Cell[106640, 2432, 5315, 113, 668, "Code",ExpressionUUID->"eca38961-40b7-7d4a-aa1b-b6045f3bcca4",
    CellTags->"agentActions[]"]},
- "modelInitialization"->{
-  Cell[119225, 2737, 274, 5, 74, "Section",ExpressionUUID->"b82d0072-7288-764d-9bc5-0e4a2ba20d41",
-   CellTags->"modelInitialization"]},
- "initializeModel[]"->{
-  Cell[120725, 2771, 4126, 94, 530, "Code",ExpressionUUID->"a619ae0a-10c1-f34d-8a31-d34f470115a2",
-   CellTags->"initializeModel[]"]},
+ "agentRulesandBehavior"->{
+  Cell[88339, 1988, 209, 4, 74, "Section",ExpressionUUID->"0d6a2109-7b35-bb46-914d-cd252ba5175d",
+   CellTags->"agentRulesandBehavior"]},
+ "coreFunctions"->{
+  Cell[41411, 838, 189, 3, 59, "Subsection",ExpressionUUID->"eba76386-d2a1-ca45-b667-e9cf93b946a3",
+   CellTags->"coreFunctions"]},
+ "createAgent[]"->{
+  Cell[36193, 720, 1566, 32, 136, "Text",ExpressionUUID->"10a084c6-a688-6540-a79c-10fafe41d5fb",
+   CellTags->"createAgent[]"]},
+ "dataStructures"->{
+  Cell[35996, 715, 194, 3, 59, "Subsection",ExpressionUUID->"5037cdbf-fa39-404f-a28d-e7ae96a5edb6",
+   CellTags->"dataStructures"]},
+ "findClosestAgentI"->{
+  Cell[75484, 1687, 1682, 43, 234, "Code",ExpressionUUID->"5196b543-4750-fc4c-b936-28020ede4538",
+   CellTags->"findClosestAgentI"]},
+ "findNearestSensableFoodInfo"->{
+  Cell[45237, 929, 2790, 69, 273, "Code",ExpressionUUID->"9b0353ea-2fcd-e94e-ac8f-ae6f1b0f96a2",
+   CellTags->"findNearestSensableFoodInfo"]},
  "futureDirection"->{
   Cell[8635043, 228676, 191, 3, 74, "Section",ExpressionUUID->"609ece5c-277b-cb4b-a3b8-6522555d4bd8",
    CellTags->"futureDirection"]},
+ "initializeModel[]"->{
+  Cell[120725, 2771, 4126, 94, 530, "Code",ExpressionUUID->"a619ae0a-10c1-f34d-8a31-d34f470115a2",
+   CellTags->"initializeModel[]"]},
+ "mainAgentDecisionLogic"->{
+  Cell[105073, 2401, 309, 6, 59, "Subsection",ExpressionUUID->"714b542f-a673-1146-bb6e-7e462a3e4d0c",
+   CellTags->"mainAgentDecisionLogic"]},
+ "mainReproductionFunction"->{
+  Cell[77942, 1757, 215, 4, 59, "Subsection",ExpressionUUID->"0e37b13f-f8d6-3f40-8a74-e47d70ee5bdd",
+   CellTags->"mainReproductionFunction"]},
+ "modelInitialization"->{
+  Cell[119225, 2737, 274, 5, 74, "Section",ExpressionUUID->"b82d0072-7288-764d-9bc5-0e4a2ba20d41",
+   CellTags->"modelInitialization"]},
+ "modelParams"->{
+  Cell[29810, 584, 343, 5, 74, "Section",ExpressionUUID->"00bd4a50-34f4-524e-9d3f-b8f78576f651",
+   CellTags->"modelParams"]},
+ "nextAgentIDDescription"->{
+  Cell[66984, 1473, 1238, 31, 107, "Text",ExpressionUUID->"f42d0a1a-adae-af44-85d9-de91315bc30f",
+   CellTags->"nextAgentIDDescription"]},
  "ref"->{
   Cell[8643002, 228824, 1682, 35, 505, "Text",ExpressionUUID->"49aa93c9-0f82-c940-b951-bf609313f72f",
-   CellTags->"ref"]}
+   CellTags->"ref"]},
+ "Reproduction"->{
+  Cell[64961, 1431, 485, 7, 74, "Section",ExpressionUUID->"a671984d-8b17-ce47-8fa1-7e377fdc9c60",
+   CellTags->"Reproduction"]}
  }
 *)
 (*CellTagsIndex
 CellTagsIndex->{
- {"modelParams", 8645362, 228880},
- {"dataStructures", 8645510, 228883},
- {"createAgent[]", 8645663, 228886},
- {"coreFunctions", 8645812, 228889},
- {"findNearestSensableFoodInfo", 8645978, 228892},
- {"Reproduction", 8646140, 228895},
- {"nextAgentIDDescription", 8646298, 228898},
- {"findClosestAgentI", 8646461, 228901},
- {"mainReproductionFunction", 8646626, 228904},
- {"agentRulesandBehavior", 8646798, 228907},
- {"mainAgentDecisionLogic", 8646965, 228910},
- {"agentActions[]", 8647129, 228913},
- {"modelInitialization", 8647288, 228916},
- {"initializeModel[]", 8647449, 228919},
- {"futureDirection", 8647606, 228922},
- {"ref", 8647752, 228925}
+ {"agentActions[]", 8645365, 228880},
+ {"agentRulesandBehavior", 8645526, 228883},
+ {"coreFunctions", 8645684, 228886},
+ {"createAgent[]", 8645836, 228889},
+ {"dataStructures", 8645986, 228892},
+ {"findClosestAgentI", 8646143, 228895},
+ {"findNearestSensableFoodInfo", 8646311, 228898},
+ {"futureDirection", 8646476, 228901},
+ {"initializeModel[]", 8646636, 228904},
+ {"mainAgentDecisionLogic", 8646800, 228907},
+ {"mainReproductionFunction", 8646974, 228910},
+ {"modelInitialization", 8647144, 228913},
+ {"modelParams", 8647299, 228916},
+ {"nextAgentIDDescription", 8647455, 228919},
+ {"ref", 8647604, 228922},
+ {"Reproduction", 8647747, 228925}
  }
 *)
 (*NotebookFileOutline
